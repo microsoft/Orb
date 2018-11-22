@@ -12,8 +12,11 @@ steps:
 
 - script: |
     npm install
+  displayName: 'npm install dev dependencies'
+
+  - script: |
     gulp build --gulpfile build\gulpfile.js --buildBranch $(Build.SourceBranchName)
-  displayName: 'npm install and run gulp'
+  displayName: 'run gulp'
 
 - task: PublishBuildArtifacts@1
   inputs:
