@@ -8,6 +8,6 @@
   "license": "",
   "devDependencies": {
     "electron": "2.0.9",
-    "electron-winstaller": "2.6.0",
+    "electron-winstaller": "2.6.0"
   }
 }
