@@ -12,7 +12,7 @@ steps:
 
 - script: |
     npm install
-    gulp default --gulpfile gulpfile.js
+    gulp build --gulpfile build\gulpfile.js --buildBranch $(Build.SourceBranchName)
   displayName: 'npm install and run gulp'
 
 - task: PublishBuildArtifacts@1
