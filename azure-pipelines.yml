@@ -14,3 +14,7 @@ steps:
     npm install
     gulp default --gulpfile gulpfile.js
   displayName: 'npm install and run gulp'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(System.DefaultWorkingDirectory)'

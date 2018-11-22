@@ -1,0 +1,13 @@
+{
+  "name": "Azure-Orb-Dev-Dependencies",
+  "version": "1.0.0",
+  "description": "All Dev Dependencies need to go here. All dependencies must be reported to http://aka.ms/OssTool. ",
+  "main": "main.js",
+  "scripts": {},
+  "author": "gajagt",
+  "license": "",
+  "devDependencies": {
+    "electron": "2.0.9",
+    "electron-winstaller": "2.6.0",
+  }
+}
