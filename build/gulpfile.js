@@ -1,6 +1,7 @@
 var gulp = require("gulp");
 var gutil = require("gulp-util");
 var argv = require('yargs').argv;
+var rename = require("gulp-rename");
 
 var paths = {
 	electron: ["node_modules/electron/dist/**/*", "!/**/electron.exe"],
