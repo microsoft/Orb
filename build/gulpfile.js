@@ -9,12 +9,13 @@ var paths = {
 	updateExe: ["node_modules/electron-winstaller/vendor/update.exe"],
 	winstaller: "node_modules/electron-winstaller/",
 	assets: "assets",
-	dist: "dist",
+	dist: __dirname + "dist",
 	app: "dist/resources/app",
 	build: "build"
 }
 
 gulp.task("copyElectron", function () {
+    gutil.log("Destination folder: " + paths.dist);
 	gutil.log("Copying electron dependencies.");
 	return gulp.src(paths.electron)
 		.pipe(gulp.dest(paths.dist));
