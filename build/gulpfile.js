@@ -5,7 +5,7 @@ var rename = require("gulp-rename");
 var path = require ('path');
 
 var paths = {
-	electron: ["node_modules/electron/dist/**/*", "!/**/electron.exe"],
+	electron: [argv.outputFolder + "/node_modules/electron/dist/**/*"],
 	electronExe: ["node_modules/electron/dist/electron.exe"],
 	updateExe: ["node_modules/electron-winstaller/vendor/update.exe"],
 	winstaller: "node_modules/electron-winstaller/",
