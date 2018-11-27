@@ -9,7 +9,7 @@ var paths = {
 	updateExe: ["node_modules/electron-winstaller/vendor/update.exe"],
 	winstaller: "node_modules/electron-winstaller/",
 	assets: "assets",
-	dist: __dirname + "dist",
+	dist: path.join(argv.outputFolder,"/dist"),
 	app: "dist/resources/app",
 	build: "build"
 }
