@@ -6,8 +6,8 @@ var path = require ('path');
 var glob = require("glob");
 
 var paths = {
-	electron: [path.join(argv.outputFolder, "/node_modules/electron/dist/**/*")],
-	electronExe: ["node_modules/electron/dist/electron.exe"],
+	electron: [path.join(argv.sourceFolder, "/node_modules/electron/dist/**/*")],
+	electronExe: [path.join(argv.sourceFolder,"node_modules/electron/dist/electron.exe")],
 	updateExe: ["node_modules/electron-winstaller/vendor/update.exe"],
 	winstaller: "node_modules/electron-winstaller/",
 	assets: "assets",
