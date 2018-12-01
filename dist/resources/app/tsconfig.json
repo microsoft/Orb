@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es5",
+        "sourceMap": true,
+        "jsx": "react",
+        "experimentalDecorators": true
+    },
+    "include": [
+        "**/*.ts*",
+        "./*.ts*"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ],
+    "compileOnSave": true
+}

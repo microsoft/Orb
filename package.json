@@ -1,10 +1,10 @@
 {
   "name": "Azure-Orb-Dev-Dependencies",
   "version": "1.0.0",
-  "description": "All Dev Dependencies need to go here. All dependencies must be reported to http://aka.ms/OssTool. ",
+  "description": "All Dev Dependencies need to go here.",
   "main": "main.js",
   "scripts": {},
-  "author": "gajagt",
+  "author": "Microsoft",
   "license": "",
   "devDependencies": {
     "electron": "2.0.9",
@@ -13,6 +13,9 @@
     "gulp": "3.9.1",
     "gulp-rename": "1.2.2",
     "gulp-util": "3.0.7",
-    "yargs": "12.0.5"
+    "yargs": "12.0.5",
+    "gulp-sourcemaps": "2.2.0",
+    "gulp-typescript": "3.2.1",
+    "typescript": "2.5.3"
   }
 }

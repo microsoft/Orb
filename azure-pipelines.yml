@@ -15,9 +15,9 @@ steps:
   displayName: 'npm install dev dependencies'
 
 - script: |
-    gulp build --gulpfile build\gulpfile.js --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.ArtifactStagingDirectory)
+    gulp build --gulpfile build\gulpfile.js --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)
   displayName: 'run gulp'
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)\dist'
+    PathtoPublish: '$(Build.SourcesDirectory)\dist'
