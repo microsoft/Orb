@@ -32,7 +32,7 @@ gulp.task("copyElectron", function () {
 
 gulp.task("copyOtherSourceFiles", function () {
     gutil.log("Copying other source files")
-    return gulp.src(path.join(argv.sourceFolder / thirdPartyNotice.txt))
+    return gulp.src(path.join(argv.sourceFolder, "/thirdPartyNotice.txt"))
         .pipe(gulp.dest(paths.dist));
 });
 
@@ -46,7 +46,7 @@ gulp.task("renameElectronExe", function () {
 });
 
 function getExeName() {
-    var exeName = "orb_test.exe";
+    var exeName = "orb.exe";
     gutil.log("Running on branch " + argv.buildBranch);
     if (argv.buildBranch.toLowerCase() === "insiders") {
         exeName = "orb_insiders.exe";
