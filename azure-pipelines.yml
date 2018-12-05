@@ -21,9 +21,14 @@ steps:
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
   displayName: 'ESRP CodeSigning'
   inputs:
+    FolderPath: $(Build.SourcesDirectory)
     ConnectedServiceName: 'Orb ESRP'
 
     signConfigType: inlineSignParams
+
+    OpusName: Orb
+
+    OpusInfo: 'https://www.github.com/microsot/orb'
 
     inlineOperation: |
      [  {
