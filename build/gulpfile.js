@@ -6,15 +6,18 @@ var path = require('path');
 var glob = require("glob");
 var ts = require("gulp-typescript");
 var sourcemaps = require("gulp-sourcemaps");
+var Q = require("q");
+var fs = require("fs");
 
 var paths = {
     electron: [path.join(argv.sourceFolder, "/node_modules/electron/dist/**/*"), "!" + path.join(argv.sourceFolder, "/**/default_app.asar"), "!" + path.join(argv.sourceFolder, "/**/electron.exe")],
     electronExe: [path.join(argv.sourceFolder, "node_modules/electron/dist/electron.exe")],
-    updateExe: ["node_modules/electron-winstaller/vendor/update.exe"],
+    updateExe: [path.join(argv.sourceFolder, "/node_modules/electron-winstaller/vendor/update.exe")],
     winstaller: "node_modules/electron-winstaller/",
-    assets: "assets",
+    assets: path.join(argv.sourceFolder, "assets"),
     dist: path.join(argv.outputFolder, "/dist"),
     app: path.join(argv.sourceFolder, "dist/resources/app"),
+    installer: path.join(argv.sourceFolder, "installer"),
     build: "build"
 }
 
@@ -23,6 +26,12 @@ gulp.task("copyElectron", function () {
     gutil.log("Source folder: " + paths.electron);
     gutil.log("Copying electron dependencies.");
     return gulp.src(paths.electron)
+        .pipe(gulp.dest(paths.dist));
+});
+
+gulp.task("copyOtherSourceFiles", function () {
+    gutil.log("Copying other source files")
+    return gulp.src(path.join(argv.sourceFolder / thirdPartyNotice.txt))
         .pipe(gulp.dest(paths.dist));
 });
 
@@ -36,8 +45,11 @@ gulp.task("renameElectronExe", function () {
 });
 
 function getExeName() {
-    var exeName = "orb.exe";
+    var exeName = "orb_test.exe";
     gutil.log("Running on branch " + argv.buildBranch);
+    if (argv.buildBranch.toLowerCase() === "insiders") {
+        exeName = "orb_insiders.exe";
+    }
     return exeName;
 }
 
@@ -50,6 +62,110 @@ function dumpFiles(input) {
     })
 }
 
+gulp.task("renameUpdateExe", function () {
+    gutil.log("Copying update exe and renaming to squirrel.exe");
+    return gulp.src(paths.updateExe)
+        .pipe(rename("squirrel.exe"))
+        .pipe(gulp.dest(paths.dist));
+});
+
+gulp.task("resEdit", ["renameElectronExe", "renameUpdateExe"], function (callback) {
+    var deferred = Q.defer();
+
+    var exeName = getExeName();
+
+    if (exeName !== "orb_insiders.exe") {
+        console.log("resEdit for prod version.");
+        rcedit(paths.dist + "/" + exeName, {
+            "name": "Orb",
+            "icon": paths.assets + "/orb.ico",
+            "version-string": {
+                "ProductName": "Orb",
+                "FileDescription": "Orb",
+                CompanyName: "Microsoft",
+                LegalCopyright: "Microsoft",
+            },
+            "product-version": getBuildVersion()
+        }, function (err) {
+            if (!err) {
+                deferred.resolve();
+            } else {
+                gutil.log(err.toString());
+                callback(err.toString());
+            }
+        });
+    } else {
+        console.log("Modifying package.json");
+        var package = JSON.parse(fs.readFileSync(paths.app + "/package.json", "utf8"));
+        if (!package) {
+            deferred.reject("Package.json not parsed");
+        }
+
+        package.name = "OrbInsiders";
+        package.description = "Orb Insiders";
+
+        fs.writeFileSync(paths.app + "/package.json", JSON.stringify(package), "utf8");
+
+        console.log("resEdit for insiders version.");
+        rcedit(paths.dist + "/" + exeName, {
+            "name": "Orb Insiders",
+            "icon": paths.assets + "/orb_insiders.ico",
+            "version-string": {
+                "ProductName": "Orb Insiders",
+                "FileDescription": "Orb Insiders",
+                CompanyName: "Microsoft",
+                LegalCopyright: "Microsoft",
+            },
+            "product-version": getBuildVersion()
+        }, function (err) {
+            if (!err) {
+                deferred.resolve();
+            } else {
+                gutil.log(err.toString());
+                callback(err.toString());
+            }
+        });
+
+    }
+
+    return deferred.promise;
+});
+
+gulp.task("createInstaller", ["copyOtherSourceFiles"], function () {
+    gutil.log("Creating Installer at " + paths.out);
+    var exeName = getExeName();
+
+    if (exeName !== "orb_insiders.exe") {
+        return electronInstaller.createWindowsInstaller({
+            appDirectory: paths.dist,
+            outputDirectory: paths.out + "/packages",
+            authors: "Microsoft",
+            owners: "Microsoft",
+            exe: exeName,
+            version: getBuildVersion().replace("\\", ""), // this is set by build.proj
+            loadingGif: paths.assets + "/orbInstall.gif",
+            setupIcon: paths.assets + "/orb.ico",
+            noMsi: true
+        });
+    } else {
+        return electronInstaller.createWindowsInstaller({
+            name: "OrbInsiders",
+            id: "OrbInsiders",
+            title: "Orb - Insiders",
+            productName: "OrbInsiders",
+            appDirectory: paths.dist,
+            outputDirectory: paths.out + "/packages",
+            authors: "Microsoft",
+            owners: "Microsoft",
+            exe: exeName,
+            version: getBuildVersion().replace("\\", ""), // this is set by build.proj
+            loadingGif: paths.assets + "/orbInsidersInstall.gif",
+            setupIcon: paths.assets + "/orb_insiders.ico",
+            noMsi: true
+        });
+    }
+});
+
 gulp.task("transpile", function () {
     var tsProject = ts.createProject(paths.app + "/tsconfig.json");
     return tsProject.src()
@@ -59,6 +175,6 @@ gulp.task("transpile", function () {
         .pipe(gulp.dest(paths.app));
 });
 
-gulp.task("build", ["copyElectron", "renameElectronExe", "transpile"], function (callback) {
+gulp.task("build", ["copyElectron", "resEdit", "transpile"], function (callback) {
     gutil.log("Building Orb");
 });
