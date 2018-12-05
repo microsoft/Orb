@@ -8,6 +8,7 @@ var ts = require("gulp-typescript");
 var sourcemaps = require("gulp-sourcemaps");
 var Q = require("q");
 var fs = require("fs");
+var rcedit = require("rcedit");
 
 var paths = {
     electron: [path.join(argv.sourceFolder, "/node_modules/electron/dist/**/*"), "!" + path.join(argv.sourceFolder, "/**/default_app.asar"), "!" + path.join(argv.sourceFolder, "/**/electron.exe")],
@@ -52,6 +53,15 @@ function getExeName() {
     }
     return exeName;
 }
+
+function getBuildVersion() {
+    if (argv.buildVersion) {
+        return argv.buildVersion
+    }
+
+    return "1.0.0.0";
+}
+
 
 function dumpFiles(input) {
     gutil.log("Dumping " + input);

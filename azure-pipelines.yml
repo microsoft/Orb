@@ -15,9 +15,9 @@ steps:
   displayName: 'npm install dev dependencies'
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-  displayName: 'ESRP CodeSigning - Squirrel'
+  displayName: 'ESRP CodeSigning - Third Parties'
   inputs:
-    FolderPath: $(Build.SourcesDirectory)\node_modules\electron-winstaller
+    FolderPath: $(Build.SourcesDirectory)\node_modules\
     ConnectedServiceName: 'Orb ESRP'
 
     signConfigType: inlineSignParams
@@ -68,13 +68,13 @@ steps:
          }]
 
 - script: |
-    gulp build --gulpfile build\gulpfile.js --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)
+    gulp build --gulpfile build\gulpfile.js --buildVersion $(Build.BuildNumber) -buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)
   displayName: 'run gulp'
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
   displayName: 'ESRP CodeSigning - Main'
   inputs:
-    FolderPath: $(Build.SourcesDirectory)\dist
+    FolderPath: $(Build.SourcesDirectory)\dist\resources\app
     ConnectedServiceName: 'Orb ESRP'
 
     signConfigType: inlineSignParams
@@ -129,7 +129,7 @@ steps:
   displayName: 'run gulp'
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-  displayName: 'ESRP CodeSigning - Main'
+  displayName: 'ESRP CodeSigning - Installer'
   inputs:
     FolderPath: $(Build.SourcesDirectory)\installer
     ConnectedServiceName: 'Orb ESRP'
