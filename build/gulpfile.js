@@ -9,6 +9,7 @@ var sourcemaps = require("gulp-sourcemaps");
 var Q = require("q");
 var fs = require("fs");
 var rcedit = require("rcedit");
+var electronInstaller = require("electron-winstaller");
 
 var paths = {
     electron: [path.join(argv.sourceFolder, "/node_modules/electron/dist/**/*"), "!" + path.join(argv.sourceFolder, "/**/default_app.asar"), "!" + path.join(argv.sourceFolder, "/**/electron.exe")],
