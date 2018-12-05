@@ -14,7 +14,7 @@ steps:
     npm install
   displayName: 'npm install dev dependencies'
 
-  - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+- task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
   displayName: 'ESRP CodeSigning - Squirrel'
   inputs:
     FolderPath: $(Build.SourcesDirectory)\node_modules\electron-winstaller
