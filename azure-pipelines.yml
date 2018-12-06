@@ -21,6 +21,10 @@ steps:
     FolderPath: $(Build.SourcesDirectory)\node_modules\
     ConnectedServiceName: 'Orb ESRP'
 
+    Pattern: '*.dll,*.exe,!setup.exe'
+
+    UseMinimatch: true
+
     signConfigType: inlineSignParams
 
     OpusName: Orb
@@ -143,7 +147,7 @@ steps:
 
     inlineOperation: |
      [  {
-             "keyCode": "CP-230012",
+             "keyCode": "CP-231522",
              "operationSetCode": "SigntoolSign",
              "parameters": [
              {
@@ -175,7 +179,7 @@ steps:
              "toolVersion": "1.0"
          },
          {
-             "keyCode": "CP-230012",
+             "keyCode": "CP-231522",
              "operationSetCode": "SigntoolVerify",
              "parameters": [ ],
              "toolName": "sign",
