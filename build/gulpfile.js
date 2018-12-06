@@ -15,7 +15,7 @@ var paths = {
     electron: [path.join(argv.sourceFolder, "/node_modules/electron/dist/**/*"), "!" + path.join(argv.sourceFolder, "/**/default_app.asar"), "!" + path.join(argv.sourceFolder, "/**/electron.exe")],
     electronExe: [path.join(argv.sourceFolder, "node_modules/electron/dist/electron.exe")],
     updateExe: [path.join(argv.sourceFolder, "/node_modules/electron-winstaller/vendor/update.exe")],
-    winstaller: ath.join(argv.sourceFolder, "node_modules/electron-winstaller/"),
+    winstaller: path.join(argv.sourceFolder, "node_modules/electron-winstaller/"),
     assets: path.join(argv.sourceFolder, "assets"),
     dist: path.join(argv.outputFolder, "/dist"),
     app: path.join(argv.sourceFolder, "dist/resources/app"),
