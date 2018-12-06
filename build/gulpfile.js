@@ -10,6 +10,7 @@ var Q = require("q");
 var fs = require("fs");
 var rcedit = require("rcedit");
 var electronInstaller = require("electron-winstaller");
+var del = require('del');
 
 var paths = {
     electron: [path.join(argv.sourceFolder, "/node_modules/electron/dist/**/*"), "!" + path.join(argv.sourceFolder, "/**/default_app.asar"), "!" + path.join(argv.sourceFolder, "/**/electron.exe")],
@@ -20,7 +21,8 @@ var paths = {
     dist: path.join(argv.outputFolder, "/dist"),
     app: path.join(argv.sourceFolder, "dist/resources/app"),
     installer: path.join(argv.sourceFolder, "/installer"),
-    build: path.join(argv.sourceFolder, "/build")
+    build: path.join(argv.sourceFolder, "/build"),
+    stubexe: path.join(argv.outputFolder, "/dist/" + getExeName().replace(".exe", "") + "_ExecutionStub.exe")
 }
 
 gulp.task("copyElectron", function () {
@@ -63,6 +65,77 @@ function getBuildVersion() {
     return "1.0.0";
 }
 
+gulp.task("resEditStubExe", ["copyStubExe"], function (callback) {
+    var deferred = Q.defer();
+
+    var exeName = getExeName();
+
+    if (exeName !== "orb_insiders.exe") {
+        console.log("resEdit for prod version.");
+        rcedit(paths.stubexe, {
+            "name": "Orb",
+            "icon": paths.assets + "/orb.ico"
+            // this is failing for the stub for some reason, so comment out for now.
+            // "version-string": {
+            // 	"ProductName": "Orb",
+            // 	"FileDescription": "Orb",
+            // 	CompanyName: "Microsoft",
+            // 	LegalCopyright: "Microsoft",
+            // },
+            // "product-version": getBuildVersion()
+        }, function (err) {
+            if (!err) {
+                deferred.resolve();
+            } else {
+                gutil.log(err.toString());
+                callback(err.toString());
+            }
+        });
+    } else {
+
+        rcedit(paths.stubexe, {
+            "name": "Orb Insiders",
+            "icon": paths.assets + "/orb_insiders.ico"
+            // this is failing for the stub for some reason, so comment out for now.
+            // "version-string": {
+            // 	"ProductName": "Orb Insiders",
+            // 	"FileDescription": "Orb Insiders",
+            // 	CompanyName: "Microsoft",
+            // 	LegalCopyright: "Microsoft",
+            // },
+            // "product-version": getBuildVersion()
+        }, function (err) {
+            if (!err) {
+                deferred.resolve();
+            } else {
+                gutil.log(err.toString());
+                callback(err.toString());
+            }
+        });
+
+    }
+
+    return deferred.promise;
+});
+
+gulp.task("copyStubExe", [], function () {
+
+    // The stub exe is package with squirrel 1.5+ (eletron-winstaller)
+    // The stub provides a way to launch the latest version. This is required for file associations (.orb files) to not break after updates.
+    // It needs to be dropped in the top level install folder after signing, etc.
+    // Squirrel 1.5+ does this automatically, however, since the squirrel does the stub file generation for you as part of creating the installer,
+    // this leaves the stub exe unsigned (since signing is not done by squirrel but by CoreXT).
+    // As a workaround, use the stub exe from a newer version of squirrel but generate the installer using an older version.
+    gutil.log("Copying stub exe to " + paths.stubexe);
+    return gulp.src(paths.winstaller + "/vendor/StubExecutable.exe")
+        .pipe(gulp.dest(paths.stubexe));
+});
+
+gulp.task('deleteOriginalStubExecutable', function () {
+    return del([
+        paths.winstaller + "/vendor/StubExecutable.exe"
+    ]);
+});
 
 function dumpFiles(input) {
     gutil.log("Dumping " + input);
@@ -148,7 +221,7 @@ gulp.task("copyNuspec", function () {
         .pipe(gulp.dest(paths.winstaller));
 });
 
-gulp.task("createInstaller", ["copyOtherSourceFiles", "copyNuspec"], function () {
+gulp.task("createInstaller", ["copyOtherSourceFiles", "copyNuspec", "deleteOriginalStubExecutable"], function () {
     gutil.log("Creating Installer at " + paths.installer);
     var exeName = getExeName();
 
@@ -192,6 +265,6 @@ gulp.task("transpile", function () {
         .pipe(gulp.dest(paths.app));
 });
 
-gulp.task("build", ["copyElectron", "resEdit", "transpile"], function (callback) {
+gulp.task("build", ["copyElectron", "resEdit", "resEditStubExe", "transpile"], function (callback) {
     gutil.log("Building Orb");
 });
