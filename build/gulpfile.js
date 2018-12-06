@@ -15,12 +15,12 @@ var paths = {
     electron: [path.join(argv.sourceFolder, "/node_modules/electron/dist/**/*"), "!" + path.join(argv.sourceFolder, "/**/default_app.asar"), "!" + path.join(argv.sourceFolder, "/**/electron.exe")],
     electronExe: [path.join(argv.sourceFolder, "node_modules/electron/dist/electron.exe")],
     updateExe: [path.join(argv.sourceFolder, "/node_modules/electron-winstaller/vendor/update.exe")],
-    winstaller: "node_modules/electron-winstaller/",
+    winstaller: ath.join(argv.sourceFolder, "node_modules/electron-winstaller/"),
     assets: path.join(argv.sourceFolder, "assets"),
     dist: path.join(argv.outputFolder, "/dist"),
     app: path.join(argv.sourceFolder, "dist/resources/app"),
     installer: path.join(argv.sourceFolder, "installer"),
-    build: "build"
+    build: path.join(argv.sourceFolder, "/build")
 }
 
 gulp.task("copyElectron", function () {
@@ -60,7 +60,7 @@ function getBuildVersion() {
         return argv.buildVersion
     }
 
-    return "1.0.0.0";
+    return "1.0.0";
 }
 
 
@@ -142,7 +142,13 @@ gulp.task("resEdit", ["renameElectronExe", "renameUpdateExe"], function (callbac
     return deferred.promise;
 });
 
-gulp.task("createInstaller", ["copyOtherSourceFiles"], function () {
+gulp.task("copyNuspec", function () {
+    gutil.log("Copying custom nuspec template.");
+    return gulp.src(paths.build + "/template.nuspectemplate")
+        .pipe(gulp.dest(paths.winstaller));
+});
+
+gulp.task("createInstaller", ["copyOtherSourceFiles", "copyNuspec"], function () {
     gutil.log("Creating Installer at " + paths.out);
     var exeName = getExeName();
 
@@ -153,7 +159,7 @@ gulp.task("createInstaller", ["copyOtherSourceFiles"], function () {
             authors: "Microsoft",
             owners: "Microsoft",
             exe: exeName,
-            version: getBuildVersion().replace("\\", ""), // this is set by build.proj
+            version: getBuildVersion(),
             loadingGif: paths.assets + "/orbInstall.gif",
             setupIcon: paths.assets + "/orb.ico",
             noMsi: true
@@ -169,7 +175,7 @@ gulp.task("createInstaller", ["copyOtherSourceFiles"], function () {
             authors: "Microsoft",
             owners: "Microsoft",
             exe: exeName,
-            version: getBuildVersion().replace("\\", ""), // this is set by build.proj
+            version: getBuildVersion(),
             loadingGif: paths.assets + "/orbInsidersInstall.gif",
             setupIcon: paths.assets + "/orb_insiders.ico",
             noMsi: true
