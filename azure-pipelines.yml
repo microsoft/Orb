@@ -1,5 +1,5 @@
 name:
-  2.0.$(Date:yyyyMMdd)$(Rev:.r)
+  1.$(Date:yyyyMMdd)$(Rev:.r)
 
 pool:
   vmImage: 'vs2017-win2016'
@@ -15,6 +15,7 @@ steps:
   displayName: 'npm install dev dependencies'
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+  enabled: false
   displayName: 'ESRP CodeSigning - Third Parties'
   inputs:
     FolderPath: $(Build.SourcesDirectory)\node_modules\
@@ -68,7 +69,7 @@ steps:
          }]
 
 - script: |
-    gulp build --gulpfile build\gulpfile.js --buildVersion $(Build.BuildNumber) -buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)
+    gulp build --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)
   displayName: 'run gulp'
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1

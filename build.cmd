@@ -1,1 +1,1 @@
-node_modules\.bin\gulp build --gulpfile %~dp0\build\gulpfile.js --buildBranch dev --sourceFolder %~dp0 --outputFolder %~dp0
+node_modules\.bin\gulp build --gulpfile %~dp0\build\gulpfile.js -buildBranch dev --sourceFolder %~dp0 --outputFolder %~dp0

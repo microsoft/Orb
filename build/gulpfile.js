@@ -19,7 +19,7 @@ var paths = {
     assets: path.join(argv.sourceFolder, "assets"),
     dist: path.join(argv.outputFolder, "/dist"),
     app: path.join(argv.sourceFolder, "dist/resources/app"),
-    installer: path.join(argv.sourceFolder, "installer"),
+    installer: path.join(argv.sourceFolder, "/installer"),
     build: path.join(argv.sourceFolder, "/build")
 }
 
@@ -149,13 +149,13 @@ gulp.task("copyNuspec", function () {
 });
 
 gulp.task("createInstaller", ["copyOtherSourceFiles", "copyNuspec"], function () {
-    gutil.log("Creating Installer at " + paths.out);
+    gutil.log("Creating Installer at " + paths.installer);
     var exeName = getExeName();
 
     if (exeName !== "orb_insiders.exe") {
         return electronInstaller.createWindowsInstaller({
             appDirectory: paths.dist,
-            outputDirectory: paths.out + "/packages",
+            outputDirectory: paths.installer,
             authors: "Microsoft",
             owners: "Microsoft",
             exe: exeName,
@@ -171,7 +171,7 @@ gulp.task("createInstaller", ["copyOtherSourceFiles", "copyNuspec"], function ()
             title: "Orb - Insiders",
             productName: "OrbInsiders",
             appDirectory: paths.dist,
-            outputDirectory: paths.out + "/packages",
+            outputDirectory: paths.installer,
             authors: "Microsoft",
             owners: "Microsoft",
             exe: exeName,
