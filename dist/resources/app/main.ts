@@ -5,6 +5,8 @@
 
 import { app, BrowserWindow } from 'electron';
 
+if (require('electron-squirrel-startup')) { app.quit(); }
+
 let mainWindow: BrowserWindow;
 
 let createWindow = () => {
@@ -28,3 +30,4 @@ app.on('activate', () => {
 });
 
 app.on('ready', createWindow)
+

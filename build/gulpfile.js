@@ -22,7 +22,7 @@ var paths = {
     app: path.join(argv.sourceFolder, "dist/resources/app"),
     installer: path.join(argv.sourceFolder, "/installer"),
     build: path.join(argv.sourceFolder, "/build"),
-    stubexe: path.join(argv.outputFolder, "/dist/" + getExeName().replace(".exe", "") + "_ExecutionStub.exe")
+    stubexe: path.join(argv.outputFolder, "/dist/" + getStubExeName())
 }
 
 gulp.task("copyElectron", function () {
@@ -55,6 +55,10 @@ function getExeName() {
         exeName = "orb_insiders.exe";
     }
     return exeName;
+}
+
+function getStubExeName() {
+    return getExeName().replace(".exe", "") + "_ExecutionStub.exe";
 }
 
 function getBuildVersion() {
@@ -124,17 +128,18 @@ gulp.task("copyStubExe", [], function () {
     // The stub provides a way to launch the latest version. This is required for file associations (.orb files) to not break after updates.
     // It needs to be dropped in the top level install folder after signing, etc.
     // Squirrel 1.5+ does this automatically, however, since the squirrel does the stub file generation for you as part of creating the installer,
-    // this leaves the stub exe unsigned (since signing is not done by squirrel but by CoreXT).
-    // As a workaround, use the stub exe from a newer version of squirrel but generate the installer using an older version.
+    // this leaves the stub exe unsigned (since signing is not done by squirrel but by ESRP).
+    // As a workaround, create the stub manually by copying it in the dist folder and delete the original squirrel stub so squirrel steps this step for us.
     gutil.log("Copying stub exe to " + paths.stubexe);
     return gulp.src(paths.winstaller + "/vendor/StubExecutable.exe")
-        .pipe(gulp.dest(paths.stubexe));
+        .pipe(rename(getStubExeName()))
+        .pipe(gulp.dest(paths.dist));
 });
 
 gulp.task('deleteOriginalStubExecutable', function () {
     return del([
         paths.winstaller + "/vendor/StubExecutable.exe"
-    ]);
+    ], { force: true });
 });
 
 function dumpFiles(input) {
