@@ -9,7 +9,7 @@
   "devDependencies": {
     "del": "^3.0.0",
     "electron": "2.0.9",
-    "electron-winstaller": "2.6.0",
+    "electron-winstaller": "2.7.0",
     "glob": "^7.1.3",
     "gulp": "3.9.1",
     "gulp-rename": "1.2.2",

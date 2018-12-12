@@ -145,7 +145,7 @@ steps:
          }]
 
 - script: |
-    gulp createInstaller --gulpfile build\gulpfile.js --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)
+    gulp createInstaller --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)
   displayName: 'run gulp createInstaller'
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
@@ -202,10 +202,15 @@ steps:
          }]
 
 - task: PublishBuildArtifacts@1
-  enabled: false
+  enabled: true
   inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)\dist'
+    PathtoPublish: '$(Build.SourcesDirectory)\node_modules\electron-winstaller\'
+
+- task: PublishBuildArtifacts@1
+  enabled: true
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)\dist\orb_ExecutionStub.exe'
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)\installer\setup.exe'
+    PathtoPublish: '$(Build.SourcesDirectory)\installer'

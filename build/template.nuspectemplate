@@ -17,6 +17,7 @@
     <file src="*.bin" target="lib\net45" />
     <file src="*.dll" target="lib\net45" />
     <file src="*.pak" target="lib\net45" />
+    <file src="*ExecutionStub.exe" target="lib\net45" />
     <file src="squirrel.exe" target="lib\net45\squirrel.exe" />
     <file src="orb.exe.config" target="lib\net45\<%- exe %>.config" />
     <file src="icudtl.dat" target="lib\net45\icudtl.dat" />
