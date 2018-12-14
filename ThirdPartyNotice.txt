@@ -1,9 +1,9 @@
 THIRD PARTY SOFTWARE NOTICES AND INFORMATION
 Do Not Translate or Localize
 
-This software incorporates material from third parties. Microsoft makes certain 
-open source code available at http://3rdpartysource.microsoft.com, or you may 
-send a check or money order for US $5.00, including the product name, the open 
+This software incorporates material from third parties. Microsoft makes certain
+open source code available at http://3rdpartysource.microsoft.com, or you may
+send a check or money order for US $5.00, including the product name, the open
 source component name, and version number, to:
 
 Source Code Compliance Team
@@ -12,9 +12,14 @@ One Microsoft Way
 Redmond, WA 98052
 USA
 
-Notwithstanding any other terms, you may reverse engineer this software to the 
-extent required to debug changes to any libraries licensed under the GNU Lesser 
+Notwithstanding any other terms, you may reverse engineer this software to the
+extent required to debug changes to any libraries licensed under the GNU Lesser
 General Public License.
 
 Orb Icon Attrbution:
 https://www.freeiconspng.com/img/25387
+
+WriteZipToSetup.exe Forked from:
+https://github.com/Squirrel/Squirrel.Windows/tree/master/src/WriteZipToSetup
+
+This was required to make squirrel stub exe signing work. See gulpfile.js for more details.

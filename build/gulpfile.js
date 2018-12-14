@@ -129,24 +129,32 @@ gulp.task("copyStubExe", [], function () {
     // this leaves the stub exe unsigned (since signing is not done by squirrel but by ESRP and we can't provide the signing cert/password directly to squirrel).
     // As a workaround, create the stub manually by copying it in the dist folder and delete the original squirrel stub so squirrel skips this step for us.
     // We also need to delete the original tool that copies over exe attributes, since this reverses the signing process.
-    // This is a hack around not having Squirrel provide an option to bring your own signed stub.
+    // Replace it with a custom version that bypasses stub signing only.
+    // This is forked from: https://github.com/Squirrel/Squirrel.Windows/tree/master/src/WriteZipToSetup
+    // The fork code is not committed, but pasted here for reference.
+    // int wmain(int argc, wchar_t* argv[])
+    // {
+    //  if (argc > 1 && wcscmp(argv[1], L"--copy-stub-resources") == 0) {
+    // 	return 0;		}
+    //
+    //
     gutil.log("Copying stub exe to " + paths.stubexe);
     return gulp.src(paths.winstaller + "/vendor/StubExecutable.exe")
         .pipe(rename(getStubExeName()))
         .pipe(gulp.dest(paths.dist));
 });
 
-gulp.task("copyStubExeAsZipToSetup", ['deleteOriginalZipToSetup'], function () {
+gulp.task("copyForkedZipToSetup", ['deleteOriginalZipToSetup'], function () {
 
     // We can't delete WriteZipToSetup.exe since squirrel fails releasify without it.
     // Just copy the same stub executable and rename it to WriteSetupToZip to keep squirrel happy.
     gutil.log("Copying stub exe to " + paths.stubexe);
-    return gulp.src(paths.winstaller + "/vendor/StubExecutable.exe")
+    return gulp.src(path.join(paths.assets, "/WriteZipToSetup_Forked.exe"))
         .pipe(rename("WriteZipToSetup.exe"))
         .pipe(gulp.dest(path.join(paths.winstaller, "/vendor/")));
 });
 
-gulp.task('deleteOriginalStubExecutable', ['copyStubExeAsZipToSetup'], function () {
+gulp.task('deleteOriginalStubExecutable', ['copyForkedZipToSetup'], function () {
     gutil.log("Deleting " + paths.originalStubExe);
 
     return del([
