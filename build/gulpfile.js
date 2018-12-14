@@ -18,11 +18,11 @@ var paths = {
     updateExe: [path.join(argv.sourceFolder, "/node_modules/electron-winstaller/vendor/update.exe")],
     winstaller: path.join(argv.sourceFolder, "/node_modules/electron-winstaller/"),
     assets: path.join(argv.sourceFolder, "assets"),
-    dist: path.join(argv.outputFolder, "/dist"),
-    app: path.join(argv.sourceFolder, "dist/resources/app"),
-    installer: path.join(argv.sourceFolder, "/installer"),
+    dist: argv.outputFolder,
+    app: path.join(argv.outputFolder, "/resources/app"),
+    installer: !isSaw() ? path.join(argv.sourceFolder, "/installer") : path.join(argv.sourceFolder, "/installer_saw"),
     build: path.join(argv.sourceFolder, "/build"),
-    stubexe: path.join(argv.outputFolder, "/dist/" + getStubExeName()),
+    stubexe: path.join(argv.outputFolder, "" + getStubExeName()),
     originalStubExe: path.join(argv.sourceFolder, "/node_modules/electron-winstaller/vendor/StubExecutable.exe")
 }
 
@@ -52,6 +52,9 @@ function getExeName() {
     return exeName;
 }
 
+function isSaw() {
+    return argv.outputFolder.toLowerCase().indexOf("_saw") > 0;
+}
 function getStubExeName() {
     return getExeName().replace(".exe", "") + "_ExecutionStub.exe";
 }
@@ -258,7 +261,6 @@ gulp.task("copyNuspec", function () {
 
 gulp.task("createInstaller", ["copyNuspec", "deleteOriginalStubExecutable"], function () {
     gutil.log("Creating Installer at " + paths.installer);
-    dumpFiles(path.join(paths.winstaller, "/vendor"));
 
     var exeName = getExeName();
 
@@ -272,7 +274,8 @@ gulp.task("createInstaller", ["copyNuspec", "deleteOriginalStubExecutable"], fun
             version: getBuildVersion(),
             loadingGif: paths.assets + "/orbInstall.gif",
             setupIcon: paths.assets + "/orb.ico",
-            noMsi: true
+            noMsi: true,
+            noDelta: true
         });
     } else {
         return electronInstaller.createWindowsInstaller({
@@ -288,7 +291,8 @@ gulp.task("createInstaller", ["copyNuspec", "deleteOriginalStubExecutable"], fun
             version: getBuildVersion(),
             loadingGif: paths.assets + "/orbInsidersInstall.gif",
             setupIcon: paths.assets + "/orb_insiders.ico",
-            noMsi: true
+            noMsi: true,
+            noDelta: true
         });
     }
 });

@@ -20,11 +20,17 @@ steps:
   displayName: 'npm install dist dependencies'
 
 - script: |
-    gulp build --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)
+    gulp build --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)\dist
   displayName: 'run gulp'
 
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: $(Build.SourcesDirectory)\dist
+    #contents: '**'
+    targetFolder: $(Build.SourcesDirectory)\dist_saw
+
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-  enabled: true
+  enabled: false
   displayName: 'ESRP CodeSigning - Third Parties'
   inputs:
     FolderPath: $(Build.SourcesDirectory)
@@ -83,7 +89,7 @@ steps:
          }]
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-  enabled: true
+  enabled: false
   displayName: 'ESRP CodeSigning - Exe'
   inputs:
     FolderPath: $(Build.SourcesDirectory)
@@ -144,11 +150,77 @@ steps:
              "toolVersion": "1.0"
          }]
 
+- task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+  enabled: true
+  displayName: 'ESRP CodeSigning - SAW'
+  inputs:
+    FolderPath: $(Build.SourcesDirectory)
+    ConnectedServiceName: 'Orb ESRP'
+
+    Pattern: |
+      /dist_saw/**/*.exe
+      /dist_saw/**/*.dll
+
+    UseMinimatch: true
+
+    signConfigType: inlineSignParams
+
+    OpusName: Orb
+
+    OpusInfo: 'https://www.github.com/microsot/orb'
+
+    inlineOperation: |
+     [  {
+             "keyCode": "CP-236167",
+             "operationSetCode": "SigntoolSign",
+             "parameters": [
+             {
+                 "parameterName": "OpusName",
+                 "parameterValue": "Microsoft"
+             },
+             {
+                 "parameterName": "OpusInfo",
+                 "parameterValue": "http://www.microsoft.com"
+             },
+             {
+                 "parameterName": "Append",
+                 "parameterValue": "/as"
+             },
+             {
+                 "parameterName": "FileDigest",
+                 "parameterValue": "/fd \"SHA256\""
+             },
+             {
+                 "parameterName": "PageHash",
+                 "parameterValue": "/NPH"
+             },
+             {
+                 "parameterName": "TimeStamp",
+                 "parameterValue": "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+             }
+             ],
+             "toolName": "sign",
+             "toolVersion": "1.0"
+         },
+         {
+             "keyCode": "CP-236167",
+             "operationSetCode": "SigntoolVerify",
+             "parameters": [ ],
+             "toolName": "sign",
+             "toolVersion": "1.0"
+         }]
+
 - script: |
-    gulp createInstaller --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)
+    gulp createInstaller --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)\dist
   displayName: 'run gulp createInstaller'
+  enabled: false
+
+- script: |
+    gulp createInstaller --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)\dist_saw
+  displayName: 'run gulp createInstaller SAW'
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+  enabled: false
   displayName: 'ESRP CodeSigning - Installer'
   inputs:
     FolderPath: $(Build.SourcesDirectory)\installer
@@ -201,16 +273,66 @@ steps:
              "toolVersion": "1.0"
          }]
 
-- task: PublishBuildArtifacts@1
-  enabled: true
+- task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+  displayName: 'ESRP CodeSigning - Installer Saw'
   inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)\node_modules\electron-winstaller\'
+    FolderPath: $(Build.SourcesDirectory)\installer_saw
+    ConnectedServiceName: 'Orb ESRP'
+
+    signConfigType: inlineSignParams
+
+    OpusName: Orb
+
+    OpusInfo: 'https://www.github.com/microsot/orb'
+
+    inlineOperation: |
+     [  {
+             "keyCode": "CP-236167",
+             "operationSetCode": "SigntoolSign",
+             "parameters": [
+             {
+                 "parameterName": "OpusName",
+                 "parameterValue": "Microsoft"
+             },
+             {
+                 "parameterName": "OpusInfo",
+                 "parameterValue": "http://www.microsoft.com"
+             },
+             {
+                 "parameterName": "Append",
+                 "parameterValue": "/as"
+             },
+             {
+                 "parameterName": "FileDigest",
+                 "parameterValue": "/fd \"SHA256\""
+             },
+             {
+                 "parameterName": "PageHash",
+                 "parameterValue": "/NPH"
+             },
+             {
+                 "parameterName": "TimeStamp",
+                 "parameterValue": "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+             }
+             ],
+             "toolName": "sign",
+             "toolVersion": "1.0"
+         },
+         {
+             "keyCode": "CP-236167",
+             "operationSetCode": "SigntoolVerify",
+             "parameters": [ ],
+             "toolName": "sign",
+             "toolVersion": "1.0"
+         }]
 
 - task: PublishBuildArtifacts@1
-  enabled: true
-  inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)\dist\orb_ExecutionStub.exe'
-
-- task: PublishBuildArtifacts@1
+  enabled: false
   inputs:
     PathtoPublish: '$(Build.SourcesDirectory)\installer'
+    artifactName: 'Installer'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)\installer_saw'
+    artifactName: 'Installer_saw'
