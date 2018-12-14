@@ -122,23 +122,45 @@ gulp.task("resEditStubExe", ["copyStubExe"], function (callback) {
 
 gulp.task("copyStubExe", [], function () {
 
-    // The stub exe is package with squirrel 1.5+ (eletron-winstaller)
+    // The stub exe is package with squirrel 1.5+ (electron-winstaller)
     // The stub provides a way to launch the latest version. This is required for file associations (.orb files) to not break after updates.
     // It needs to be dropped in the top level install folder after signing, etc.
     // Squirrel 1.5+ does this automatically, however, since the squirrel does the stub file generation for you as part of creating the installer,
-    // this leaves the stub exe unsigned (since signing is not done by squirrel but by ESRP).
-    // As a workaround, create the stub manually by copying it in the dist folder and delete the original squirrel stub so squirrel steps this step for us.
+    // this leaves the stub exe unsigned (since signing is not done by squirrel but by ESRP and we can't provide the signing cert/password directly to squirrel).
+    // As a workaround, create the stub manually by copying it in the dist folder and delete the original squirrel stub so squirrel skips this step for us.
+    // We also need to delete the original tool that copies over exe attributes, since this reverses the signing process.
+    // This is a hack around not having Squirrel provide an option to bring your own signed stub.
     gutil.log("Copying stub exe to " + paths.stubexe);
     return gulp.src(paths.winstaller + "/vendor/StubExecutable.exe")
         .pipe(rename(getStubExeName()))
         .pipe(gulp.dest(paths.dist));
 });
 
-gulp.task('deleteOriginalStubExecutable', function () {
+gulp.task("copyStubExeAsZipToSetup", ['deleteOriginalZipToSetup'], function () {
+
+    // We can't delete WriteZipToSetup.exe since squirrel fails releasify without it.
+    // Just copy the same stub executable and rename it to WriteSetupToZip to keep squirrel happy.
+    gutil.log("Copying stub exe to " + paths.stubexe);
+    return gulp.src(paths.winstaller + "/vendor/StubExecutable.exe")
+        .pipe(rename("WriteZipToSetup.exe"))
+        .pipe(gulp.dest(path.join(paths.winstaller, "/vendor/")));
+});
+
+gulp.task('deleteOriginalStubExecutable', ['copyStubExeAsZipToSetup'], function () {
     gutil.log("Deleting " + paths.originalStubExe);
 
     return del([
         paths.originalStubExe
+    ], { force: true });
+});
+
+gulp.task('deleteOriginalZipToSetup', function () {
+    var zipToSetupPath = path.join(paths.winstaller + "/vendor/WriteZipToSetup.exe");
+
+    gutil.log("Deleting " + zipToSetupPath);
+
+    return del([
+        zipToSetupPath
     ], { force: true });
 });
 
