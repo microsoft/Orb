@@ -1,0 +1,1 @@
+node_modules\.bin\gulp createInstaller --gulpfile %~dp0\build\gulpfile.js -buildBranch dev --sourceFolder %~dp0 --outputFolder %~dp0 --buildBranch dev

@@ -10,6 +10,11 @@ steps:
     versionSpec: '8.x'
   displayName: 'Install Node.js'
 
+- task: NuGetToolInstaller@0
+  displayName: 'Use NuGet 4.4.1'
+  inputs:
+    versionSpec: 4.4.1
+
 - script: |
     npm install
   displayName: 'npm install dev dependencies'
@@ -22,6 +27,20 @@ steps:
 - script: |
     gulp build --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)\dist
   displayName: 'run gulp'
+
+- task: NuGetCommand@2
+  displayName: 'NuGet restore'
+  inputs:
+    restoreSolution: '$(Build.SourcesDirectory)\dotNet\Orb.sln'
+
+- task: VSBuild@1
+  displayName: 'Build .NET sln'
+  inputs:
+    solution: '$(Build.SourcesDirectory)\dotNet\Orb.sln'
+
+    platform: 'Any CPU'
+
+    configuration: Release
 
 - task: CopyFiles@2
   inputs:
@@ -325,6 +344,12 @@ steps:
              "toolName": "sign",
              "toolVersion": "1.0"
          }]
+
+- task: PublishBuildArtifacts@1
+  enabled: false
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)\dist'
+    artifactName: 'Dist'
 
 - task: PublishBuildArtifacts@1
   enabled: false
