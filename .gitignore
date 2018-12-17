@@ -14,6 +14,8 @@ dist/LICENSE
 dist/version
 dist/locales/*
 
+**/test-results.xml
+
 #Git temp files
 **/*.orig
 
@@ -21,6 +23,8 @@ dist/locales/*
 **/*.js
 **/*.js.map
 manual_nuget/package/**/*
+
+installer/**/*
 
 #Do not ignore
 !dist/resources/app/tab/**/*.js

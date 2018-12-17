@@ -48,6 +48,15 @@ steps:
     #contents: '**'
     targetFolder: $(Build.SourcesDirectory)\dist_saw
 
+- script: |
+    npm test
+  displayName: 'npm test'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFiles: '**/Test-*.xml'
+    searchFolder: '$(Build.SourcesDirectory)'
+
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
   enabled: false
   displayName: 'ESRP CodeSigning - Third Parties'
@@ -170,7 +179,7 @@ steps:
          }]
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-  enabled: true
+  enabled: false
   displayName: 'ESRP CodeSigning - SAW'
   inputs:
     FolderPath: $(Build.SourcesDirectory)
@@ -237,6 +246,7 @@ steps:
 - script: |
     gulp createInstaller --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)\dist_saw
   displayName: 'run gulp createInstaller SAW'
+  enabled: false
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
   enabled: false
@@ -294,6 +304,7 @@ steps:
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
   displayName: 'ESRP CodeSigning - Installer Saw'
+  enabled: false
   inputs:
     FolderPath: $(Build.SourcesDirectory)\installer_saw
     ConnectedServiceName: 'Orb ESRP'
