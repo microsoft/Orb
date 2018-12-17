@@ -58,7 +58,8 @@ steps:
     searchFolder: '$(Build.SourcesDirectory)'
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-  enabled: false
+  enabled: true
+  condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
   displayName: 'ESRP CodeSigning - Third Parties'
   inputs:
     FolderPath: $(Build.SourcesDirectory)
@@ -117,7 +118,8 @@ steps:
          }]
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-  enabled: false
+  enabled: true
+  condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
   displayName: 'ESRP CodeSigning - Exe'
   inputs:
     FolderPath: $(Build.SourcesDirectory)
@@ -179,7 +181,8 @@ steps:
          }]
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-  enabled: false
+  enabled: true
+  condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
   displayName: 'ESRP CodeSigning - SAW'
   inputs:
     FolderPath: $(Build.SourcesDirectory)
@@ -241,12 +244,14 @@ steps:
 - script: |
     gulp createInstaller --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)\dist
   displayName: 'run gulp createInstaller'
-  enabled: false
+  enabled: true
+  condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
 
 - script: |
     gulp createInstaller --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)\dist_saw
   displayName: 'run gulp createInstaller SAW'
-  enabled: false
+  enabled: true
+  condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
   enabled: false
@@ -357,19 +362,22 @@ steps:
          }]
 
 - task: PublishBuildArtifacts@1
-  enabled: false
+  enabled: true
+  condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
   inputs:
     PathtoPublish: '$(Build.SourcesDirectory)\dist'
     artifactName: 'Dist'
 
 - task: PublishBuildArtifacts@1
-  enabled: false
+  enabled: true
+  condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
   inputs:
     PathtoPublish: '$(Build.SourcesDirectory)\installer'
     artifactName: 'Installer'
 
 - task: PublishBuildArtifacts@1
-  enabled: false
+  enabled: true
+  condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
   inputs:
     PathtoPublish: '$(Build.SourcesDirectory)\installer_saw'
     artifactName: 'Installer_saw'
