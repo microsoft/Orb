@@ -4,7 +4,7 @@
   "description": "All Dev Dependencies need to go here.",
   "main": "main.js",
   "scripts": {
-    "test": "electron-mocha --renderer test/*.js --reporter mocha-junit-reporter"
+    "test": "electron-mocha --renderer dist/resources/app/test/*.js --reporter mocha-junit-reporter"
   },
   "author": "Microsoft",
   "license": "",

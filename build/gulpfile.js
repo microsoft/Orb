@@ -1,3 +1,6 @@
+//------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.  All rights reserved.
+//------------------------------------------------------------
 var gulp = require("gulp");
 var gutil = require("gulp-util");
 var argv = require('yargs').argv;

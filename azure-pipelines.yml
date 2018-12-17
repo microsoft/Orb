@@ -369,6 +369,7 @@ steps:
     artifactName: 'Installer'
 
 - task: PublishBuildArtifacts@1
+  enabled: false
   inputs:
     PathtoPublish: '$(Build.SourcesDirectory)\installer_saw'
     artifactName: 'Installer_saw'
