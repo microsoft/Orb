@@ -254,7 +254,8 @@ steps:
   condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-  enabled: false
+  enabled: true
+  condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
   displayName: 'ESRP CodeSigning - Installer'
   inputs:
     FolderPath: $(Build.SourcesDirectory)\installer
@@ -309,7 +310,8 @@ steps:
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
   displayName: 'ESRP CodeSigning - Installer Saw'
-  enabled: false
+  enabled: true
+  condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
   inputs:
     FolderPath: $(Build.SourcesDirectory)\installer_saw
     ConnectedServiceName: 'Orb ESRP'
