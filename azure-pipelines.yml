@@ -54,6 +54,14 @@ steps:
     #contents: '**'
     targetFolder: $(Build.SourcesDirectory)\electron-winstaller_saw
 
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: $(Build.SourcesDirectory)\node_modules\electron-winstaller\vendor
+    contents: 'setup.exe'
+    targetFolder: $(Build.SourcesDirectory)\unsignedSetup\
+    # Make a copy of setup.exe to replace later. This is done so setup.exe is signed only once at the end.
+    # Exclusions using minimatch don't seem to be working, hence this workaround of copying.
+
 - script: |
     npm test
   displayName: 'npm test'
@@ -135,7 +143,6 @@ steps:
     Pattern: |
       /dist/**/*.exe
       /node_modules/electron-winstaller/**/*.exe
-      !/node_modules/electron-winstaller/vendor/setup.exe #Installer setup.exe is signed at the end.
 
     UseMinimatch: true
 
@@ -199,7 +206,7 @@ steps:
       /dist_saw/**/*.dll
       /electron-winstaller_saw/**/*.exe
       /electron-winstaller_saw/**/*.dll
-      !/node_modules/electron-winstaller/vendor/setup.exe #Installer setup.exe is signed at the end.
+      !/electron-winstaller_saw/setup.exe #Installer setup.exe is signed at the end.
 
     UseMinimatch: true
 
@@ -250,6 +257,13 @@ steps:
              "toolVersion": "1.0"
          }]
 
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: $(Build.SourcesDirectory)\unsignedSetup\
+    contents: 'setup.exe'
+    targetFolder: $(Build.SourcesDirectory)\node_modules\electron-winstaller\vendor
+    overWrite: true
+
 - script: |
     gulp createInstaller --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)\dist
   displayName: 'run gulp createInstaller'
@@ -263,6 +277,13 @@ steps:
     targetFolder: $(Build.SourcesDirectory)\node_modules\electron-winstaller\vendor
     overWrite: true
     # Replace the SAW signed squirrel bits in the original folder before create installer is invoked.
+
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: $(Build.SourcesDirectory)\unsignedSetup\
+    contents: 'setup.exe'
+    targetFolder: $(Build.SourcesDirectory)\node_modules\electron-winstaller\vendor
+    overWrite: true
 
 - script: |
     gulp createInstaller --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)\dist_saw
