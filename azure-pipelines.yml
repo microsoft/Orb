@@ -48,6 +48,12 @@ steps:
     #contents: '**'
     targetFolder: $(Build.SourcesDirectory)\dist_saw
 
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: $(Build.SourcesDirectory)\node_modules\electron-winstaller\vendor
+    #contents: '**'
+    targetFolder: $(Build.SourcesDirectory)\electron-winstaller_saw
+
 - script: |
     npm test
   displayName: 'npm test'
@@ -67,6 +73,7 @@ steps:
 
     Pattern: |
       /dist/**/*.dll
+      /node_modules/electron-winstaller/**/*.dll
 
     UseMinimatch: true
 
@@ -127,9 +134,8 @@ steps:
 
     Pattern: |
       /dist/**/*.exe
-      /node_modules/electron-winstaller/**/update.exe
-      /node_modules/electron-winstaller/**/squirrel.exe
-      /node_modules/electron-winstaller/**/StubExecutable.exe
+      /node_modules/electron-winstaller/**/*.exe
+      !/node_modules/electron-winstaller/vendor/setup.exe #Installer setup.exe is signed at the end.
 
     UseMinimatch: true
 
@@ -191,6 +197,9 @@ steps:
     Pattern: |
       /dist_saw/**/*.exe
       /dist_saw/**/*.dll
+      /electron-winstaller_saw/**/*.exe
+      /electron-winstaller_saw/**/*.dll
+      !/node_modules/electron-winstaller/vendor/setup.exe #Installer setup.exe is signed at the end.
 
     UseMinimatch: true
 
@@ -246,6 +255,14 @@ steps:
   displayName: 'run gulp createInstaller'
   enabled: true
   condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
+
+  - task: CopyFiles@2
+  inputs:
+    sourceFolder: $(Build.SourcesDirectory)\electron-winstaller_saw
+    #contents: '**'
+    targetFolder: $(Build.SourcesDirectory)\node_modules\electron-winstaller\vendor
+    overWrite: true
+    # Replace the SAW signed squirrel bits in the original folder before create installer is invoked.
 
 - script: |
     gulp createInstaller --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)\dist_saw
