@@ -256,7 +256,7 @@ steps:
   enabled: true
   condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
 
-  - task: CopyFiles@2
+- task: CopyFiles@2
   inputs:
     sourceFolder: $(Build.SourcesDirectory)\electron-winstaller_saw
     #contents: '**'
