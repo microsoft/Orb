@@ -286,6 +286,11 @@ steps:
     overWrite: true
 
 - script: |
+    echo $(SAWBlobUrl) > $(Build.SourceBranchName)\dist\resources\app\autoUpdatePath.txt
+  displayName: 'Update SAW autoUpdatePath'
+  enabled: true
+
+- script: |
     gulp createInstaller --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)\dist_saw
   displayName: 'run gulp createInstaller SAW'
   enabled: true
