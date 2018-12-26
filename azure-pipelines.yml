@@ -286,7 +286,7 @@ steps:
     overWrite: true
 
 - script: |
-    echo $(SAWBlobUrl) > $(Build.SourceBranchName)\dist\resources\app\autoUpdatePath.txt
+    echo $(SAWBlobUrl) > $(Build.SourcesDirectory)\dist\resources\app\autoUpdatePath.txt
   displayName: 'Update SAW autoUpdatePath'
   enabled: true
 
