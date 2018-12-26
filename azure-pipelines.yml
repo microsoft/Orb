@@ -218,7 +218,7 @@ steps:
 
     inlineOperation: |
      [  {
-             "keyCode": "CP-236167",
+             "keyCode": "CP-236169",
              "operationSetCode": "SigntoolSign",
              "parameters": [
              {
@@ -250,7 +250,7 @@ steps:
              "toolVersion": "1.0"
          },
          {
-             "keyCode": "CP-236167",
+             "keyCode": "CP-236169",
              "operationSetCode": "SigntoolVerify",
              "parameters": [ ],
              "toolName": "sign",
@@ -367,7 +367,7 @@ steps:
 
     inlineOperation: |
      [  {
-             "keyCode": "CP-236167",
+             "keyCode": "CP-236169",
              "operationSetCode": "SigntoolSign",
              "parameters": [
              {
@@ -399,7 +399,7 @@ steps:
              "toolVersion": "1.0"
          },
          {
-             "keyCode": "CP-236167",
+             "keyCode": "CP-236169",
              "operationSetCode": "SigntoolVerify",
              "parameters": [ ],
              "toolName": "sign",

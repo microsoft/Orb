@@ -1,0 +1,1 @@
+https://orbstorage.blob.core.windows.net/release/latest/
