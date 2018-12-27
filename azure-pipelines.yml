@@ -292,7 +292,7 @@ steps:
 
 - script: |
     echo $(SAWBlobUrl_Insiders) > $(Build.SourcesDirectory)\dist\resources\app\autoUpdatePath_insiders.txt
-  displayName: 'Update SAW autoUpdatePath'
+  displayName: 'Update SAW autoUpdatePath insiders'
   enabled: true
 
 - script: |
