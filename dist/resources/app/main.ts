@@ -43,14 +43,20 @@ app.on('activate', () => {
 
 app.on('ready', createWindow)
 
+function isInsiders() {
+    return path.basename(process.execPath).toLowerCase() === "orb_insiders.exe";
+}
+
 let checkForUpdate = () => {
 
     // Orb uses squirrel for managing updates.
     // Call update.exe (squirrel) and try upgrading orb.
     let dirName = path.dirname(process.execPath);
 
-    let autoUpdateFilePath =
-        path.resolve(dirName, 'autoUpdatePath.txt');
+    let autoUpdateFileName = isInsiders() ?
+        'autoUpdatePath_insiders.txt' : 'autoUpdatePath.txt';
+
+    let autoUpdateFilePath = path.resolve(dirName, 'resources/app/', autoUpdateFileName);
 
     fs.readFile(autoUpdateFilePath, 'utf8', (err, updatePath) => {
         if (err) {

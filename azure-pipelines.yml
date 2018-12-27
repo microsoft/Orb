@@ -291,6 +291,11 @@ steps:
   enabled: true
 
 - script: |
+    echo $(SAWBlobUrl_Insiders) > $(Build.SourcesDirectory)\dist\resources\app\autoUpdatePath_insiders.txt
+  displayName: 'Update SAW autoUpdatePath'
+  enabled: true
+
+- script: |
     gulp createInstaller --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)\dist_saw
   displayName: 'run gulp createInstaller SAW'
   enabled: true
