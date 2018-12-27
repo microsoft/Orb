@@ -286,12 +286,12 @@ steps:
     overWrite: true
 
 - script: |
-    echo $(SAWBlobUrl) > $(Build.SourcesDirectory)\dist\resources\app\autoUpdatePath.txt
+    echo $(SAWBlobUrl) > $(Build.SourcesDirectory)\dist_saw\resources\app\autoUpdatePath.txt
   displayName: 'Update SAW autoUpdatePath'
   enabled: true
 
 - script: |
-    echo $(SAWBlobUrl_Insiders) > $(Build.SourcesDirectory)\dist\resources\app\autoUpdatePath_insiders.txt
+    echo $(SAWBlobUrl_Insiders) > $(Build.SourcesDirectory)\dist_saw\resources\app\autoUpdatePath_insiders.txt
   displayName: 'Update SAW autoUpdatePath insiders'
   enabled: true
 

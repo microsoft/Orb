@@ -60,7 +60,7 @@ let checkForUpdate = () => {
 
     fs.readFile(autoUpdateFilePath, 'utf8', (err, updatePath) => {
         if (err) {
-
+            console.warn(err);
         } else {
             let updateDotExe =
                 path.resolve(dirName, '..', 'update.exe');
