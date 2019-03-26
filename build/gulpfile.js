@@ -16,17 +16,17 @@ var electronInstaller = require("electron-winstaller");
 var del = require('del');
 
 var paths = {
-    electron: [path.join(argv.sourceFolder, "/node_modules/electron/dist/**/*"), "!" + path.join(argv.sourceFolder, "/**/default_app.asar"), "!" + path.join(argv.sourceFolder, "/**/electron.exe")],
+    electron: [path.join(argv.sourceFolder, "node_modules/electron/dist/**/*"), "!" + path.join(argv.sourceFolder, "/**/default_app.asar"), "!" + path.join(argv.sourceFolder, "/**/electron.exe")],
     electronExe: [path.join(argv.sourceFolder, "node_modules/electron/dist/electron.exe")],
-    updateExe: [path.join(argv.sourceFolder, "/node_modules/electron-winstaller/vendor/update.exe")],
-    winstaller: path.join(argv.sourceFolder, "/node_modules/electron-winstaller/"),
+    updateExe: [path.join(argv.sourceFolder, "node_modules/electron-winstaller/vendor/update.exe")],
+    winstaller: path.join(argv.sourceFolder, "node_modules/electron-winstaller/"),
     assets: path.join(argv.sourceFolder, "assets"),
     dist: argv.outputFolder,
-    app: path.join(argv.outputFolder, "/resources/app"),
-    installer: !isSaw() ? path.join(argv.sourceFolder, "/installer") : path.join(argv.sourceFolder, "/installer_saw"),
-    build: path.join(argv.sourceFolder, "/build"),
+    app: path.join(argv.outputFolder, "resources/app"),
+    installer: !isSaw() ? path.join(argv.sourceFolder, "installer") : path.join(argv.sourceFolder, "installer_saw"),
+    build: path.join(argv.sourceFolder, "build"),
     stubexe: path.join(argv.outputFolder, "" + getStubExeName()),
-    originalStubExe: path.join(argv.sourceFolder, "/node_modules/electron-winstaller/vendor/StubExecutable.exe")
+    originalStubExe: path.join(argv.sourceFolder, "node_modules/electron-winstaller/vendor/StubExecutable.exe")
 }
 
 gulp.task("copyElectron", function () {
