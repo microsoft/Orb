@@ -15,6 +15,7 @@ var rcedit = require("rcedit");
 var electronInstaller = require("electron-winstaller");
 var del = require("del");
 var spawnSync = require("child_process").spawnSync;
+var Msbuild = require("msbuild");
 
 var paths = {
     electron: [path.join(argv.sourceFolder, "node_modules/electron/dist/**/*"), "!" + path.join(argv.sourceFolder, "/**/default_app.asar"), "!" + path.join(argv.sourceFolder, "/**/electron.exe")],
@@ -348,14 +349,32 @@ gulp.task("runTests", function (done) {
     gutil.log("Run tests");
     var res = spawnSync("npm.cmd", ["test"], { cwd: paths.app, stdio: ["inherit", "inherit", "inherit"] });
     if (res.error) {
-        throw "Failed to install dev dependencies";
+        throw "Failed to run tests";
     }
 
     done();
 })
 
+gulp.task("buildDotNetDependencies", function (done) {
+    gutil.log("nuget.exe", ["restore"], { cwd: path.join(argv.sourceFolder, "dotNet"), stdio: ["inherit", "inherit", "inherit"] });
+    var res = spawnSync("nuget.exe", ["restore"], { cwd: path.join(argv.sourceFolder, "dotNet"), stdio: ["inherit", "inherit", "inherit"] });
+    if (res.error) {
+        throw "Failed to restore dotNet packages";
+    }
+
+    gutil.log("msbuild.exe", ["Orb.sln"], { cwd: path.join(argv.sourceFolder, "dotNet"), stdio: ["inherit", "inherit", "inherit"] });
+
+    var build = new Msbuild();
+    build.sourcePath = path.join(argv.sourceFolder, "dotNet", "Orb.sln");
+    build.build();
+    // var res = spawnSync("msbuild.exe", ["Orb.sln"], { cwd: path.join(argv.sourceFolder, "dotNet"), stdio: ["inherit", "inherit", "inherit"] });
+    if (res.error) {
+        throw "Failed to restore Orb.sln";
+    }
+})
+
 if (argv.buildBranch == "dev") {
-    gulp.task("build", ["installDependencies", "copyElectron", "resEdit", "resEditStubExe", "transpile", "runTests"], function (callback) {
+    gulp.task("build", ["installDependencies", "copyElectron", "resEdit", "resEditStubExe", "transpile", "buildDotNetDependencies", "runTests"], function (callback) {
         gutil.log("Building Orb");
     });
 } else {
