@@ -1,0 +1,7 @@
+{
+    "type": "kusto",
+    "relativePath": "myDir\\myObject",
+    "connectionProfile": "",
+    "description": "",
+    "query": ""
+}

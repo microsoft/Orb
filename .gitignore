@@ -8,6 +8,8 @@
 
 node_modules/**/*
 dist/resources/app/node_modules/**/*
+dist/resources/app/edgeDependencies/**/*
+dotNet/packages/**/*
 dist/resources/electron.asar
 dist/*.*
 dist/LICENSE

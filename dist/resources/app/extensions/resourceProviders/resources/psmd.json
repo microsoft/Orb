@@ -1,0 +1,10 @@
+{
+    "type": "psmd",
+    "relativePath": "myDir\\myObject",
+    "powershellProfile": "",
+    "description": "",
+    "script": "",
+    "options": {
+        "outputFormat": "auto"
+    }
+}

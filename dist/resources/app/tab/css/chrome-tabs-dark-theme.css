@@ -1,0 +1,24 @@
+.chrome-tabs.chrome-tabs-dark-theme {
+  background: linear-gradient(rgb(48, 48, 48), rgb(48, 48, 48));
+  box-shadow: 0 0.05em #282828;
+}
+.chrome-tabs.chrome-tabs-dark-theme .chrome-tabs-bottom-bar {
+  background: rgb(64, 64, 64);
+  box-shadow: 0 -0.05em rgba(0,0,0,0.5);
+}
+.chrome-tabs.chrome-tabs-dark-theme .chrome-tab .chrome-tab-background > svg .chrome-tab-shadow {
+  stroke: rgba(0,0,0,0.5);
+}
+.chrome-tabs.chrome-tabs-dark-theme .chrome-tab .chrome-tab-background > svg .chrome-tab-background {
+  fill: rgb(64, 64, 64);
+}
+.chrome-tabs.chrome-tabs-dark-theme .chrome-tab.chrome-tab-current .chrome-tab-background > svg .chrome-tab-background {
+  fill: #505050;
+}
+.chrome-tabs.chrome-tabs-dark-theme .chrome-tab .chrome-tab-title {
+  -webkit-font-smoothing: antialiased;
+  color: #fff;
+}
+.chrome-tabs.chrome-tabs-dark-theme .chrome-tab .chrome-tab-close:not(:hover) {
+  color: #cfcfcf;
+}

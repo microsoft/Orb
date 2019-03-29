@@ -1,0 +1,184 @@
+{
+    "namespace": "Test",
+    "path": "TestObject",
+    "requiredProps": [
+        "Tenant"
+    ],
+    "key": "Tenant",
+    "constructor": {
+        "type": "kusto",
+        "connectionProfile": "ACMKusto",
+        "query": "TMMgmtFabricSettingEtwTable  | where {timeRange} and Tenant =~ {Tenant} | take 1 | project Tenant",
+        "wildcardQuery": "TMMgmtFabricSettingEtwTable  | where {timeRange} and Tenant matches regex {Tenant} | summarize by Tenant",
+        "minimumResolutionInMinutes": 45
+    },
+    "additionalProps": [
+        {
+            "name": "f",
+            "type": "constant",
+            "value": "if(!$global:orbFCache){$global:orbFCache=@{}};$f = $global:orbFCache[{Tenant}];if(!$f){$f = gf {Tenant};$global:orbFCache[{Tenant}] = $f};$f"
+        }
+    ],
+    "resources": [
+        {
+            "type": "jarvis",
+            "relativePath": "Health\\Cluster EKG",
+            "description": "VM and Node Availability Dashboard",
+            "link": "https://jarvis-west.dc.ad.msft.net/dashboard/AzureComputeManager/Fabricator/ClusterEKG?overrides=[{%22query%22:%22//*[id=%27Tenant%27]%22,%22key%22:%22value%22,%22replacement%22:%22{Tenant}%22}]%20"
+        },
+        {
+            "type": "psx",
+            "relativePath": "Connect with FcShell",
+            "powershellProfile": "FcShell",
+            "description": "Open a new FcShell window and connect to the Fabric.",
+            "script": "$f = gf {Tenant}",
+            "showInContextMenu": "true"
+        },
+        {
+            "type": "psmd",
+            "relativePath": "TestPsmd",
+            "powershellProfile": "FcShell",
+            "description": ".",
+            "script": "start-sleep 50;Get-Process"
+        },
+        {
+            "type": "psmd",
+            "relativePath": "test\\getProcess",
+            "powershellProfile": "FcShell",
+            "description": ".",
+            "script": "Get-Process"
+        },
+        {
+            "type": "psmd",
+            "relativePath": "test\\getDate",
+            "powershellProfile": "FcShell",
+            "description": ".",
+            "script": "Get-Date"
+        },
+        {
+            "type": "psmd",
+            "relativePath": "test\\testError",
+            "powershellProfile": "FcShell",
+            "description": ".",
+            "script": "Get-Datxzxce;write-error foo;'restul'"
+        },
+        {
+            "type": "psmd",
+            "relativePath": "test\\testWarning",
+            "powershellProfile": "FcShell",
+            "description": ".",
+            "script": "write-warning foo;write-warning bar;'bee['"
+        },
+        {
+            "type": "psmd",
+            "relativePath": "test\\Exception",
+            "powershellProfile": "FcShell",
+            "description": ".",
+            "script": "throw 'foo'"
+        },
+        {
+            "type": "psmd",
+            "relativePath": "test\\ReadHost",
+            "description": ".",
+            "script": "Read-Host foo"
+        },
+        {
+            "type": "psmd",
+            "relativePath": "test\\Get-Credential",
+            "powershellProfile": "FcShell",
+            "description": ".",
+            "script": "$x = Get-Credential;$x;$x.GetNetworkCredential().Password;"
+        },
+        {
+            "type": "psmd",
+            "relativePath": "test\\ArrayPrompt",
+            "powershellProfile": "FcShell",
+            "description": ".",
+            "script": "Invoke-NodeCommand"
+        },
+        {
+            "type": "psmd",
+            "relativePath": "test\\InvokeNodeCommand",
+            "powershellProfile": "FcShell",
+            "description": ".",
+            "script": "$f = gf {Tenant};$f.Nodes[0] | Invoke-NodeCommand 'cmd /c echo test';"
+        },
+        {
+            "type": "psmd",
+            "relativePath": "test\\ImportRepo",
+            "powershellProfile": "FcShell",
+            "description": ".",
+            "script": "Import-Repository"
+        },
+        {
+            "type": "psmd",
+            "relativePath": "test\\Guid",
+            "powershellProfile": "FcShell",
+            "description": ".",
+            "script": "Test-Guid"
+        },
+        {
+            "type": "psmd",
+            "relativePath": "test\\SS",
+            "powershellProfile": "FcShell",
+            "description": ".",
+            "script": "Get-SS"
+        },
+        {
+            "type": "psmd",
+            "relativePath": "test\\SSArray",
+            "powershellProfile": "FcShell",
+            "description": ".",
+            "script": "Get-SSArray"
+        },
+        {
+            "type": "psmd",
+            "relativePath": "test\\YesNo",
+            "powershellProfile": "FcShell",
+            "description": ".",
+            "script": "Confirm-YesOrNo"
+        },
+        {
+            "type": "psmd",
+            "relativePath": "test\\Cancellation",
+            "powershellProfile": "FcShell",
+            "description": ".",
+            "script": "while(1){(get-date) | ac c:\\temp\\test.txt;sleep 1}"
+        },
+        {
+            "type": "psmd",
+            "relativePath": "versionSummary",
+            "powershellProfile": "FcShell",
+            "description": ".",
+            "script": "ver? -MarkdownOutput",
+            "options": {
+                "outputFormat": "rawMarkdown"
+            }
+        },
+        {
+            "type": "psmd",
+            "relativePath": "getCloud",
+            "powershellProfile": "FcShell",
+            "description": ".",
+            "script": "Get-Cloud *BY*"
+        },
+        {
+            "type": "psmd",
+            "relativePath": "getFabric",
+            "powershellProfile": "FcShell",
+            "description": ".",
+            "script": "measure-command {Get-Fabric {Tenant}}"
+        }
+    ],
+    "associations": [
+        {
+            "type": "kusto",
+            "relativePath": "Tenants",
+            "associatedObjectPath": "FC\\Tenant",
+            "description": "",
+            "connectionProfile": "ACMKusto",
+            "query": "LogContainerSnapshot | where {timeRange} and Tenant == {Tenant} | summarize by tenantName, Tenant",
+            "minimumResolutionInMinutes": 120
+        }
+    ]
+}
