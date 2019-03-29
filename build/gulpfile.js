@@ -3,9 +3,9 @@
 //------------------------------------------------------------
 var gulp = require("gulp");
 var gutil = require("gulp-util");
-var argv = require('yargs').argv;
+var argv = require("yargs").argv;
 var rename = require("gulp-rename");
-var path = require('path');
+var path = require("path");
 var glob = require("glob");
 var ts = require("gulp-typescript");
 var sourcemaps = require("gulp-sourcemaps");
@@ -13,7 +13,8 @@ var Q = require("q");
 var fs = require("fs");
 var rcedit = require("rcedit");
 var electronInstaller = require("electron-winstaller");
-var del = require('del');
+var del = require("del");
+var spawnSync = require("child_process").spawnSync;
 
 var paths = {
     electron: [path.join(argv.sourceFolder, "node_modules/electron/dist/**/*"), "!" + path.join(argv.sourceFolder, "/**/default_app.asar"), "!" + path.join(argv.sourceFolder, "/**/electron.exe")],
@@ -309,6 +310,56 @@ gulp.task("transpile", function () {
         .pipe(gulp.dest(paths.app));
 });
 
-gulp.task("build", ["copyElectron", "resEdit", "resEditStubExe", "transpile"], function (callback) {
-    gutil.log("Building Orb");
-});
+gulp.task("installDependencies", function (done) {
+    gutil.log("Install Dependencies");
+    gutil.log("npm.cmd", ["install"], { cwd: argv.sourceFolder, stdio: ["inherit", "inherit", "inherit"] });
+    var res = null;
+
+    res = spawnSync("npm.cmd", ["install"], { cwd: argv.sourceFolder, stdio: ["inherit", "inherit", "inherit"] });
+    if (res.error) {
+        throw "Failed to install dev dependencies";
+    }
+
+    gutil.log("npm.cmd", ["install"], { cwd: paths.app, stdio: ["inherit", "inherit", "inherit"] });
+    res = spawnSync("npm.cmd", ["install"], { cwd: paths.app, stdio: ["inherit", "inherit", "inherit"] });
+
+    if (res.error) {
+        throw "Failed to intall app dependencies";
+    }
+
+    gutil.log("npm.cmd", ["install"], { cwd: path.join(argv.sourceFolder, "node_modules_native"), stdio: ["inherit", "inherit", "inherit"] });
+    spawnSync("npm.cmd", ["install"], { cwd: path.join(argv.sourceFolder, "node_modules_native"), stdio: ["inherit", "inherit", "inherit"] });
+
+    if (res.error) {
+        throw "Failed to install native dependencies";
+    }
+
+    gutil.log("powershell.exe", ["-File", path.join(argv.sourceFolder, "node_modules_native", "buildNativeDependencies.ps1")], { stdio: ["inherit", "inherit", "inherit"] });
+    spawnSync("powershell.exe", ["-File", path.join(argv.sourceFolder, "node_modules_native", "buildNativeDependencies.ps1")], { stdio: ["inherit", "inherit", "inherit"] });
+
+    if (res.error) {
+        throw "Failed to compile native dependencies";
+    }
+
+    done();
+})
+
+gulp.task("runTests", function (done) {
+    gutil.log("Run tests");
+    var res = spawnSync("npm.cmd", ["test"], { cwd: paths.app, stdio: ["inherit", "inherit", "inherit"] });
+    if (res.error) {
+        throw "Failed to install dev dependencies";
+    }
+
+    done();
+})
+
+if (argv.buildBranch == "dev") {
+    gulp.task("build", ["installDependencies", "copyElectron", "resEdit", "resEditStubExe", "transpile", "runTests"], function (callback) {
+        gutil.log("Building Orb");
+    });
+} else {
+    gulp.task("build", ["copyElectron", "resEdit", "resEditStubExe", "transpile"], function (callback) {
+        gutil.log("Building Orb");
+    });
+}
