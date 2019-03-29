@@ -3,12 +3,11 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using System.IO;
-using System.Security.Cryptography;
-
 namespace Orb
 {
+    using Microsoft.IdentityModel.Clients.ActiveDirectory;
+    using System.IO;
+    using System.Security.Cryptography;
 
     // This is a simple persistent cache implementation for a desktop application.
     // It uses DPAPI for storing tokens in a local file.

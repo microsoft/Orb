@@ -3,16 +3,31 @@
     "version": "1.0.0",
     "description": "Object-based Resource Browser",
     "main": "main.js",
-    "author": "Microsoft",
+    "scripts": {
+        "test": "electron-mocha --renderer test/test*.js --reporter mocha-junit-reporter"
+    },
+    "author": "Microsoft/Azure",
     "private": true,
     "license": "MIT",
-    "dependencies": {
+    "devDependencies": {
+        "@types/bluebird": "3.5.1",
         "@types/d3": "4.11.0",
         "@types/enzyme": "2.7.1",
         "@types/material-ui": "0.18.3",
+        "@types/mocha": "^5.2.6",
         "@types/react": "15.6.6",
         "@types/react-autosuggest": "9.3.1",
         "@types/react-dom": "15.5.6",
+        "chai": "3.5.0",
+        "electron-mocha": "4.0.3",
+        "enzyme": "2.7.1",
+        "jsdom": "9.10.0",
+        "react-addons-test-utils": "15.4.2",
+        "sinon": "2.2.0",
+        "spectron": "3.6.2",
+        "mocha-junit-reporter": "1.18.0"
+    },
+    "dependencies": {
         "adal-angular": "1.0.12",
         "applicationinsights": "0.19.0",
         "bluebird": "3.5.1",

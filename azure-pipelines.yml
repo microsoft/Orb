@@ -7,7 +7,7 @@ pool:
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: '8.x'
+    versionSpec: '8.15.0'
   displayName: 'Install Node.js'
 
 - task: NuGetToolInstaller@0
@@ -20,9 +20,16 @@ steps:
   displayName: 'npm install dev dependencies'
 
 - script: |
-    cd $(Build.SourcesDirectory)\dist\resources\app
-    npm install
+    npm install --prefix $(Build.SourcesDirectory)\dist\resources\app
   displayName: 'npm install dist dependencies'
+
+- script: |
+    npm install --prefix $(Build.SourcesDirectory)\node_modules_forked
+  displayName: 'npm install native dependencies'
+
+- script: |
+    $(Build.SourcesDirectory)\node_modules_native\buildNativeDependencies.ps1
+  displayName: 'rebuild native dependencies native dependencies'
 
 - script: |
     gulp build --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)\dist
@@ -63,7 +70,7 @@ steps:
     # Exclusions using minimatch don't seem to be working, hence this workaround of copying.
 
 - script: |
-    npm test
+    npm test --prefix $(Build.SourcesDirectory)\dist\resources\app
   displayName: 'npm test'
 
 - task: PublishTestResults@2

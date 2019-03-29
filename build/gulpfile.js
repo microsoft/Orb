@@ -3,9 +3,9 @@
 //------------------------------------------------------------
 var gulp = require("gulp");
 var gutil = require("gulp-util");
-var argv = require('yargs').argv;
+var argv = require("yargs").argv;
 var rename = require("gulp-rename");
-var path = require('path');
+var path = require("path");
 var glob = require("glob");
 var ts = require("gulp-typescript");
 var sourcemaps = require("gulp-sourcemaps");
@@ -13,20 +13,22 @@ var Q = require("q");
 var fs = require("fs");
 var rcedit = require("rcedit");
 var electronInstaller = require("electron-winstaller");
-var del = require('del');
+var del = require("del");
+var spawnSync = require("child_process").spawnSync;
+var Msbuild = require("msbuild");
 
 var paths = {
-    electron: [path.join(argv.sourceFolder, "/node_modules/electron/dist/**/*"), "!" + path.join(argv.sourceFolder, "/**/default_app.asar"), "!" + path.join(argv.sourceFolder, "/**/electron.exe")],
+    electron: [path.join(argv.sourceFolder, "node_modules/electron/dist/**/*"), "!" + path.join(argv.sourceFolder, "/**/default_app.asar"), "!" + path.join(argv.sourceFolder, "/**/electron.exe")],
     electronExe: [path.join(argv.sourceFolder, "node_modules/electron/dist/electron.exe")],
-    updateExe: [path.join(argv.sourceFolder, "/node_modules/electron-winstaller/vendor/update.exe")],
-    winstaller: path.join(argv.sourceFolder, "/node_modules/electron-winstaller/"),
+    updateExe: [path.join(argv.sourceFolder, "node_modules/electron-winstaller/vendor/update.exe")],
+    winstaller: path.join(argv.sourceFolder, "node_modules/electron-winstaller/"),
     assets: path.join(argv.sourceFolder, "assets"),
     dist: argv.outputFolder,
-    app: path.join(argv.outputFolder, "/resources/app"),
-    installer: !isSaw() ? path.join(argv.sourceFolder, "/installer") : path.join(argv.sourceFolder, "/installer_saw"),
-    build: path.join(argv.sourceFolder, "/build"),
+    app: path.join(argv.outputFolder, "resources/app"),
+    installer: !isSaw() ? path.join(argv.sourceFolder, "installer") : path.join(argv.sourceFolder, "installer_saw"),
+    build: path.join(argv.sourceFolder, "build"),
     stubexe: path.join(argv.outputFolder, "" + getStubExeName()),
-    originalStubExe: path.join(argv.sourceFolder, "/node_modules/electron-winstaller/vendor/StubExecutable.exe")
+    originalStubExe: path.join(argv.sourceFolder, "node_modules/electron-winstaller/vendor/StubExecutable.exe")
 }
 
 gulp.task("copyElectron", function () {
@@ -309,6 +311,74 @@ gulp.task("transpile", function () {
         .pipe(gulp.dest(paths.app));
 });
 
-gulp.task("build", ["copyElectron", "resEdit", "resEditStubExe", "transpile"], function (callback) {
-    gutil.log("Building Orb");
-});
+gulp.task("installDependencies", function (done) {
+    gutil.log("Install Dependencies");
+    gutil.log("npm.cmd", ["install"], { cwd: argv.sourceFolder, stdio: ["inherit", "inherit", "inherit"] });
+    var res = null;
+
+    res = spawnSync("npm.cmd", ["install"], { cwd: argv.sourceFolder, stdio: ["inherit", "inherit", "inherit"] });
+    if (res.error) {
+        throw "Failed to install dev dependencies";
+    }
+
+    gutil.log("npm.cmd", ["install"], { cwd: paths.app, stdio: ["inherit", "inherit", "inherit"] });
+    res = spawnSync("npm.cmd", ["install"], { cwd: paths.app, stdio: ["inherit", "inherit", "inherit"] });
+
+    if (res.error) {
+        throw "Failed to intall app dependencies";
+    }
+
+    gutil.log("npm.cmd", ["install"], { cwd: path.join(argv.sourceFolder, "node_modules_native"), stdio: ["inherit", "inherit", "inherit"] });
+    spawnSync("npm.cmd", ["install"], { cwd: path.join(argv.sourceFolder, "node_modules_native"), stdio: ["inherit", "inherit", "inherit"] });
+
+    if (res.error) {
+        throw "Failed to install native dependencies";
+    }
+
+    gutil.log("powershell.exe", ["-File", path.join(argv.sourceFolder, "node_modules_native", "buildNativeDependencies.ps1")], { stdio: ["inherit", "inherit", "inherit"] });
+    spawnSync("powershell.exe", ["-File", path.join(argv.sourceFolder, "node_modules_native", "buildNativeDependencies.ps1")], { stdio: ["inherit", "inherit", "inherit"] });
+
+    if (res.error) {
+        throw "Failed to compile native dependencies";
+    }
+
+    done();
+})
+
+gulp.task("runTests", function (done) {
+    gutil.log("Run tests");
+    var res = spawnSync("npm.cmd", ["test"], { cwd: paths.app, stdio: ["inherit", "inherit", "inherit"] });
+    if (res.error) {
+        throw "Failed to run tests";
+    }
+
+    done();
+})
+
+gulp.task("buildDotNetDependencies", function (done) {
+    gutil.log("nuget.exe", ["restore"], { cwd: path.join(argv.sourceFolder, "dotNet"), stdio: ["inherit", "inherit", "inherit"] });
+    var res = spawnSync("nuget.exe", ["restore"], { cwd: path.join(argv.sourceFolder, "dotNet"), stdio: ["inherit", "inherit", "inherit"] });
+    if (res.error) {
+        throw "Failed to restore dotNet packages";
+    }
+
+    gutil.log("msbuild.exe", ["Orb.sln"], { cwd: path.join(argv.sourceFolder, "dotNet"), stdio: ["inherit", "inherit", "inherit"] });
+
+    var build = new Msbuild();
+    build.sourcePath = path.join(argv.sourceFolder, "dotNet", "Orb.sln");
+    build.build();
+    // var res = spawnSync("msbuild.exe", ["Orb.sln"], { cwd: path.join(argv.sourceFolder, "dotNet"), stdio: ["inherit", "inherit", "inherit"] });
+    if (res.error) {
+        throw "Failed to restore Orb.sln";
+    }
+})
+
+if (argv.buildBranch == "dev") {
+    gulp.task("build", ["installDependencies", "copyElectron", "resEdit", "resEditStubExe", "transpile", "buildDotNetDependencies", "runTests"], function (callback) {
+        gutil.log("Building Orb");
+    });
+} else {
+    gulp.task("build", ["copyElectron", "resEdit", "resEditStubExe", "transpile"], function (callback) {
+        gutil.log("Building Orb");
+    });
+}

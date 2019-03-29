@@ -78,7 +78,7 @@ namespace Orb
             }
 
             return authResult;
-        }        
+        }
 
         private AuthenticationContext GetAuthenticationContext(string tenant, string cacheLocation)
         {

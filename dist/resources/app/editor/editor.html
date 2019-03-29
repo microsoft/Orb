@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="../node_modules/monaco-editor/min/vs/editor/editor.main.css">
+</head>
+
+<body>
+    <div id="react-app"></div>
+</body>
+
+<script>
+    var nodeRequire = global.require;
+
+</script>
+<script src="./../node_modules/monaco-editor/min/vs/loader.js"></script>
+<script src="./../node_modules/react/dist/react.min.js"></script>
+<script src="./../node_modules/react-dom/dist/react-dom.min.js"></script>
+<script>
+    var amdRequire = global.require;
+    global.require = nodeRequire;
+    var editor = require("./editor.js");
+
+</script>
+
+</html>
