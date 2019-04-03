@@ -15,6 +15,10 @@ steps:
   inputs:
     versionSpec: 4.4.1
 
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '2.7.15'
+
 - script: |
     npm install
   displayName: 'npm install dev dependencies'

@@ -325,7 +325,7 @@ gulp.task("installDependencies", function (done) {
     res = spawnSync("npm.cmd", ["install"], { cwd: paths.app, stdio: ["inherit", "inherit", "inherit"] });
 
     if (res.error) {
-        throw "Failed to intall app dependencies";
+        throw "Failed to install app dependencies";
     }
 
     gutil.log("npm.cmd", ["install"], { cwd: path.join(argv.sourceFolder, "node_modules_native"), stdio: ["inherit", "inherit", "inherit"] });
@@ -382,3 +382,4 @@ if (argv.buildBranch == "dev") {
         gutil.log("Building Orb");
     });
 }
+
