@@ -92,8 +92,8 @@ steps:
     ConnectedServiceName: 'Orb ESRP'
 
     Pattern: |
-      /dist/**/*.dll
-      /node_modules/electron-winstaller/**/*.dll
+      dist\**\*.dll
+      node_modules\electron-winstaller\**\*.dll
 
     UseMinimatch: true
 
