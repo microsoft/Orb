@@ -84,7 +84,7 @@ steps:
     searchFolder: '$(Build.SourcesDirectory)'
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-  enabled: true
+  enabled: false
   condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
   displayName: 'ESRP CodeSigning - Third Parties'
   inputs:
@@ -153,8 +153,8 @@ steps:
     ConnectedServiceName: 'Orb ESRP'
 
     Pattern: |
-      /dist/**/*.exe
-      /node_modules/electron-winstaller/**/*.exe
+      dist\**\*.exe
+      node_modules\electron-winstaller\**\*.exe
 
     UseMinimatch: true
 
