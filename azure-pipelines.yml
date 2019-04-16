@@ -84,7 +84,7 @@ steps:
     searchFolder: '$(Build.SourcesDirectory)'
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-  enabled: false
+  enabled: true
   condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
   displayName: 'ESRP CodeSigning - Third Parties'
   inputs:
