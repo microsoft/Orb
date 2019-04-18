@@ -91,7 +91,7 @@ steps:
     FolderPath: $(Build.SourcesDirectory)
     ConnectedServiceName: 'Orb ESRP'
 
-    Pattern: |
+    Pattern:
       "dist\**\*.dll,node_modules\electron-winstaller\**\*.dll"
 
     UseMinimatch: true
