@@ -87,13 +87,17 @@ steps:
   enabled: true
   condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
   displayName: 'ESRP CodeSigning - Third Parties'
+  
   inputs:
-    FolderPath: D:\a\1\s
+    FolderPath: $(Build.SourcesDirectory)
     ConnectedServiceName: 'Orb ESRP'
 
-    Pattern: api-ms-win-core-console-l1-1-0.dll
+    Pattern: |
+      /dist/**/*.dll
+      /node_modules/electron-winstaller/**/*.dll
 
-    UseMinimatch: false
+
+    UseMinimatch: true
 
     signConfigType: inlineSignParams
 
