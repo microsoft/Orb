@@ -89,11 +89,10 @@ steps:
   displayName: 'ESRP CodeSigning - Third Parties'
   
   inputs:
-    FolderPath: $(Build.SourcesDirectory)
+    FolderPath: $(Build.SourcesDirectory)/dist
     ConnectedServiceName: 'Orb ESRP'
 
-    Pattern: |
-      /dist/**/*.dll
+    Pattern: api-ms-win-core-console-l1-1-0.dll
 
     UseMinimatch: true
 
