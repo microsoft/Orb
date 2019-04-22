@@ -94,8 +94,6 @@ steps:
 
     Pattern: |
       /dist/**/*.dll
-      /node_modules/electron-winstaller/**/*.dll
-
 
     UseMinimatch: true
 
