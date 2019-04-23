@@ -89,7 +89,7 @@ steps:
   displayName: 'ESRP CodeSigning - Third Parties'
   
   inputs:
-    FolderPath: 'dist'
+    FolderPath: 'dist\'
     ConnectedServiceName: 'Orb ESRP'
 
     Pattern: '*.dll'
