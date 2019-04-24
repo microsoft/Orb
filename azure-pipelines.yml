@@ -87,14 +87,10 @@ steps:
   enabled: true
   condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
   displayName: 'ESRP CodeSigning - Third Parties'
-  
   inputs:
-    FolderPath: 'dist\'
     ConnectedServiceName: 'Orb ESRP'
-
+    FolderPath: dist
     Pattern: '*.dll'
-
-    UseMinimatch: true
 
     signConfigType: inlineSignParams
 
