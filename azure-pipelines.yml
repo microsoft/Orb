@@ -24,7 +24,8 @@ steps:
   displayName: 'npm install dev dependencies'
 
 - script: |
-    npm install --production --prefix $(Build.SourcesDirectory)\dist\resources\app
+    cd $(Build.SourcesDirectory)\dist\resources\app
+    npm install --production
   displayName: 'npm install dist dependencies'
   
 - script: |
