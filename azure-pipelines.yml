@@ -24,7 +24,7 @@ steps:
   displayName: 'npm install dev dependencies'
 
 - script: |
-    npm install --prefix $(Build.SourcesDirectory)\dist\resources\app
+    npm install --production --prefix $(Build.SourcesDirectory)\dist\resources\app
   displayName: 'npm install dist dependencies'
   
 - script: |
@@ -75,7 +75,7 @@ steps:
   condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
   displayName: 'ESRP CodeSigning - Third Parties'
   inputs:
-    FolderPath: $(Build.SourcesDirectory)/dotNet
+    FolderPath: $(Build.SourcesDirectory)/dist
     ConnectedServiceName: 'Orb ESRP'
 
     Pattern: |
