@@ -7,7 +7,7 @@ pool:
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: '8.15.0'
+    versionSpec: '8.x'
   displayName: 'Install Node.js'
 
 - task: NuGetToolInstaller@0
