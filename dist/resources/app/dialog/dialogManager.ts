@@ -34,6 +34,20 @@ export class DialogManager {
         }
     }
 
+    static prompt(title: string, message: string, caption: string, keys: string[]): Promise<{}> {
+        let inputFields: FieldDescription[] = [];
+        keys.forEach((key) => {
+            inputFields.push({
+                Name: key,
+                Type: "string",
+                IsArray: false,
+                IsSecureString: false
+            })
+        })
+
+        return DialogManager.showFieldDialog(title, message, caption, inputFields);
+    }
+
     static showFieldDialog(title: string, message: string, caption: string, inputFields: FieldDescription[]): Promise<DialogOutput> {
         DialogManager.initialize();
 

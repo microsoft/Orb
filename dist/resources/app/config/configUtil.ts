@@ -1,7 +1,9 @@
-const Config = require('electron-config');
+const Config = require("electron-config");
 const config = new Config();
 import * as path from "path";
+import { DialogManager } from "../dialog/dialogManager";
 import { remote } from "electron";
+import * as Promise from 'bluebird';
 
 export class ConfigUtil {
     private static modelRepoDir: string;
@@ -10,6 +12,7 @@ export class ConfigUtil {
     private static fontSize: string;
     private static reuseSlbShell: boolean;
     private static alwaysOpenInNewTab: boolean;
+    private static defaultModelUrl = "https://msazure.visualstudio.com/One/_git/Azure-OrbModels/";
 
     static getModelRepoDir(): string {
         if (!ConfigUtil.modelRepoDir) {
@@ -27,13 +30,26 @@ export class ConfigUtil {
     static getRemoteOrigin() {
         if (!ConfigUtil.remoteOrigin) {
             if (!config.get("remoteOrigin")) {
-                config.set("remoteOrigin", "https://msazure.visualstudio.com/One/_git/Azure-OrbModels/");
+                config.set("remoteOrigin", ConfigUtil.defaultModelUrl);
             }
 
             ConfigUtil.remoteOrigin = config.get("remoteOrigin");
         }
 
         return ConfigUtil.remoteOrigin;
+    }
+
+    static getRemoteOriginWithPrompt(): Promise<any> {
+        let key = "remoteOrigin";
+        let remoteOrigin = config.get("remoteOrigin");
+        if (remoteOrigin) {
+            return Promise.resolve(remoteOrigin);
+        }
+
+        return DialogManager.prompt("Configuration", "What's the url for OrbModels?", "Default:" + ConfigUtil.defaultModelUrl, [key]).then((res) => {
+            config.set(key, res[key]);
+            return res[key];
+        })
     }
 
     static getFontFamily() {

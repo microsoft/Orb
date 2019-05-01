@@ -40,13 +40,15 @@ const initialize = (): Promise<any> => {
     }
 
     Util.mkDirSync(ConfigUtil.getModelRepoDir());
-    return new Promise<any>((resolve, reject) => {
-        const repo = Repo.instance();
-        if (!repo.existsSync()) {
-            resolve(repo.gitClone());
-        } else {
-            resolve();
-        }
+    return ConfigUtil.getRemoteOriginWithPrompt().then(() => {
+        return new Promise<any>((resolve, reject) => {
+            const repo = Repo.instance();
+            if (!repo.existsSync()) {
+                resolve(repo.gitClone());
+            } else {
+                resolve();
+            }
+        })
     })
 }
 
