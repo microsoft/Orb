@@ -75,11 +75,11 @@ steps:
   condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
   displayName: 'ESRP CodeSigning - Third Parties'
   inputs:
-    FolderPath: $(Build.SourcesDirectory)
+    FolderPath: $(Build.SourcesDirectory)/dist/resources/app/node_modules
     ConnectedServiceName: 'Orb ESRP'
 
     Pattern: |
-      dist/**/*.dll
+      *.dll
 
     UseMinimatch: true
 
