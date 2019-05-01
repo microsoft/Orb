@@ -27,6 +27,16 @@ steps:
     cd $(Build.SourcesDirectory)\dist\resources\app
     npm install --production
   displayName: 'npm install dist dependencies'
+
+- script: |
+    cd $(Build.SourcesDirectory)\node_modules_forked
+    npm install
+  displayName: 'npm install native dependencies'
+
+- task: PowerShell@2
+  inputs: 
+    filePath: $(Build.SourcesDirectory)\node_modules_native\buildNativeDependencies.ps1
+  displayName: 'compile native dependencies'
   
 - script: |
     gulp build --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)\dist
@@ -45,6 +55,15 @@ steps:
     platform: 'Any CPU'
 
     configuration: Release
+    
+- script: |
+    npm test --prefix $(Build.SourcesDirectory)\dist\resources\app
+  displayName: 'npm test'
+
+- script: |
+    cd $(Build.SourcesDirectory)\dist\resources\app
+    npm prune --production
+  displayName: 'remove dev dependencies'
 
 - task: CopyFiles@2
   inputs:
