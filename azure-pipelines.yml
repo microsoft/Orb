@@ -20,15 +20,6 @@ steps:
   displayName: 'npm install dev dependencies'
 
 - script: |
-    cd $(Build.SourcesDirectory)\dist\resources\app
-    npm install
-  displayName: 'npm install dist dependencies'
-
-- script: |
-    npm install --prefix $(Build.SourcesDirectory)\node_modules_forked
-  displayName: 'npm install native dependencies'
-
-- script: |
     gulp build --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)\dist
   displayName: 'run gulp'
 
