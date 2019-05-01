@@ -27,11 +27,6 @@ steps:
     npm install --prefix $(Build.SourcesDirectory)\node_modules_forked
   displayName: 'npm install native dependencies'
 
-- task: PowerShell@2
-  inputs: 
-    filePath: $(Build.SourcesDirectory)\node_modules_native\buildNativeDependencies.ps1
-  displayName: 'compile native dependencies'
-
 - script: |
     gulp build --gulpfile build\gulpfile.js --buildVersion "$(Build.BuildNumber)" --buildBranch $(Build.SourceBranchName) --sourceFolder $(Build.SourcesDirectory) --outputFolder $(Build.SourcesDirectory)\dist
   displayName: 'run gulp'
