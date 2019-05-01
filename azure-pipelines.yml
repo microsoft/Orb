@@ -75,7 +75,7 @@ steps:
   condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
   displayName: 'ESRP CodeSigning - Third Parties'
   inputs:
-    FolderPath: $(Build.SourcesDirectory)/dist/resources/app/node_modules/bin
+    FolderPath: $(Build.SourcesDirectory)/dist/resources/app/node_modules/.bin
     ConnectedServiceName: 'Orb ESRP'
 
     Pattern: |
