@@ -15,10 +15,6 @@ steps:
   inputs:
     versionSpec: 4.4.1
 
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '2.7.14'
-
 - script: |
     npm install
   displayName: 'npm install dev dependencies'
@@ -69,10 +65,6 @@ steps:
     # Make a copy of setup.exe to replace later. This is done so setup.exe is signed only once at the end.
     # Exclusions using minimatch don't seem to be working, hence this workaround of copying.
 
-- script: |
-    npm test --prefix $(Build.SourcesDirectory)\dist\resources\app
-  displayName: 'npm test'
-
 - task: PublishTestResults@2
   inputs:
     testResultsFiles: '**/Test-*.xml'
@@ -83,9 +75,12 @@ steps:
   condition: and(succeeded(), in(variables['Build.Reason'], 'Manual'))
   displayName: 'ESRP CodeSigning - Third Parties'
   inputs:
+    FolderPath: $(Build.SourcesDirectory)
     ConnectedServiceName: 'Orb ESRP'
-    FolderPath: dist
-    Pattern: '*.dll'
+
+    Pattern: |
+      /dist/**/*.dll
+      /node_modules/electron-winstaller/**/*.dll
 
     signConfigType: inlineSignParams
 
