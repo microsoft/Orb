@@ -39,14 +39,16 @@ const initialize = (): Promise<any> => {
         return Promise.resolve();
     }
 
-    Util.mkDirSync(ConfigUtil.getModelRepoDir());
-    return new Promise<any>((resolve, reject) => {
-        const repo = Repo.instance();
-        if (!repo.existsSync()) {
-            resolve(repo.gitClone());
-        } else {
-            resolve();
-        }
+    return ConfigUtil.promptForMissingConfiguration().then(() => {
+        Util.mkDirSync(ConfigUtil.getModelRepoDir());
+        return new Promise<any>((resolve, reject) => {
+            const repo = Repo.instance();
+            if (!repo.existsSync()) {
+                resolve(repo.gitClone());
+            } else {
+                resolve();
+            }
+        })
     })
 }
 

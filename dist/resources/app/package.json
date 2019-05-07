@@ -4,7 +4,7 @@
     "description": "Object-based Resource Browser",
     "main": "main.js",
     "scripts": {
-        "test": "electron-mocha --renderer test/test*.js --reporter mocha-junit-reporter"
+        "test": "electron-mocha --renderer test/test*.js"
     },
     "author": "Microsoft/Azure",
     "private": true,

@@ -175,12 +175,7 @@ export class PowerShellExecutor {
         return new Promise<PSResult>((resolve, reject, onCancel) => {
             let runspaceKey: string;
 
-            // If user specifies to reuse SLB shell, reuse SLB shell
-            if (profile && profile.name == PowershellProfileNames.slbShell && ConfigUtil.getReuseSlbShell()) {
-                runspaceKey = profile.name;
-            } else {
-                runspaceKey = (profile ? namespaceName + profile.name : namespaceName) + (lastRequestTabKey ? lastRequestTabKey : "");
-            }
+            runspaceKey = (profile ? namespaceName + profile.name : namespaceName) + (lastRequestTabKey ? lastRequestTabKey : "");
 
             console.log("RunspaceKey", runspaceKey);
             let requestId = (PowerShellExecutor.requestId++).toString();

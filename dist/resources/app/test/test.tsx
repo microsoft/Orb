@@ -3,7 +3,6 @@ import { should, expect, assert } from "chai";
 import { mount, shallow, render } from "enzyme";
 import * as sinon from "sinon";
 import { Toast } from "../toast/toast";
-import { App } from "../app";
 import { OrbState, StateManager } from "../state/state";
 import { TerminalConfigManager } from "../config/terminalConfig";
 import { AddressBar } from "../addressBar/addressBar";
@@ -12,11 +11,11 @@ import { Util } from "../util/util";
 import { LinkManager } from "../linkManager/linkManager";
 import { PersistedState, FileFormatState } from "../state/state";
 import { ModelReader } from "../modelReader/modelReader";
-import { ResourceProviderHelper } from "../extensions/resourceProviders/helper";
-import { IResourceExternalContext } from "../extensions/commonInterfaces";
 import { describe, it } from "mocha";
 import * as Promise from "bluebird";
-import * as m from "Model";
+import { ConfigUtil } from "../config/configUtil";
+import { remote } from "electron";
+import * as path from "path";
 
 const Application = require("spectron").Application;
 
@@ -457,6 +456,8 @@ describe("ModelReader - validateObjectToBeMerged", () => {
         ModelReader.getOrbSetting = (settingName: string) => {
             return Promise.resolve(true);
         };
+
+        ConfigUtil.modelRepoDir = path.join(remote.app.getPath("userData"), "OrbModels");
     })
 
     it("Test validateObjectToBeMerged failed for namespaceConfig protected resource", () => {
@@ -630,6 +631,8 @@ describe("ModelReader - mergeJsonObjects", () => {
         ModelReader.getOrbSetting = (settingName: string) => {
             return Promise.resolve(true);
         };
+
+        ConfigUtil.modelRepoDir = path.join(remote.app.getPath("userData"), "OrbModels");
     })
 
     it("Test mergeJsonObjects throws exception when namespace conflicted", () => {
