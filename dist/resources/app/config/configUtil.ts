@@ -2,7 +2,7 @@ const Config = require("electron-config");
 const config = new Config();
 import * as path from "path";
 import { DialogManager } from "../dialog/dialogManager";
-import { remote, systemPreferences } from "electron";
+import { remote } from "electron";
 import * as Promise from "bluebird";
 
 export class ConfigUtil {
@@ -38,7 +38,7 @@ export class ConfigUtil {
             return Promise.resolve();
         }
 
-        return DialogManager.prompt("Configuration", "What's the url for OrbModels?", "all fields are required", missingConfigs).then((res) => {
+        return DialogManager.prompt("Configuration", "Some required configuration(s) are missing: ", "*All fields are required", missingConfigs).then((res) => {
             let emptyInputs = [];
 
             missingConfigs.forEach((missingConfig) => {
