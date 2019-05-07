@@ -10,13 +10,9 @@ import { observer } from "mobx-react";
 import { OrbState } from "./state/state";
 import { NavBar } from "./navBar/navBar";
 import { SideBar } from "./sideBar/sideBar";
-import { StateManager } from "./state/state";
 import { TabManager } from "./tabManager/tabManager";
-import { ModelReader } from "./modelReader/modelReader";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import { ResourceCollections } from "./db/db";
-import { Constants } from "./state/state";
-import { RepoManifest, ExtensionState, ExtensionPersistedState, PackageManifest, ExtensionPoints } from "./extensions/commonInterfaces";
 
 let log = require("loglevel");
 

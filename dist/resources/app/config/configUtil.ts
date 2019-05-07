@@ -2,25 +2,61 @@ const Config = require("electron-config");
 const config = new Config();
 import * as path from "path";
 import { DialogManager } from "../dialog/dialogManager";
-import { remote } from "electron";
-import * as Promise from 'bluebird';
+import { remote, systemPreferences } from "electron";
+import * as Promise from "bluebird";
 
 export class ConfigUtil {
     private static modelRepoDir: string;
     private static remoteOrigin: string;
     private static fontFamily: string;
     private static fontSize: string;
-    private static reuseSlbShell: boolean;
     private static alwaysOpenInNewTab: boolean;
     private static defaultModelUrl = "https://msazure.visualstudio.com/One/_git/Azure-OrbModels/";
 
+    public static defaultConfig = {
+        modelRepoDir: path.join(remote.app.getPath("userData"), "OrbModels"),
+        remoteOrigin: null,
+        fontFamily: "Roboto,sans-serif",
+        fontSize: "14px",
+        alwaysOpenInNewTab: false,
+    }
+
+    static promptForMissingConfiguration(): Promise<void> {
+        let missingConfigs = [];
+
+        Object.keys(ConfigUtil.defaultConfig).forEach((prop) => {
+            if (config.get(prop) == undefined) {
+                if (ConfigUtil.defaultConfig[prop] != null) {
+                    config.set(prop, ConfigUtil.defaultConfig[prop]);
+                } else {
+                    missingConfigs.push(prop);
+                }
+            }
+        })
+
+        if (missingConfigs.length == 0) {
+            return Promise.resolve();
+        }
+
+        return DialogManager.prompt("Configuration", "What's the url for OrbModels?", "all fields are required", missingConfigs).then((res) => {
+            let emptyInputs = [];
+
+            missingConfigs.forEach((missingConfig) => {
+                if (res[missingConfig]) {
+                    config.set(missingConfig, res[missingConfig]);
+                } else {
+                    emptyInputs.push(missingConfig);
+                }
+            });
+
+            if (emptyInputs.length > 0) {
+                return ConfigUtil.promptForMissingConfiguration();
+            }
+        })
+    }
+
     static getModelRepoDir(): string {
         if (!ConfigUtil.modelRepoDir) {
-            if (!config.get("modelRepoDir")) {
-                const modelRepoDir = path.join(remote.app.getPath("userData"), "OrbModels");
-                config.set("modelRepoDir", modelRepoDir);
-            }
-
             ConfigUtil.modelRepoDir = config.get("modelRepoDir");
         }
 
@@ -29,35 +65,14 @@ export class ConfigUtil {
 
     static getRemoteOrigin() {
         if (!ConfigUtil.remoteOrigin) {
-            if (!config.get("remoteOrigin")) {
-                config.set("remoteOrigin", ConfigUtil.defaultModelUrl);
-            }
-
             ConfigUtil.remoteOrigin = config.get("remoteOrigin");
         }
 
         return ConfigUtil.remoteOrigin;
     }
 
-    static getRemoteOriginWithPrompt(): Promise<any> {
-        let key = "remoteOrigin";
-        let remoteOrigin = config.get("remoteOrigin");
-        if (remoteOrigin) {
-            return Promise.resolve(remoteOrigin);
-        }
-
-        return DialogManager.prompt("Configuration", "What's the url for OrbModels?", "Default:" + ConfigUtil.defaultModelUrl, [key]).then((res) => {
-            config.set(key, res[key]);
-            return res[key];
-        })
-    }
-
     static getFontFamily() {
         if (!ConfigUtil.fontFamily) {
-            if (!config.get("fontFamily")) {
-                config.set("fontFamily", "Roboto,sans-serif");
-            }
-
             ConfigUtil.fontFamily = config.get("fontFamily");
         }
 
@@ -66,34 +81,14 @@ export class ConfigUtil {
 
     static getFontSize() {
         if (!ConfigUtil.fontSize) {
-            if (!config.get("fontSize")) {
-                config.set("fontSize", "14px");
-            }
-
             ConfigUtil.fontSize = config.get("fontSize");
         }
 
         return ConfigUtil.fontSize;
     }
 
-    static getReuseSlbShell(): boolean {
-        if (ConfigUtil.reuseSlbShell == null) {
-            if (config.get("reuseSlbShell") == null) {
-                config.set("reuseSlbShell", false);
-            }
-
-            ConfigUtil.reuseSlbShell = config.get("reuseSlbShell");
-        }
-
-        return ConfigUtil.reuseSlbShell;
-    }
-
     static getAlwaysOpenInNewTab(): boolean {
         if (ConfigUtil.alwaysOpenInNewTab == null) {
-            if (config.get("alwaysOpenInNewTab") == null) {
-                config.set("alwaysOpenInNewTab", true);
-            }
-
             ConfigUtil.alwaysOpenInNewTab = config.get("alwaysOpenInNewTab");
         }
 

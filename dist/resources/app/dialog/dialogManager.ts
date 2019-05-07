@@ -5,10 +5,8 @@
 /// <reference path="../typings/index.d.ts" />
 /// <reference path="./dialog.d.ts" />
 
-import * as m from "Model";
 import { remote, ipcRenderer } from 'electron';
 import * as Promise from 'bluebird';
-import * as path from 'path';
 let log = require('loglevel');
 
 export class DialogManager {
@@ -45,7 +43,9 @@ export class DialogManager {
             })
         })
 
-        return DialogManager.showFieldDialog(title, message, caption, inputFields);
+        return DialogManager.showFieldDialog(title, message, caption, inputFields).then((res) => {
+            return res.fieldValues;
+        });
     }
 
     static showFieldDialog(title: string, message: string, caption: string, inputFields: FieldDescription[]): Promise<DialogOutput> {
