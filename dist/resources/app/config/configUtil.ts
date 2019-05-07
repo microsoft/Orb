@@ -6,7 +6,7 @@ import { remote, systemPreferences } from "electron";
 import * as Promise from "bluebird";
 
 export class ConfigUtil {
-    private static modelRepoDir: string;
+    public static modelRepoDir: string;
     private static remoteOrigin: string;
     private static fontFamily: string;
     private static fontSize: string;
