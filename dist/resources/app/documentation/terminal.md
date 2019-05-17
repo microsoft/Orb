@@ -39,22 +39,11 @@ The launchParameters not available in the .terminal resource but can be used her
 				}
 			},
 			{
-				"relativePath": "FcShell\\Constrained",
-				"namespace": "Compute",
-				"powershellProfile": "FcShell",
+				"relativePath": "CustomizedPowerShell",
+				"namespace": "Profile's namespace",
+				"powershellProfile": "CustomizedPowerShell",
 				"script": "",
 				"launchParameters": "-NoLogo -NoProfie",
-				"style": {
-					"fontSize": "100px",
-					"backgroundColor": "rgb(57, 56, 62)",
-					"textColor": "rgb(238,237,240)"
-				}
-			},
-			{
-				"relativePath": "FcShell\\Full",
-				"namespace": "Compute",
-				"powershellProfile": "FcShellFull",
-				"script": "",
 				"style": {
 					"fontSize": "100px",
 					"backgroundColor": "rgb(57, 56, 62)",

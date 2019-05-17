@@ -100,10 +100,10 @@ To add resources or objects, see the model documentation [here.](models.md)
 
 # Wiki
 
-<a href= "https://github.com/Microsoft/Orb/tree/master/dist/resources" target="_blank">https://github.com/Microsoft/Orb/tree/master/dist/resources</a>
+<a href= "https://github.com/Microsoft/Orb/README.md" target="_blank">https://github.com/Microsoft/Orb/README.md</a>
 
 # Support
 
 Please email [orbTalk](mailto:orbTalk@microsoft.com) for support.
 
-For suggesting features use: <a href= "http://aka.ms/orbUserVoice" target="_blank">http://aka.ms/orbUserVoice</a>
+For suggesting features use: <a href= "https://github.com/Microsoft/Orb/issues" target="_blank">https://github.com/Microsoft/Orb/issues</a>

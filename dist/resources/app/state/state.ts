@@ -100,11 +100,11 @@ export class TabState extends TabRequest { // TODO remove this extension. It's b
 }
 
 export class Constants {
-    static userVoice = "https://github.com/Microsoft/Orb";
+    static userVoice = "https://github.com/Microsoft/Orb/issues";
     static helpUrl = Util.getUrlPathRelativeToApp("./markdown/markdownView.html?md=documentation/all.md");
     static terminalUrl = Util.getUrlPathRelativeToApp("./terminal/terminal.html");
     static mdUrl = Util.getUrlPathRelativeToApp("./markdown/markdownView.html");
-    static supportUrl = "mailto:orbDev@microsoft.com";
+    static supportUrl = "mailto:orbTalk@microsoft.com";
     static editorUrl = Util.getUrlPathRelativeToApp("./editor/editor.html") + "?originalSrc={0}&originalSrcType={1}&modifiedSrc={2}&modifiedSrcType={3}&language={4}&isDiff={5}";
     static prHelperUrl = Util.getUrlPathRelativeToApp("./markdown/markdownView.html?md=documentation/pullRequest.md");
     static reactResourceUrl = Util.getUrlPathRelativeToApp("./extensions/resourceProviders/reactResourceProvider/index.html");

@@ -16,33 +16,27 @@ The below file opens up the Version Summary resource defined in Global\ComputeMa
 <objectExplorer>
 {
     "instance": "new",
+    "searchNamespace": "OrbSample",
     "explorerTrees": [
         {
-            "objectId": "Compute\\Global\\Compute Manager",
-            "namespace": "Compute",
-            "objectPath": "Global\\Compute Manager",
-            "requiredProps": {}
-        },
-        {
-            "objectId": "Compute\\FC\\Fabric\\BN1StageApp01",
-            "namespace": "Compute",
-            "objectPath": "FC\\Fabric",
+            "objectId": "OrbSample\\Compute\\VM\\df9df236-22fe-4d84-8c6b-42c6d63704e1",
+            "namespace": "OrbSample",
+            "objectPath": "Compute\\VM",
             "requiredProps": {
-                "Tenant": "BN1StageApp01"
+                "VMId": "df9df236-22fe-4d84-8c6b-42c6d63704e1"
             }
         }
     ],
     "openTabs": [
         {
             "type": "explorerResource",
-            "objectId": "Compute\\FC\\Fabric\\BN1StageApp01",
-            "relativePath": "Fabric.psmd"
+            "objectId": "OrbSample\\Compute\\VM\\df9df236-22fe-4d84-8c6b-42c6d63704e1",
+            "relativePath": "Events\\VM Events (Kusto Example).kusto"
         }
     ],
     "explorerTime": {
-        "type": "absolute",
-        "startTime": "Thu, 13 Apr 2017 05:38:34 GMT",
-        "endTime": "Fri, 14 Apr 2017 05:38:34 GMT"
+        "type": "relative",
+        "ago": "30d"
     }
 }
 </objectExplorer>
@@ -100,7 +94,7 @@ An array of tabs to open. Three tab types are possible.
 
 ### Open a User-Defined Terminal
 
-Launch 'FcShell\Full' in the default Orb instance.
+Launch 'UserDefinedPowerShellResourceProfile' in the default Orb instance.
 
 <objectExplorer>
 {
@@ -108,7 +102,7 @@ Launch 'FcShell\Full' in the default Orb instance.
     "openTabs": [
             {
                 "type": "localTerminal",
-                "relativePath": "FcShell\\Full"
+                "relativePath": "UserDefinedPowerShellResourceProfile"
             }
     ]
 }
@@ -144,10 +138,10 @@ The special [environment variables](terminal.md) injected into Orb terminals are
 function Add-ToOrb {
     <#
     .SYNOPSIS
-    Adds an FC object to the Orb explorer.
+    Adds an powershell object to the Orb explorer.
 
     .EXAMPLE
-    C:\PS> $f | Add-ToOrb; Get-Cloud *Stage* | Add-ToOrb -OpenTabs @("Events\TenantEvents.kusto");
+    C:\PS> $o | Add-ToOrb;
     #>
 
     [CmdletBinding()]
@@ -172,24 +166,17 @@ function Add-ToOrb {
         $resourceTemplate = '{{"type":"explorerResource", "objectId":"{0}", "relativePath":"{1}"}},';
 
         foreach ($o in $Object) {
-            $treeTemplate = '{{"namespace":"Compute","objectPath":"{0}","requiredProps":{1},"objectId":"{2}"}}';
+            $treeTemplate = '{{"namespace":"OrbSample","objectPath":"{0}","requiredProps":{1},"objectId":"{2}"}}';
 
             $type = ($o | gm |? {$_.Name -eq "GetType"}).TypeName
             $treeJson = "";
             $objectId = "";
 
             switch ($type) {
-                {($_ -eq "RD.Fabric.Controller.PowerShell.ObjectModel.Fabric") -or ($_ -eq "RD.Fabric.Controller.PowerShell.ObjectModel.Cloud")} {
-                    $requiredProps = '{{"Tenant":"{0}"}}' -f $o.Name;
-                    $objectId = "Compute\\FC\\Fabric\\$($o.Name)";
-                    $treeJson = $treeTemplate -f "FC\\Fabric", $requiredProps, $objectId
-                    break;
-                }
-
-                {($_ -eq "RD.Fabric.Controller.PowerShell.ObjectModel.Tenant")} {
-                    $objectId = "Compute\\FC\\Tenant\\$($o.Name)"
-                    $requiredProps = '{{"Tenant":"{0}", "tenantName":"{1}"}}' -f $o.FabricName, $o.Name;
-                    $treeJson = $treeTemplate -f "FC\\Tenant", $requiredProps, $objectId
+                {$_ -eq "Orb.VM"} {
+                    $requiredProps = '{{"VMId":"{0}"}}' -f $o.Id;
+                    $objectId = "OrbSample\\Compute\\VM\\$($o.Id)";
+                    $treeJson = $treeTemplate -f "Compute\\VM", $requiredProps, $objectId
                     break;
                 }
             }

@@ -15,7 +15,7 @@ Orb uses a git repository to store all object and resource definitions.
 
 >* Orb automatically syncs with the Models git repository to continuously update definitions.
 
-The Orb Models Repository is located [here.](https://msazure.visualstudio.com/DefaultCollection/One/_git/Azure-OrbModels)
+The Orb Models Repository is located [here.](https://dev.azure.com/orbModels/_git/OrbModels)
 
 You can explore your local git repository in the Edit page. You can also right-click folders and click 'Reveal in Explorer'.
 
@@ -40,7 +40,7 @@ Object trees can span namespaces if required.
 
 ## Creating a new Namespace
 
-To create a namespace, you need to create a new folder and a namespaceconfig.json file.
+To create a namespace, you need to create a new folder and a namespaceConfig.json file.
 
 You can pick one of the 3 directory layouts below.
 
@@ -125,11 +125,11 @@ These resource profiles tell Orb about how to connect to key resources like Kust
 
 This allows individual resource definitions to share connection configuration.
 
-Sample namespace config for Compute:
+Sample namespace config for OrbSample:
 
 ```json
 {
-    "name": "Compute",
+    "name": "OrbSample",
     "requiredBaseProps": [
         {
             "name": "cloudType",
@@ -137,48 +137,36 @@ Sample namespace config for Compute:
             "label": "Environment",
             "value": [
                 "Public",
-                "Fairfax",
-                "Mooncake",
-                "Blackforest"
+                "Private",
             ]
         }
     ],
     "resourceProfiles": [
         {
             "type": "kusto",
-            "name": "ACMKusto",
+            "name": "OrbDB",
             "clustersByCloudType": {
-                "Public": "https://azurecm.kusto.windows.net",
-                "Fairfax": "https://azurecmff.kusto.usgovcloudapi.net",
-                "Mooncake": "https://azurecmmc.kusto.chinacloudapi.cn",
-                "Blackforest": "https://azurecmbf.kusto.cloudapi.de"
+                "Public": "https://orbcluster.westus2.kusto.windows.net",
+                "Private": "https://orbcluster.westus2.kusto.windows.net"
             },
-            "db": "AzureCM"
-        },
-        {
-            "type": "dgrep",
-            "name": "ACMDgrep",
-            "endpointsByCloudType": {
-                "Public": "Diagnostics PROD",
-                "Mooncake": "CA Mooncake",
-                "Fairfax": "CA Fairfax",
-                "Blackforest": "CA Blackforest"
+            "dbsByCloudType": {
+                "Public": "orbtestdb"
+            },
+            "db": "orbtestdb",
+            "errorHelpMap": {
+                "403": "Please make sure you have valid AAD account."
             }
-        },
-        {
-            "type": "powershell",
-            "name": "FcShell",
-            "startupScript": ".(Join-Path $env:FcShellLatestRoot '\\FcShellBootstrap.ps1');"
         }
     ]
 }
+
 ```
 
 ### requiredBaseProps
 
 This is a set of properties that all objects in the namespace will inherit.
 
->* requiredBaseProps can be used to implement national clouds support
+>* requiredBaseProps can be used to implement [national clouds support](https://docs.microsoft.com/en-us/graph/deployments)
 
 Currently, only enums are supported as requiredBaseProps. These enum choices are automatically displayed on the search page.
 
@@ -210,14 +198,14 @@ Sample global object json file:
 
 ```json
 {
-    "namespace": "Compute",
-    "path": "Global\\Compute Manager",
+    "namespace": "OrbSample",
+    "path": "Global\\Global Object",
     "resources": [
         {
             "type": "jarvis",
-            "relativePath": "FC\\Global EKG",
+            "relativePath": "Compute\\Global Object",
             "description": "Global Compute VM, Node Availability",
-            "link": "https://jarvis-west.dc.ad.msft.net/dashboard/AzureComputeManager/Fabricator/GlobalEKG"
+            "link": "https://github.com/Microsoft/Orb"
         }
     ]
 }
@@ -235,61 +223,44 @@ Sample object json file:
 
 ```json
 {
-    "namespace": "Compute",
-    "path": "FC\\Tenant",
+    "namespace": "OrbSample",
+    "path": "Compute\\VM",
     "requiredProps": [
-        "tenantName",
-        "Tenant"
+        "VMId"
     ],
-    "key": "tenantName",
-    "displayName": "Compute: {tenantName}",
-    "disablePathlessSearch": false,
+    "key": "VMId",
     "constructor": {
         "type": "kusto",
-        "connectionProfile": "ACMKusto",
-        "query": "LogContainerSnapshot | where {timeRange} and tenantName == \"{tenantName}\" | take 1 | project tenantName, Tenant",
-        "wildcardQuery": "LogContainerSnapshot | where {timeRange} and tenantName matches regex \"{tenantName}\" | summarize by tenantName, Tenant",
-        "minimumResolutionInMinutes": 120,
-        "searchHint": "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|[0-9a-f]{8}[0-9a-f]{4}[1-5][0-9a-f]{3}[89ab][0-9a-f]{3}[0-9a-f]{12}"
+        "connectionProfile": "OrbDB",
+        "query": "VMSnapshot | where {timeRange} and VMId =~ \"{VMId}\" | take 1 | project VMId",
+        "wildcardQuery": "VMSnapshot | where {timeRange} and VMId matches regex \"{VMId}\" | summarize by VMId",
+        "minimumResolutionInMinutes": 120
     },
+    "additionalProps": [
+    ],
     "resources": [
         {
-            "type": "dgrep",
-            "relativePath": "DGrep\\TenantEvents",
-            "connectionProfile": "ACMDgrep",
-            "description": "",
-            "link": "https://jarvis-west.dc.ad.msft.net/?page=logs&be=DGrep&time=2016-11-18T02:26:00.000Z&offset=~60&offsetUnit=Minutes&UTC=true&ep=Diagnostics%20PROD&ns=Fc&en=TMMgmtTenantEventsEtwTable&scopingConditions=[[\"Tenant\",\"{Tenant}\"]]&serverQuery=TenantName%20%3D%3D%20\"{tenantName}\"&aggregates=[\"Count%20by%20resultType\"]&chartEditorVisible=true&chartType=Line&chartLayers=[[\"New%20Layer\",\"\"]]%20"
-        },
-        {
             "type": "kusto",
-            "relativePath": "Kusto\\TenantEvents",
-            "connectionProfile": "ACMKusto",
-            "description": "",
-            "query": "TMMgmtTenantEventsEtwTable | where {timeRange} and TenantName == \"{tenantName}\" | project PreciseTimeStamp, Message "
+            "relativePath": "Events\\VM Events (Kusto Example)",
+            "connectionProfile": "OrbDB",
+            "description": ".kusto example",
+            "query": "VMSnapshot | where {timeRange} and VMId == \"{VMId}\" | project PreciseTimeStamp, Event asc"
         },
         {
-            "type": "psmd",
-            "relativePath": "FcShell\\Get-Fabric",
-            "powershellProfile": "FcShell",
-            "description": "",
-            "script": "{gf}$f"
-        }
-    ],
-    "additionalProps": [
-        {
-            "name": "gf",
-            "type": "constant",
-            "value": "$f = Get-FabricCached {Tenant};"
+            "type": "link",
+            "relativePath": "VM diagnostics (Link Example)",
+            "description": ".link example",
+            "link": "https://github.com/Microsoft/Orb?vm={VMId}"
         }
     ],
     "associations": [
         {
             "type": "kusto",
-            "relativePath": "Fabric",
-            "associatedObjectPath": "FC\\Fabric",
+            "relativePath": "Node",
+            "associatedObjectPath": "Compute\\Node",
             "description": "",
-            "connectionProfile": "ACMKusto",
-            "query": "LogContainerSnapshot | where {timeRange} and tenantName == \"{tenantName}\" | limit 1 | project Tenant",
+            "connectionProfile": "OrbDB",
+            "query": "NodeSnapshot | where {timeRange} and VMId == \"{VMId}\" | limit 1 | project NodeId",
             "minimumResolutionInMinutes": 120
         }
     ]
@@ -308,7 +279,7 @@ This is a property from the requiredProps set that is required to search for thi
 
 ### disablePathlessSearch
 
-This prevents the object from being searched when a path is not specified (either in the search pane or in IcM mode). This defaults to *false* if not defined.
+This prevents the object from being searched when a path is not specified (in the search pane). This defaults to *false* if not defined.
 Please use this if your constructor takes a long time to run or requires user input.
 
 ### displayName
@@ -343,22 +314,6 @@ This prevents the object from being searched in the search pane. Usefull when yo
 #### PowerShell
 
 To use Powershell to define objects, see [this](powershellObjects.md) section.
-
-### searchHint
-
-Regex pattern used to identify how to discover keys that might match the given object type.
-
-For example, if your object keys are all of type guid, use the following searchHint.
-
-```json
-{
-    "searchHint": "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"
-}
-```
-
-> searchHint is required to enable suggested objects in IcM triage mode.
-
-More details about IcM triage mode can be found [here.](icmIntegration.md)
 
 ### additionalProps
 These are properties that are not required to create the object, but are additional properties on the object.
@@ -398,9 +353,9 @@ This allows re-using code/text snippets in the object definition file.
 {
     "additionalProps": [
         {
-            "name": "gf",
+            "name": "vmId",
             "type": "constant",
-            "value": "$f = Get-FabricCached {Tenant};\n"
+            "value": "{VMId}"
         }
     ]
 }
@@ -418,17 +373,19 @@ Append your object with any number of properties from Kusto.
 {
     "additionalProps": [
         {
-            "name": ["Region", "DC"],
+            "name": [
+                "NodeId"
+            ],
             "type": "kusto",
-            "connectionProfile": "ACMKusto",
-            "query": "LogClusterSnapshot | where {timeRange} and Region != \"\" and Tenant == \"{Tenant}\" | take 1 | project Region, DC=DataCenterName",
-            "minimumResolutionInMinutes": 120
+            "connectionProfile": "OrbDB",
+            "query": "VMSnapshot | where {timeRange} and VMId == \"{VMId}\" | project NodeId",
+            "minimumResolutionInMinutes": 45
         }
     ]
 }
 ```
 
-Now you can use {Region} and {DC} in any resource definition.
+Now you can use {NodeId} in any resource definition.
 
 #### PowerShell additionalProps
 
@@ -441,10 +398,10 @@ Append your object with a number of properties from PowerShell scripts.
 {
     "additionalProps": [
         {
-        "name": [ "SLBTenantName" ],
+        "name": [ "ADUser" ],
         "type": "powershell",
-        "powershellProfile": "SlbShell",
-        "script": "$t = $null; $t = Get-TenantCached {Cluster} {deploymentId}; if(!$t){return};$lbsettings = $t.LoadBalancerSettings; $vip = $lbsettings[0].VirtualIP.ToString();$f = Get-Fabric {Cluster} -SetAsDefaultForSession; $slbTenantName = get-slbforvip -Vip $vip -Fabric $f; new-object psobject -property @{SLBTenantName=$slbTenantName}"
+        "powershellProfile": "AzurePowerShell",
+        "script": "Get-ADUser -Filter * -SearchBase \"OU=Finance,OU=UserAccounts,DC=FABRIKAM,DC=COM\""
         }
     ]
 }
@@ -465,7 +422,6 @@ Variable | Description
 {startTime} | Start time in UTC that is selected on the Explorer/Search views.
 {endTime} | End time in UTC that is selected on the Explorer/Search views.
 {timeRange} | Kusto query snippet that can be used in a where clause to combine start/end times. Used in Kusto resources only.
-{icmId} | IcM incident Id when using triage mode.
 
 >* Not all resource group types need to use these variables.
 
@@ -473,20 +429,19 @@ Variable | Description
 
 ## Example of Contextualization
 
-Contextualization is the process of making a generic resource definition a contrete one by replacing *requiredProps* values and global variables.
+Contextualization is the process of making a generic resource definition a concrete one by replacing *requiredProps* values and global variables.
 
 Sample resource definition:
 <pre>
-TMMgmtTenantEventsEtwTable | where {timeRange} and TenantName == {tenantName} and Tenant == {Tenant} | project PreciseTimeStamp, Message
+VMSnapshot | where {timeRange} and VMId =~ \"{VMId}\" | take 1 | project VMId
 </pre>
 
-Let's say we have a concrete Tenant with *requiredProp* values.
+Let's say we have a concrete VM with *requiredProp* values.
 
 ```json
 {
     "requiredProps": {
-        "tenantName": "slb",
-        "Tenant": "CH1StageApp01"
+        "VMId": "df9df236-22fe-4d84-8c6b-42c6d63704e1"
     }
 }
 ```
@@ -495,7 +450,7 @@ Also, suppose the time range selected is the last 2 hours.
 
 Output concrete resource:
 <pre>
- TMMgmtTenantEventsEtwTable | where PreciseTimeStamp > ago(2h) and TenantName == "slb" and Tenant == "Ch1StageApp01" | project PreciseTimeStamp, Message
+ VMSnapshot | where PreciseTimeStamp > ago(2h) and VMId =~ "df9df236-22fe-4d84-8c6b-42c6d63704e1" | take 1 | project VMId
 </pre>
 
 Note all the variable substitutions that occurred above.
@@ -518,12 +473,6 @@ Setting this to true will show the resource in the right-click context menu inst
 The relativePath will be converted to sub-menus if it contains any directories.
 For example, a relative path of *foo\bar\myResource* will be converted to a menu foo, and sub-menu bar as *foo->bar->myResource*.
 
-### showInQuickActionMenu
-Setting this to true will show this resource in the quick action menu when using the IcM triage mode.
-More details can be found [here.](icmIntegration.md)
-
----
-
 ## Resource Types
 
 ### .link
@@ -541,83 +490,6 @@ Sample definition:
 }
 ```
 
-### .acis
-
-This is a link to a Geneva Action (formerly Acis).
-
->* Click the link button and select the long link option.
-
-* Replace any variables with property names from the object definition.
-
-```json
-{
-    "type": "acis",
-    "relativePath": "CRP\\Get Sub",
-    "description": "",
-    "link": "https://jarvis-west.dc.ad.msft.net/?page=actions&acisEndpoint=Public&extension=CRP&group=Subscription%20Operations&operationId=GetCRPSubscriptionDetails&operationName=Get%20Subscription%20Details%20(persistent%20data)&params={\"wellknownsubscriptionid\":\"{subscriptionId}\",\"smecrpregion\":\"WestUS\",\"smecrpsuffixparam\":\"/ResourceGroups\"}&actionEndpoint=Production&genevatraceguid=911f7cc0-a575-4bc9-b4c6-6b9f647d8259&startExecution=false"
-}
-```
-
-### .jarvis
-
-This is a link to Jarvis dashboards.
-
->* You can map requiredProps to jarvis dashboard overrides.
-
->* Time range does not need to be specified on the link. The resource handler automatically inserts the time range.
-
-To get the jarvis link:
-
-* If you need dashboard overrides replaced, make sure you add the override on the jarvis dashboard with any value.
-
-* Click the share button to generate a link.
-
-* Make sure you link to a saved dashboard and not a temporary one.
-
-* Replace the override value with property names from requiredProps.
-
-Sample definition:
-
-```json
-{
-    "type": "jarvis",
-    "relativePath": "Health\\Cluster EKG",
-    "description": "VM and Node Availability Dashboard",
-    "link": "https://jarvis-west.dc.ad.msft.net/dashboard/AzureComputeManager/Fabricator/ClusterEKG?overrides=[{%22query%22:%22//*[id=%27Tenant%27]%22,%22key%22:%22value%22,%22replacement%22:%22{Tenant}%22}]%20"
-}
-```
-
-### .dgrep
-
-This is a link to Dgrep searches. The resource handler automatically inserts the time range.
-
->* If a time range is present on the link, you do not need to modify the time range in any way.
-
-To get the Dgrep link:
-
- * Click the share button.
-
- * Make sure you select the full query with absolute times.
-
- * Replace actual object values with requiredProps property names.
-
- * You can ignore all time range properties. These are automatically handled.
-
- >* Make sure you escape quotes using \ in the json definition.
-
-Sample definition:
-
-```json
-{
-    "type": "dgrep",
-    "relativePath": "DGrep\\TenantEvents",
-    "connectionProfile": "ACMDgrep",
-    "description": "",
-    "link": "https://jarvis-west.dc.ad.msft.net/?page=logs&be=DGrep&time=2016-11-18T02:26:00.000Z&offset=~60&offsetUnit=Minutes&UTC=true&ep=Diagnostics%20PROD&ns=Fc&en=TMMgmtTenantEventsEtwTable&scopingConditions=[[\"Tenant\",\"{Tenant}\"]]&serverQuery=TenantName%20%3D%3D%20\"{tenantName}\"&aggregates=[\"Count%20by%20resultType\"]&chartEditorVisible=true&chartType=Line&chartLayers=[[\"New%20Layer\",\"\"]]%20"
-}
-```
-
-
 ### .kusto
 
 This is a kusto query definition.
@@ -631,10 +503,10 @@ Sample definition:
 ```json
 {
     "type": "kusto",
-    "relativePath": "Kusto\\TenantEvents",
-    "connectionProfile": "ACMKusto",
-    "description": "",
-    "query": "TMMgmtTenantEventsEtwTable | where {timeRange} and TenantName == {tenantName} and Tenant == {Tenant} | project PreciseTimeStamp, Message "
+    "relativePath": "Events\\VM Events (Kusto Example)",
+    "connectionProfile": "OrbDB",
+    "description": ".kusto example",
+    "query": "VMSnapshot | where {timeRange} and VMId == \"{VMId}\" | project PreciseTimeStamp, Event asc"
 }
 ```
 
@@ -652,11 +524,9 @@ The profile can be left unspecified if no modules need to be preloaded explicitl
 ```json
 {
     "type": "psx",
-    "relativePath": "Connect with FcShell",
-    "powershellProfile": "FcShell",
-    "description": "Open a new FcShell window and connect to the Fabric.",
-    "script": "$f = gf {Tenant}",
-    "showInContextMenu": "true"
+    "relativePath": "Runtime\\VM State (PSX Example)",
+    "description": ".psx example",
+    "script": "Write-Host '{vmId} started'"
 }
 ```
 
@@ -670,7 +540,7 @@ Open an Orb powershell terminal and run the provided script. The schema is ident
 
 Render any PowerShell script as markdown automatically.
 
-You can specify a PowerShell profile specified in namespaceconfig.json to preload modules for the script.
+You can specify a PowerShell profile specified in namespaceConfig.json to preload modules for the script.
 
 The profile can be left unspecified if no modules need to be preloaded explicitly.
 
@@ -693,10 +563,9 @@ The profile can be left unspecified if no modules need to be preloaded explicitl
 ```json
 {
     "type": "psmd",
-    "relativePath": "Connect with FcShell",
-    "powershellProfile": "FcShell",
-    "description": "Open a new FcShell window and connect to the Fabric.",
-    "script": "$f = gf {Tenant}",
+    "relativePath": "Runtime\\VM State (PSMD Example)",
+    "description": ".psmd example",
+    "script": "'{vmId} started'",
     "options": {
         "outputFormat": "auto"
     }
@@ -737,10 +606,6 @@ control the default display depth of the tree view using the *formatOptions* tag
 
 If you use the *objectExplorer*, the script you run has *|ConvertTo-JSON* appended to it to pass the data to Orb. To control the depth of the *ConvertTo-JSON* operation, specify the *parseDepth* tag.
 
-### .heatmap
-
-See [this](heatmaps.md) for more information.
-
 # Associations
 
 Object Resource Trees can be linked together using associations.
@@ -757,17 +622,11 @@ Sample definition:
 
 ```json
 {
-    "associations": [
-        {
-            "type": "kusto",
-            "relativePath": "Fabric",
-            "associatedObjectPath": "FC\\Fabric",
-            "description": "",
-            "connectionProfile": "ACMKusto",
-            "query": "LogContainerSnapshot | where {timeRange} and tenantName == {tenantName} | limit 1 | project Tenant",
-            "minimumResolutionInMinutes": 120
-        }
-    ]
+    "type": "kusto",
+    "relativePath": "Events\\VM Events (Kusto Example)",
+    "connectionProfile": "OrbDB",
+    "description": ".kusto example",
+    "query": "VMSnapshot | where {timeRange} and VMId == \"{VMId}\" | project PreciseTimeStamp, Event asc"
 }
 ```
 

@@ -330,7 +330,7 @@ export class ResourceEditor extends React.Component<Props, State> {
                         requiredProps = requiredProps.concat(objectDefinition.original.requiredProps);
                     }
 
-                    let globalContextVariables = ["icmId"];
+                    let globalContextVariables = [];
                     if (this.state.resourceType === "kusto") {
                         globalContextVariables = globalContextVariables.concat(["startTime", "endTime", "timeRange"]);
                     }
