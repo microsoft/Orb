@@ -1,8 +1,9 @@
 name:
   1.$(Date:yyyyMMdd)$(Rev:.r)
-
+  
 pool:
   vmImage: 'vs2017-win2016'
+  timeoutInMinutes: 0
 
 steps:
 - task: NodeTool@0

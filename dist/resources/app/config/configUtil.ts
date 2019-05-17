@@ -17,7 +17,7 @@ export class ConfigUtil {
         remoteOrigin: "https://dev.azure.com/orbModels/OrbModels",
         fontFamily: "Roboto,sans-serif",
         fontSize: "14px",
-        alwaysOpenInNewTab: false,
+        alwaysOpenInNewTab: true,
     }
 
     static promptForMissingConfiguration(): Promise<void> {
