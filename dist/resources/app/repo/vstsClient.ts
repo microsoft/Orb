@@ -2,6 +2,7 @@
 import * as rp from "request-promise";
 import * as Promise from "bluebird";
 import { VstsAuthenticator } from "../data/auth";
+import { ConfigUtil } from "../config/configUtil";
 
 export interface VstsResponse {
     pullRequestId: number;
@@ -21,7 +22,7 @@ export interface VstsResponse {
 }
 
 export class VstsClient {
-    private baseURI = "https://dev.azure.com/orbModels/_apis/git/repositories/d4136505-6729-4843-9213-84b700af567d";
+    private baseURI = ConfigUtil.Settings.vstsBaseUri;
     private PULLREQUEST_URI = this.baseURI + "/pullRequests?api-version=3.0";
     private UPDATE_PULLREQUEST_URI = this.baseURI + "/pullRequests/{0}?api-version=3.0";
     private GET_PULLREQUEST_URI = this.PULLREQUEST_URI + "&sourceRefName={0}&targetRefName={1}&$top=1";
@@ -103,7 +104,7 @@ export class VstsClient {
     }
 
     public getPullRequestURL(pullRequestId) {
-        return "https://dev.azure.com/orbModels/_git/OrbModels/pullrequest/{0}".format(pullRequestId);
+        return ConfigUtil.Settings.pullRequestUrl + "/{0}".format(pullRequestId);
     }
 
     public getActivePendingPullRequests(branchName: string): Promise<{ value: VstsResponse[] }> {

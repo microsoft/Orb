@@ -8,6 +8,7 @@ import * as electron from "electron";
 import * as Promise from "bluebird";
 import * as path from "path";
 import { Util } from "../util/util";
+import { ConfigUtil } from "../config/configUtil";
 
 export interface IAuthenticator {
     isAuthInProgress?(): boolean;
@@ -85,9 +86,9 @@ export class KustoAuthenticator extends AadAuthenticator {
     private static _instance: KustoAuthenticator;
 
     private constructor() {
-        super("db662dc1-0cfe-4e1c-a843-19a68e65be58",
-            "https://microsoft/kustoclient",
-            "https://orbcluster.westus2.kusto.windows.net");
+        super(ConfigUtil.Settings.kustoClientId,
+            ConfigUtil.Settings.kustoClientReplyUri,
+            ConfigUtil.Settings.kustoResourceId);
     }
 
     public static instance() {
@@ -104,9 +105,9 @@ export class VstsAuthenticator extends AadAuthenticator {
     private static _instance: VstsAuthenticator;
 
     private constructor() {
-        super("872cd9fa-d31f-45e0-9eab-6e460a02d1f1",
-            "urn:ietf:wg:oauth:2.0:oob",
-            "499b84ac-1321-427f-aa17-267ca6975798");
+        super(ConfigUtil.Settings.vstsClientId,
+            ConfigUtil.Settings.vstsClientReplyUri,
+            ConfigUtil.Settings.vstsResourceId);
     }
 
     public static instance() {

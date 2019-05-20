@@ -7,7 +7,6 @@
 
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
 import darkBaseTheme from "material-ui/styles/baseThemes/darkBaseTheme";
 import * as injectTapEventPluginExport from "react-tap-event-plugin";
@@ -17,7 +16,6 @@ import { Util } from "./util/util";
 import { ConfigUtil } from "./config/configUtil";
 import { Repo } from "./repo/repo";
 import { App } from "./app";
-import { Constants } from "./state/state";
 
 let log;
 
@@ -40,8 +38,8 @@ const initialize = (): Promise<any> => {
     }
 
     return ConfigUtil.promptForMissingConfiguration().then(() => {
-        Util.mkDirSync(ConfigUtil.getModelRepoDir());
-        return new Promise<any>((resolve, reject) => {
+        Util.mkDirSync(ConfigUtil.Settings.modelRepoDir);
+        return new Promise<any>((resolve) => {
             const repo = Repo.instance();
             if (!repo.existsSync()) {
                 resolve(repo.gitClone());
@@ -56,7 +54,8 @@ const initialize = (): Promise<any> => {
 // <DevTools />
 initialize()
     .catch((e) => {
-        alert("Failed to load object definitions, please ensure you have access to {0} and visit {1} section known issues. Error: {2}".format(ConfigUtil.getRemoteOrigin(), Constants.orbHomePage, e.toString()));
+        console.log(ConfigUtil.Settings)
+        alert("Failed to load object definitions from origin: {0}. Error: {1}".format(ConfigUtil.Settings.remoteOrigin, e.toString()));
     }).finally(() => {
         ReactDOM.render(
             <App orbState={store} theme={theme} />,
@@ -73,8 +72,8 @@ initialize()
         }
 
         // Injecting configured styles to app header and excluding chrome styles
-        Util.injectFontFamily(["html", "div", "body"], ConfigUtil.getFontFamily(), true);
-        Util.injectFontSize(["html", "div:not([class^='chrome']):not([class^='address']):not([class^='exclude'])", "body"], ConfigUtil.getFontSize(), true);
+        Util.injectFontFamily(["html", "div", "body"], ConfigUtil.Settings.fontFamily, true);
+        Util.injectFontSize(["html", "div:not([class^='chrome']):not([class^='address']):not([class^='exclude'])", "body"], ConfigUtil.Settings.fontSize, true);
 
         sendNotification();
     })

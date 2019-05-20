@@ -6,30 +6,62 @@ import { remote } from "electron";
 import * as Promise from "bluebird";
 
 export class ConfigUtil {
-    public static modelRepoDir: string;
-    private static remoteOrigin: string;
-    private static fontFamily: string;
-    private static fontSize: string;
-    private static alwaysOpenInNewTab: boolean;
+    public static Settings = {
+        modelRepoDir: null,
+        remoteOrigin: null,
+        fontFamily: null,
+        fontSize: null,
+        alwaysOpenInNewTab: null,
+        pullRequestUrl: null,
+        vstsBaseUri: null,
+        kustoClientId: null,
+        kustoClientReplyUri: null,
+        kustoResourceId: null,
+        vstsClientId: null,
+        vstsClientReplyUri: null,
+        vstsResourceId: null,
+        featureRequestUrl: null,
+        supportUrl: null,
+        homePageUrl: null,
+    }
 
-    public static defaultConfig = {
+    private static DefaultConfig = {
         modelRepoDir: path.join(remote.app.getPath("userData"), "OrbModels"),
-        remoteOrigin: "https://dev.azure.com/orbModels/OrbModels",
+        remoteOrigin: "https://dev.azure.com/orbModels/_git/OrbModels",
         fontFamily: "Roboto,sans-serif",
         fontSize: "14px",
         alwaysOpenInNewTab: true,
+        pullRequestUrl: "https://dev.azure.com/orbModels/_git/OrbModels/pullrequest",
+        vstsBaseUri: "https://dev.azure.com/orbModels/_apis/git/repositories/d4136505-6729-4843-9213-84b700af567d",
+        kustoClientId: "db662dc1-0cfe-4e1c-a843-19a68e65be58",
+        kustoClientReplyUri: "https://microsoft/kustoclient",
+        kustoResourceId: "https://orbcluster.westus2.kusto.windows.net",
+        vstsClientId: "872cd9fa-d31f-45e0-9eab-6e460a02d1f1",
+        vstsClientReplyUri: "urn:ietf:wg:oauth:2.0:oob",
+        vstsResourceId: "499b84ac-1321-427f-aa17-267ca6975798",
+        featureRequestUrl: "https://github.com/Microsoft/Orb/issues",
+        supportUrl: "mailto:orbTalk@microsoft.com",
+        homePageUrl: "https://github.com/Microsoft/Orb"
+    }
+
+    private static set(name: string, value: any): void {
+        config.set(name, value);
+        ConfigUtil.Settings[name] = value;
     }
 
     static promptForMissingConfiguration(): Promise<void> {
         let missingConfigs = [];
 
-        Object.keys(ConfigUtil.defaultConfig).forEach((prop) => {
-            if (config.get(prop) == undefined) {
-                if (ConfigUtil.defaultConfig[prop] != null) {
-                    config.set(prop, ConfigUtil.defaultConfig[prop]);
+        Object.keys(ConfigUtil.DefaultConfig).forEach((prop) => {
+            let cache = config.get(prop);
+            if (cache == undefined) {
+                if (ConfigUtil.DefaultConfig[prop] != null) {
+                    ConfigUtil.set(prop, ConfigUtil.DefaultConfig[prop]);
                 } else {
                     missingConfigs.push(prop);
                 }
+            } else {
+                ConfigUtil.Settings[prop] = cache;
             }
         })
 
@@ -41,8 +73,8 @@ export class ConfigUtil {
             let emptyInputs = [];
 
             missingConfigs.forEach((missingConfig) => {
-                if (res[missingConfig]) {
-                    config.set(missingConfig, res[missingConfig]);
+                if (res[missingConfig] != undefined) {
+                    ConfigUtil.set(missingConfig, res[missingConfig]);
                 } else {
                     emptyInputs.push(missingConfig);
                 }
@@ -52,45 +84,5 @@ export class ConfigUtil {
                 return ConfigUtil.promptForMissingConfiguration();
             }
         })
-    }
-
-    static getModelRepoDir(): string {
-        if (!ConfigUtil.modelRepoDir) {
-            ConfigUtil.modelRepoDir = config.get("modelRepoDir");
-        }
-
-        return ConfigUtil.modelRepoDir;
-    }
-
-    static getRemoteOrigin() {
-        if (!ConfigUtil.remoteOrigin) {
-            ConfigUtil.remoteOrigin = config.get("remoteOrigin");
-        }
-
-        return ConfigUtil.remoteOrigin;
-    }
-
-    static getFontFamily() {
-        if (!ConfigUtil.fontFamily) {
-            ConfigUtil.fontFamily = config.get("fontFamily");
-        }
-
-        return ConfigUtil.fontFamily;
-    }
-
-    static getFontSize() {
-        if (!ConfigUtil.fontSize) {
-            ConfigUtil.fontSize = config.get("fontSize");
-        }
-
-        return ConfigUtil.fontSize;
-    }
-
-    static getAlwaysOpenInNewTab(): boolean {
-        if (ConfigUtil.alwaysOpenInNewTab == null) {
-            ConfigUtil.alwaysOpenInNewTab = config.get("alwaysOpenInNewTab");
-        }
-
-        return ConfigUtil.alwaysOpenInNewTab;
     }
 }

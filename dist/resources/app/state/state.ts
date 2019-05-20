@@ -100,18 +100,18 @@ export class TabState extends TabRequest { // TODO remove this extension. It's b
 }
 
 export class Constants {
-    static userVoice = "https://github.com/Microsoft/Orb/issues";
+    static userVoice = ConfigUtil.Settings.featureRequestUrl;
     static helpUrl = Util.getUrlPathRelativeToApp("./markdown/markdownView.html?md=documentation/all.md");
     static terminalUrl = Util.getUrlPathRelativeToApp("./terminal/terminal.html");
     static mdUrl = Util.getUrlPathRelativeToApp("./markdown/markdownView.html");
-    static supportUrl = "mailto:orbTalk@microsoft.com";
+    static supportUrl = ConfigUtil.Settings.supportUrl;
     static editorUrl = Util.getUrlPathRelativeToApp("./editor/editor.html") + "?originalSrc={0}&originalSrcType={1}&modifiedSrc={2}&modifiedSrcType={3}&language={4}&isDiff={5}";
     static prHelperUrl = Util.getUrlPathRelativeToApp("./markdown/markdownView.html?md=documentation/pullRequest.md");
     static reactResourceUrl = Util.getUrlPathRelativeToApp("./extensions/resourceProviders/reactResourceProvider/index.html");
     static resourceEditorUrl = Util.getUrlPathRelativeToApp("./resourceEditor/resourceEditor.html");
     static extensionApps = Util.getAppPath() + "\\extensions\\apps";
     static extensionsManifestDir = "src\\ProtectedModels\\Extensions";
-    static orbHomePage = "https://github.com/Microsoft/Orb";
+    static orbHomePage = ConfigUtil.Settings.homePageUrl;
 }
 
 namespace ExplorerNodeTypes {

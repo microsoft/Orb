@@ -288,7 +288,7 @@ describe("ModelReader - validateObjectToBeMerged", () => {
             return Promise.resolve(true);
         };
 
-        ConfigUtil.modelRepoDir = path.join(remote.app.getPath("userData"), "OrbModels");
+        ConfigUtil.Settings.modelRepoDir = path.join(remote.app.getPath("userData"), "OrbModels");
     })
 
     it("Test validateObjectToBeMerged failed for namespaceConfig protected resource", () => {

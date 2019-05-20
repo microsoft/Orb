@@ -50,15 +50,15 @@ abstract class BaseRepo {
     }
 
     protected getSrcPath(fullPath: string): string {
-        let srcPath = fullPath.startsWith(ConfigUtil.getModelRepoDir()) ?
-            fullPath.substring(ConfigUtil.getModelRepoDir().length + 1) :
+        let srcPath = fullPath.startsWith(ConfigUtil.Settings.modelRepoDir) ?
+            fullPath.substring(ConfigUtil.Settings.modelRepoDir.length + 1) :
             fullPath;
 
         return srcPath.replace(/\\/g, "/");
     }
 
     existsSync(): boolean {
-        return Util.existsSync(path.join(ConfigUtil.getModelRepoDir(), ".git"));
+        return Util.existsSync(path.join(ConfigUtil.Settings.modelRepoDir, ".git"));
     }
 
     pullRequest(): Promise<any> {
@@ -195,7 +195,7 @@ class SimpleGitRepo extends BaseRepo {
     gitClone(): Promise<any> {
         console.log("gitClone");
         return new Promise<any>((resolve, reject) => {
-            this.git.clone(ConfigUtil.getRemoteOrigin(), ConfigUtil.getModelRepoDir(), [], (err, res) => {
+            this.git.clone(ConfigUtil.Settings.remoteOrigin, ConfigUtil.Settings.modelRepoDir, [], (err, res) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -407,10 +407,10 @@ class NodeGitRepo extends BaseRepo {
     gitClone(): Promise<any> {
         console.log("gitClone");
         return this.getPersonalAccessToken().then((token) => {
-            return this.git.Clone(ConfigUtil.getRemoteOrigin(), ConfigUtil.getModelRepoDir(),
+            return this.git.Clone(ConfigUtil.Settings.remoteOrigin, ConfigUtil.Settings.modelRepoDir,
                 this.getFetchOpts(token)).catch((e) => {
-                    return Util.remove(ConfigUtil.getModelRepoDir()).then(() => {
-                        return this.git.Clone(ConfigUtil.getRemoteOrigin(), ConfigUtil.getModelRepoDir(),
+                    return Util.remove(ConfigUtil.Settings.modelRepoDir).then(() => {
+                        return this.git.Clone(ConfigUtil.Settings.remoteOrigin, ConfigUtil.Settings.modelRepoDir,
                             this.getFetchOpts(token));
                     })
                 });
@@ -483,7 +483,7 @@ export class Repo {
     public static instance() {
         try {
             if (Repo._instance == null) {
-                Repo._instance = new NodeGitRepo(ConfigUtil.getModelRepoDir());
+                Repo._instance = new NodeGitRepo(ConfigUtil.Settings.modelRepoDir);
             }
         } catch (ex) {
             log.error(ex.toString());

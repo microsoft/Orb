@@ -57,7 +57,7 @@ export class Kusto {
             let requestId = uuidV4();
             console.log("requestId:", requestId);
             var headers = {
-                "Authorization": (cloudType.toLowerCase() === "public" ? "bearer " : "http://schemas.microsoft.com/dsts/saml2-bearer  ") + token,
+                "Authorization": "bearer ",
                 "Content-Type": "application/json;charset=UTF-8",
                 "Connection": "Keep-Alive",
                 "Accept-Encoding": "gzip",

@@ -11,7 +11,6 @@ import * as path from 'path';
 import * as os from 'os';
 import { DialogManager } from '../dialog/DialogManager';
 import { Util } from '../util/util';
-import { ConfigUtil } from '../config/configUtil';
 
 let log = require('loglevel');
 
