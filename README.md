@@ -1,3 +1,41 @@
+# Installation
+https://orbstorage.blob.core.windows.net/release/latest/Setup.exe
+
+
+# Get Started
+## Prerequisites
+### Install VSCode
+https://code.visualstudio.com/Download
+
+### Install node.js
+https://nodejs.org/en/download/
+
+### Install typescript & tslint
+
+```
+npm uninstall -g typescript
+npm install -g tslint typescript@2.5.3
+```
+
+## Clone repository
+Open cmd:
+```
+cd *yourWorkingDir*
+git clone https://github.com/microsoft/Orb.git
+```
+
+## Build
+```
+cd *yourWorkingDir*\Orb
+npm install
+build.cmd
+```
+
+## Run
+```
+cd *yourWorkingDir*\Orb\dist
+Orb.exe
+```
 
 # Contributing
 
