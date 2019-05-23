@@ -2,12 +2,10 @@
 
 * [Back to Help](all.md)
 
-> With the Orb October update, you can now define objects, properties, and associations using PowerShell scripts.
-
 ## The Basics
 As with any non-global object, there are a few required keys in the configuration JSON.
 
-<objectExplorer>
+```
 {
     "namespace": "Demo",
     "path": "PowerShell\\Employee",
@@ -30,7 +28,7 @@ As with any non-global object, there are a few required keys in the configuratio
         }
     ]
 }
-</objectExplorer>
+```
 
 In the case of a PowerShell-defined object, the _namespace_, _path_, _key_, and _requiredProps_ are exactly the same. Where things differ is the _constructor_ key.
 
@@ -50,7 +48,7 @@ This is run when Orb wants to create the object you're defining. The script need
 ## Additional Properties
 Another way to add PowerShell data to existing Orb objects is to add a PowerShell additional property.
 
-<objectExplorer>
+```
 {
     "additionalProps": [
         {
@@ -61,7 +59,7 @@ Another way to add PowerShell data to existing Orb objects is to add a PowerShel
         }
     ]
 }
-</objectExplorer>
+```
 
 For PowerShell-defined properties, there are four possible entries into the definition JSON:
 > _name_, _type_, _powershellProfile_, and _script_
@@ -83,7 +81,7 @@ This is run when Orb wants to fetch the properties. All _requiredProps_, _baseRe
 ## PowerShell Associated Objects
 The last way to add PowerShell data to objects is to define an association. In essence, associated objects are objects that can be fetched using an object's _requiredProps_, _baseRequiredProps_, and _additionalProps_.
 
-<objectExplorer>
+```
 {
     "associations": [
         {
@@ -95,7 +93,7 @@ The last way to add PowerShell data to objects is to define an association. In e
         }
     ]
 }
-</objectExplorer>
+```
 
 ### Type
 In the above example, the _type_ is defined as "__powershell__". This lets Orb know that it needs to run PowerShell to get the associated objects.
@@ -123,5 +121,5 @@ Under the _Demo_ namespace, you can search through a simple live demonstration o
 deep level of nesting, this command can take a long amount of time. Consider controlling the depth of your returned object like below:
 
 ```powershell
-$f = get-fabricCached CO1TstApp01; $x = $f.nodes[0].TdmPhysicalNodeReference; $x | Select -ExcludeProperty Fabric -Property *  | ConvertTo-Json -Depth 1 | ConvertFrom-Json
+Get-Process | ConvertTo-Json -Depth 1 | ConvertFrom-Json
 ```

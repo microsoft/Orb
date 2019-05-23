@@ -174,7 +174,7 @@ Currently, only enums are supported as requiredBaseProps. These enum choices are
 
 If requiredBaseProps are setup for your namespace as shown in the example above, every object will automatically include the *cloudType* variable.
 
-Kusto/Dgrep resources will be automatically converted to the endpoint defined for the given cloudType.
+Kusto resources will be automatically converted to the endpoint defined for the given cloudType.
 
 > Orb will automatically convert saved queries to Public endpoints if the underlying object is in a different cloudType.
 
@@ -204,7 +204,7 @@ Sample global object json file:
         {
             "type": "jarvis",
             "relativePath": "Compute\\Global Object",
-            "description": "Global Compute VM, Node Availability",
+            "description": "Global Compute VM, Host Availability",
             "link": "https://github.com/Microsoft/Orb"
         }
     ]
@@ -237,14 +237,23 @@ Sample object json file:
         "minimumResolutionInMinutes": 120
     },
     "additionalProps": [
+        {
+            "name": [
+                "HostId"
+            ],
+            "type": "kusto",
+            "connectionProfile": "OrbDB",
+            "query": "VMSnapshot | where {timeRange} and VMId == \"{VMId}\" | project HostId",
+            "minimumResolutionInMinutes": 45
+        }
     ],
     "resources": [
         {
             "type": "kusto",
-            "relativePath": "Events\\VM Events (Kusto Example)",
+            "relativePath": "Snapshot\\VM Snapshot (Kusto Example)",
             "connectionProfile": "OrbDB",
             "description": ".kusto example",
-            "query": "VMSnapshot | where {timeRange} and VMId == \"{VMId}\" | project PreciseTimeStamp, Event asc"
+            "query": "VMSnapshot | where {timeRange} and VMId == \"{VMId}\" | project PreciseTimeStamp, State, OsImage"
         },
         {
             "type": "link",
@@ -256,15 +265,25 @@ Sample object json file:
     "associations": [
         {
             "type": "kusto",
-            "relativePath": "Node",
-            "associatedObjectPath": "Compute\\Node",
+            "relativePath": "Host",
+            "associatedObjectPath": "Compute\\Host",
             "description": "",
             "connectionProfile": "OrbDB",
-            "query": "NodeSnapshot | where {timeRange} and VMId == \"{VMId}\" | limit 1 | project NodeId",
+            "query": "VMSnapshot | where {timeRange} and VMId == \"{VMId}\" | take 1 | project HostId",
+            "minimumResolutionInMinutes": 120
+        },
+        {
+            "type": "kusto",
+            "relativePath": "Rack",
+            "associatedObjectPath": "Compute\\Rack",
+            "description": "",
+            "connectionProfile": "OrbDB",
+            "query": "HostSnapshot | where {timeRange} and HostId == \"{HostId}\" | take 1 | project RackId",
             "minimumResolutionInMinutes": 120
         }
     ]
 }
+
 ```
 
 ### requiredProps
@@ -374,18 +393,18 @@ Append your object with any number of properties from Kusto.
     "additionalProps": [
         {
             "name": [
-                "NodeId"
+                "HostId"
             ],
             "type": "kusto",
             "connectionProfile": "OrbDB",
-            "query": "VMSnapshot | where {timeRange} and VMId == \"{VMId}\" | project NodeId",
+            "query": "VMSnapshot | where {timeRange} and VMId == \"{VMId}\" | project HostId",
             "minimumResolutionInMinutes": 45
         }
     ]
 }
 ```
 
-Now you can use {NodeId} in any resource definition.
+Now you can use {HostId} in any resource definition.
 
 #### PowerShell additionalProps
 
@@ -398,7 +417,7 @@ Append your object with a number of properties from PowerShell scripts.
 {
     "additionalProps": [
         {
-        "name": [ "ADUser" ],
+        "name": ["ADUser"],
         "type": "powershell",
         "powershellProfile": "AzurePowerShell",
         "script": "Get-ADUser -Filter * -SearchBase \"OU=Finance,OU=UserAccounts,DC=FABRIKAM,DC=COM\""
@@ -503,10 +522,10 @@ Sample definition:
 ```json
 {
     "type": "kusto",
-    "relativePath": "Events\\VM Events (Kusto Example)",
+    "relativePath": "Snapshot\\VM Snapshot (Kusto Example)",
     "connectionProfile": "OrbDB",
     "description": ".kusto example",
-    "query": "VMSnapshot | where {timeRange} and VMId == \"{VMId}\" | project PreciseTimeStamp, Event asc"
+    "query": "VMSnapshot | where {timeRange} and VMId == \"{VMId}\" | project PreciseTimeStamp asc"
 }
 ```
 
@@ -514,7 +533,7 @@ Sample definition:
 
 Open any PowerShell script in an external window.
 
-You can specify a PowerShell profile specified in namespaceconfig.json to preload modules for the script.
+You can specify a PowerShell profile specified in namespaceConfig.json to preload modules for the script.
 
 The profile can be left unspecified if no modules need to be preloaded explicitly.
 
@@ -622,15 +641,17 @@ Sample definition:
 
 ```json
 {
-    "type": "kusto",
-    "relativePath": "Events\\VM Events (Kusto Example)",
-    "connectionProfile": "OrbDB",
-    "description": ".kusto example",
-    "query": "VMSnapshot | where {timeRange} and VMId == \"{VMId}\" | project PreciseTimeStamp, Event asc"
+   "type": "kusto",
+   "relativePath": "Host",
+   "associatedObjectPath": "Compute\\Host",
+   "description": "",
+   "connectionProfile": "OrbDB",
+   "query": "VMSnapshot | where {timeRange} and VMId == \"{VMId}\" | take 1 | project HostId",
+   "minimumResolutionInMinutes": 120
 }
 ```
 
-In the above example a Tenant is associated with a Fabric.
+In the above example a Host is associated with a VM.
 
 For details on minimumResolutionInMinutes see the [constructor section](#constructor) above.
 

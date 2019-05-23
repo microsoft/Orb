@@ -22,7 +22,7 @@ export interface VstsResponse {
 }
 
 export class VstsClient {
-    private baseURI = ConfigUtil.Settings.vstsBaseUri;
+    private baseURI = ConfigUtil.GetSetting("vstsBaseUri");
     private PULLREQUEST_URI = this.baseURI + "/pullRequests?api-version=3.0";
     private UPDATE_PULLREQUEST_URI = this.baseURI + "/pullRequests/{0}?api-version=3.0";
     private GET_PULLREQUEST_URI = this.PULLREQUEST_URI + "&sourceRefName={0}&targetRefName={1}&$top=1";
@@ -104,7 +104,7 @@ export class VstsClient {
     }
 
     public getPullRequestURL(pullRequestId) {
-        return ConfigUtil.Settings.remoteOrigin + "/pullrequest/{0}".format(pullRequestId);
+        return ConfigUtil.GetSetting("remoteOrigin") + "/pullrequest/{0}".format(pullRequestId);
     }
 
     public getActivePendingPullRequests(branchName: string): Promise<{ value: VstsResponse[] }> {

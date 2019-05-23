@@ -139,12 +139,8 @@ declare module "Model" {
         style: {};
     }
 
-    export interface NodeRdpResource extends Resource {
-        arguments: string;
-    }
-
     export interface PsmdOptions {
-        outputFormat: "auto" | "rawMarkdown" | "objectExplorer" | "MRDriverLatestHealthSnapShot";
+        outputFormat: "auto" | "rawMarkdown" | "objectExplorer";
         formatOptions?: PsmdFormatOptions;
     }
 

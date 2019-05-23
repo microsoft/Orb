@@ -10,8 +10,7 @@ import * as React from "react";
  * Place Markdown Extension modules here. The key should be the extension name in lowercase.
  */
 const markdownExtensionModules = {
-    objectexplorer: require("./objectExplorer"),
-    mrdriverlatesthealthsnapshot: require("./mrDriverLatestHealthSnapShot")
+    objectexplorer: require("./objectExplorer")
 }
 
 /**

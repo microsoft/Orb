@@ -201,7 +201,7 @@ export class Edit extends React.Component<EditProps, any> {
                                     fontWeight: "inherit"
                                 }
                             }
-                            directory={path.join(ConfigUtil.Settings.modelRepoDir, "src")}
+                            directory={path.join(ConfigUtil.GetSetting("modelRepoDir"), "src")}
                         />
                     </div>
                 </Collapse>

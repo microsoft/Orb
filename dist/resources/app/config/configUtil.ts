@@ -63,4 +63,12 @@ export class ConfigUtil {
             }
         })
     }
+
+    static GetSetting(name: string) {
+        if (ConfigUtil.Settings[name] == null) {
+            ConfigUtil.Settings[name] = config.get(name);
+        }
+
+        return ConfigUtil.Settings[name];
+    }
 }

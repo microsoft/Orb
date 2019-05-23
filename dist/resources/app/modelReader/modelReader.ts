@@ -39,11 +39,11 @@ export class ModelReader {
     private static configCache: { [key: string]: m.OverridableConfig };
 
     public static getFilePath(namespace: string, objectPath: string): string {
-        return path.join(ConfigUtil.Settings.modelRepoDir, "src\\Models", namespace, "Objects", objectPath + ".json");
+        return path.join(ConfigUtil.GetSetting("modelRepoDir"), "src\\Models", namespace, "Objects", objectPath + ".json");
     }
 
     public static getFlightPath(namespace: string, flightPath: string): string {
-        return path.join(ConfigUtil.Settings.modelRepoDir, "src\\Models", namespace, "Flights", flightPath + ".json");
+        return path.join(ConfigUtil.GetSetting("modelRepoDir"), "src\\Models", namespace, "Flights", flightPath + ".json");
     }
 
     public static validateAndParseObjectDefinition(object: m.ObjectDefinition): Promise<any> {
@@ -57,7 +57,7 @@ export class ModelReader {
 
         this.configCache = {};
 
-        return glob(path.join(ConfigUtil.Settings.modelRepoDir, "src\\ProtectedModels\\*.config.json"))
+        return glob(path.join(ConfigUtil.GetSetting("modelRepoDir"), "src\\ProtectedModels\\*.config.json"))
             .map((path) => readJson(path))
             .each((json) => {
                 this.configCache[json.name] = json;
@@ -297,7 +297,7 @@ export class ModelReader {
         let arr = [];
         let innerExceptions = [];
 
-        return glob(path.join(ConfigUtil.Settings.modelRepoDir, "src\\**\\namespaceConfig.json"))
+        return glob(path.join(ConfigUtil.GetSetting("modelRepoDir"), "src\\**\\namespaceConfig.json"))
             .then((filePaths) => {
                 let readPromises = [];
                 filePaths.forEach((filePath) => {
@@ -371,7 +371,7 @@ export class ModelReader {
     private static readObjectDefinitions(namespaceName: string, throwInnerException = false): Promise<{ [key: string]: m.ParsedObjectDefinition }> {
         return ModelReader.getNameSpace(namespaceName).then((namespaceConfig) => {
             let result = {};
-            let parentPath = path.join(ConfigUtil.Settings.modelRepoDir, "src\\**", namespaceName, "Objects\\**");
+            let parentPath = path.join(ConfigUtil.GetSetting("modelRepoDir"), "src\\**", namespaceName, "Objects\\**");
             let innerExceptions = [];
 
             // Searches for root objects underneath src\**\Objects\**\*.json
@@ -510,7 +510,7 @@ export class ModelReader {
     private static getAssociatedPaths(jsonPath: string): Promise<string[]> {
         let fileExt = path.extname(jsonPath);
 
-        let unixModelRepoDir: string = ConfigUtil.Settings.modelRepoDir.replace(/\\/g, "/");
+        let unixModelRepoDir: string = ConfigUtil.GetSetting("modelRepoDir").replace(/\\/g, "/");
 
         // Search path after the source folder
         // Ex: Models/stuff.json
@@ -559,7 +559,7 @@ export class ModelReader {
      */
     private static getValidationDirectory(filePath: string): string {
         let unixFilePath = filePath.replace(/\\/g, "/");
-        let unixModelRepoDir = ConfigUtil.Settings.modelRepoDir.replace(/\\/g, "/");
+        let unixModelRepoDir = ConfigUtil.GetSetting("modelRepoDir").replace(/\\/g, "/");
 
         let relativePath = unixFilePath.replace(unixModelRepoDir, "");
 

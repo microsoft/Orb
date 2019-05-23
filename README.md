@@ -1,52 +1,55 @@
+![](https://img.shields.io/badge/node-8.15.0-blue.svg)
+![](https://img.shields.io/badge/electron-2.0.9-blue.svg)
+![](https://img.shields.io/badge/typescript-2.5.3-blue.svg)
+![](https://img.shields.io/badge/platform-win--64%20%7C%20win--32-success.svg)
+![](https://img.shields.io/badge/build-passing-success.svg)
+
+Orb is a web browser, built specifically for LiveSite and DevOps. It combines Kusto, Link, PowerShell and a lot more.
+
 # Installation
 https://orbstorage.blob.core.windows.net/release/latest/Setup.exe
 
+# Features
+## Object and Context Driven
+Orb is context driven and allows you to rapidly browse through information based on an object hierarchy.
 
-# Get Started
-## Prerequisites
-### Install VSCode
-https://code.visualstudio.com/Download
+When any resource on the object tree is clicked, all context associated with that object is passed to the resource link.
+This allows you to rapidly explore queries, dashboards, links and powershell scripts since all variables are automatically injected for you.
 
-### Install node.js
-https://nodejs.org/en/download/
+![](gifs/ObjectAndContextDriven.gif)
 
-### Install typescript & tslint
+## Backed by Kusto
+Kusto integration allows rapidly searching for objects and discovering hierarchies dynamically.
 
-```
-npm uninstall -g typescript
-npm install -g tslint typescript@2.5.3
-```
+![](gifs/BackedByKusto.gif)
+## Extensible and Shareable
+All object definitions and hierarchies are defined as JSON config. You can edit object definitions, add resources and share your changes from within Orb.
 
-## Clone repository
-Open cmd:
-```
-cd *yourWorkingDir*
-git clone https://github.com/microsoft/Orb.git
-```
+These config files are stored on a Git repository so you can audit and rollback changes just as easily.
 
-## Build
-```
-cd *yourWorkingDir*\Orb
-npm install
-build.cmd
-```
+![](gifs/ExtensibleAndShareable.gif)
+## PowerShell Support
+Orb allows you to save and share PowerShell snippets. The results of these PowerShell snippets are displayed as web pages rendered using Markdown.
 
-## Run
-```
-cd *yourWorkingDir*\Orb\dist
-Orb.exe
-```
+Since Orb allows multiple tabs, you can open up saved snippets and run them in parallel. Reloading (F5) these PowerShell pages re-executes the PowerShell script. Ctrl+F searches through result output.
 
-# Contributing
+![](gifs/PowerShellSupport.gif)
+# Terminal Integration
+In addition to PowerShell Markdown support, you can open a fully functional PowerShell terminal in Orb.
+You can define custom terminal profiles to launch terminals with custom startup scripts.
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.microsoft.com..
+![](gifs/TerminalIntegration.gif)
+# Orb Files and Links
+You can save Orb state to a file, edit it, pin it to your JumpList to accelerate repeated workflows.
 
-When you submit a pull request, a CLA-bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., label, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
+You can also share your Orb state as a link.
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+# Built On Chromium
+Orb is built on [Electron](https://electronjs.org/).
+
+Every tab in Orb is a Chromium process (just like in Chrome) - i.e. you don't need to worry about Browser compatibility when using Orb.
+
+# [Onboarding](ONBOARDING.md)
+
+# [Contributing](CONTRIBUTING.md)
+

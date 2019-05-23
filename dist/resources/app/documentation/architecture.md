@@ -22,8 +22,4 @@ This open-source module allows running .NET side-by-side with node.JS. This allo
 
 <a href= "https://github.com/kexplo/electron-edge" target="_blank">https://github.com/kexplo/electron-edge</a>
 
-## More information
-
-If you are interested in developing for Orb, reach out to [orbTalk.](mailto:orbTalk@microsoft.com)
-
 

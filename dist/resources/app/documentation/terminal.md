@@ -19,41 +19,30 @@ The launchParameters not available in the .terminal resource but can be used her
 
 ## Sample Terminal Config
 
-<objectExplorer>
+```
 {
-	"modelRepoDir": "C:\\Users\\gajagt\\AppData\\Roaming\\OrbInsiders\\OrbModels",
-	"remoteOrigin": "https://msazure.visualstudio.com/One/_git/Azure-OrbModels/",
+	"modelRepoDir": "C:\\Users\\xxx\\AppData\\Roaming\\Orb\\OrbModels",
+	"remoteOrigin": "https://dev.azure.com/orbModels/_git/OrbModels",
+	"alwaysOpenInNewTab": true,
+	"vstsBaseUri": "https://dev.azure.com/orbModels/_apis/git/repositories/d4136505-6729-4843-9213-84b700af567d",
+	"homePageUrl": "https://github.com/Microsoft/Orb",
 	"terminalConfig": {
-		"default": "FcShell\\Full",
+		"default": "PowerShell",
 		"resources": [
 			{
 				"relativePath": "PowerShell",
 				"namespace": "",
 				"powershellProfile": "",
 				"script": "",
-				"launchParameters": "-NoLogo",
 				"style": {
-					"fontSize": "100px",
-					"backgroundColor": "rgb(57, 56, 62)",
-					"textColor": "rgb(238,237,240)"
-				}
-			},
-			{
-				"relativePath": "CustomizedPowerShell",
-				"namespace": "Profile's namespace",
-				"powershellProfile": "CustomizedPowerShell",
-				"script": "",
-				"launchParameters": "-NoLogo -NoProfie",
-				"style": {
-					"fontSize": "100px",
+					"fontSize": "15px",
 					"backgroundColor": "rgb(57, 56, 62)",
 					"textColor": "rgb(238,237,240)"
 				}
 			}
 		]
 	}
-}
-</objectExplorer>
+```
 
 ## Special Environment Variables
 

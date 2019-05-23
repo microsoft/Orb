@@ -13,7 +13,7 @@ You can also create custom Orb files based on the file format described below.
 ## Sample Orb File
 
 The below file opens up the Version Summary resource defined in Global\ComputeManager.
-<objectExplorer>
+```
 {
     "instance": "new",
     "searchNamespace": "OrbSample",
@@ -39,7 +39,7 @@ The below file opens up the Version Summary resource defined in Global\ComputeMa
         "ago": "30d"
     }
 }
-</objectExplorer>
+```
 
 ### instance
 
@@ -61,7 +61,7 @@ Start time/End time/TimeAgo for the explorer page to use. Both absolute time and
 
 absolute time example:
 
-<objectExplorer>
+```
 {
     "explorerTime": {
         "type": "absolute",
@@ -69,18 +69,18 @@ absolute time example:
         "endTime": "Fri, 14 Apr 2017 05:38:34 GMT"
     }
 }
-</objectExplorer>
+```
 
 relative time example:
 
-<objectExplorer>
+```
 {
     "explorerTime": {
         "type": "relative",
         "ago": "1h"
     }
 }
-</objectExplorer>
+```
 
 ### openTabs
 
@@ -96,7 +96,7 @@ An array of tabs to open. Three tab types are possible.
 
 Launch 'UserDefinedPowerShellResourceProfile' in the default Orb instance.
 
-<objectExplorer>
+```
 {
     "instance":"Default",
     "openTabs": [
@@ -106,13 +106,13 @@ Launch 'UserDefinedPowerShellResourceProfile' in the default Orb instance.
             }
     ]
 }
-</objectExplorer>
+```
 
 ### Open Web Links
 
 Launch bing.com in a new Orb instance.
 
-<objectExplorer>
+```
 {
     "instance":"Default",
     "openTabs":[
@@ -122,7 +122,7 @@ Launch bing.com in a new Orb instance.
         }
     ]
 }
-</objectExplorer>
+```
 
 ### Terminal Interaction and Automation
 

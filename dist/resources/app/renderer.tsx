@@ -38,7 +38,7 @@ const initialize = (): Promise<any> => {
     }
 
     return ConfigUtil.promptForMissingConfiguration().then(() => {
-        Util.mkDirSync(ConfigUtil.Settings.modelRepoDir);
+        Util.mkDirSync(ConfigUtil.GetSetting("modelRepoDir"));
         return new Promise<any>((resolve) => {
             const repo = Repo.instance();
             if (!repo.existsSync()) {
@@ -54,8 +54,7 @@ const initialize = (): Promise<any> => {
 // <DevTools />
 initialize()
     .catch((e) => {
-        console.log(ConfigUtil.Settings)
-        alert("Failed to load object definitions from origin: {0}. Error: {1}".format(ConfigUtil.Settings.remoteOrigin, e.toString()));
+        alert("Failed to load object definitions from origin: {0}. Error: {1}".format(ConfigUtil.GetSetting("remoteOrigin"), e.toString()));
     }).finally(() => {
         ReactDOM.render(
             <App orbState={store} theme={theme} />,
@@ -101,6 +100,7 @@ log.methodFactory = function (methodName, logLevel, loggerName) {
             StateManager.getStore().toast.inner.showToast(msgString, methodName === "trace"
                 || methodName == "debug" ? "info" : methodName);
         }
+
         rawMethod(message);
     };
 };

@@ -124,7 +124,7 @@ export class ResourceEditor extends React.Component<Props, State> {
 
         this.contextHint = null;
         this.objectProps = [];
-        this.modelDir = ConfigUtil.Settings.modelRepoDir.replace(/\\/g, "/") + "/";
+        this.modelDir = ConfigUtil.GetSetting("modelRepoDir").replace(/\\/g, "/") + "/";
         document.title = "Resource Editor";
         ipcRenderer.on("context-received", (event, arg: {
             fromClipboard: boolean,

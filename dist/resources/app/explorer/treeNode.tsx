@@ -261,7 +261,7 @@ export class TreeNode extends React.Component<ExplorerNodeProps, any> {
     }
 
     handleResourceClick(event: React.MouseEvent<any>) {
-        this.openResource(this.props.node.resource, event, ConfigUtil.Settings.alwaysOpenInNewTab);
+        this.openResource(this.props.node.resource, event, ConfigUtil.GetSetting("alwaysOpenInNewTab"));
     }
 
     openResource(resource: m.Resource, event?: React.MouseEvent<any>, openFirstRequestInNewTab = false) {
@@ -556,7 +556,7 @@ export class TreeNode extends React.Component<ExplorerNodeProps, any> {
                     label: "Pin to Explorer",
                     click: () => {
                         let explorerState = sideBarState.explorer.inner;
-                        TreeGenerator.generateTree(currNamespace, currPath, this.props.node.objectContext.requiredProps, null, true)
+                        TreeGenerator.generateTree(currNamespace, currPath, this.props.node.objectContext.requiredProps, null, true, this.props.node.objectContext.requiredBaseProps)
                             .then((root) => {
                                 let position = this.getPosition();
                                 explorerState.addObjectTree(root, position);

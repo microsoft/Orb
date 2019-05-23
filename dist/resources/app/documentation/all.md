@@ -104,6 +104,4 @@ To add resources or objects, see the model documentation [here.](models.md)
 
 # Support
 
-Please email [orbTalk](mailto:orbTalk@microsoft.com) for support.
-
-For suggesting features use: <a href= "https://github.com/Microsoft/Orb/issues" target="_blank">https://github.com/Microsoft/Orb/issues</a>
+[See Contributing Section](https://github.com/microsoft/Orb/blob/master/ONBOARDING.md)

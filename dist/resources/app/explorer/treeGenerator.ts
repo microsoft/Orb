@@ -506,18 +506,18 @@ export class TreeGenerator {
     }
 
     public static reloadAllTrees() {
-        ModelReader.clearObjectDefinitionCache();
-        ModelReader.clearNamespaceCache();
         const promises = [];
         promises.push(ResourceSuggestionDB.instance().destroy());
         promises.push(ResourceCollections.instance().destroy());
 
         Promise.all(promises).then(() => {
+            ModelReader.clearObjectDefinitionCache();
+            ModelReader.clearNamespaceCache();
             let explorerState = StateManager.getStore().sideBar.inner.explorer.inner;
             explorerState.trees.forEach(tree => {
                 let rootNode = tree.root.node;
                 TreeGenerator.generateTree(
-                    rootNode.namespace, rootNode.objectPath, rootNode.objectContext.requiredProps, null, true)
+                    rootNode.namespace, rootNode.objectPath, rootNode.objectContext.requiredProps, null, true, rootNode.objectContext.requiredBaseProps)
                     .then((root) => {
                         root.node.setChildrenObservables(rootNode.childrenVisible, false);
                         tree.setRoot(root);

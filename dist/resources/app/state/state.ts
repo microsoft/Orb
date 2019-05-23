@@ -4,8 +4,8 @@
 
 /// <reference path="../typings/index.d.ts" />
 
-import { IObservableValue, observable, IObservableArray, action, transaction, useStrict, computed } from "mobx";
-import { ipcRenderer, remote, clipboard } from "electron";
+import { observable, action, useStrict, computed } from "mobx";
+import { ipcRenderer, remote } from "electron";
 import { Util } from "../util/util";
 import * as m from "Model";
 import { GitFile, Repo } from "../repo/repo";
@@ -13,21 +13,15 @@ import { TreeGenerator } from "../explorer/treeGenerator";
 import * as uuidV4 from "uuid/v4";
 import { TerminalConfigManager } from "../config/terminalConfig";
 import { ResourceProviderHelper } from "../extensions/ResourceProviders/helper";
-import { ResourceSuggestionDB, IResource } from "../db/db";
+import { ResourceSuggestionDB } from "../db/db";
 import { ResourceProviderSelector } from "../extensions/ResourceProviders/ResourceProviderSelector";
 import { VstsResponse } from "../repo/vstsClient";
 import * as url from "url";
 import * as fs from "fs";
 import { LinkManager } from "../linkManager/linkManager";
-import { ExtensionState, ExtensionPointNavBar, RepoManifest } from "../extensions/commonInterfaces";
+import { ExtensionState } from "../extensions/commonInterfaces";
 import { ConfigUtil } from "../config/configUtil";
-import { isNullOrUndefined } from "util";
 import { Win32Edge } from "../data/win32Edge";
-import { KustoEdge } from "../data/kustoEdge";
-import { Kusto } from "../data/kusto";
-import * as path from "path";
-import { Key } from "readline";
-import { NavBar } from "../navBar/navBar";
 import * as Promise from "bluebird";
 
 var glob = require("glob")
@@ -109,7 +103,7 @@ export class Constants {
     static resourceEditorUrl = Util.getUrlPathRelativeToApp("./resourceEditor/resourceEditor.html");
     static extensionApps = Util.getAppPath() + "\\extensions\\apps";
     static extensionsManifestDir = "src\\ProtectedModels\\Extensions";
-    static orbHomePage = ConfigUtil.Settings.homePageUrl;
+    static orbHomePage = ConfigUtil.GetSetting("homePageUrl");
 }
 
 namespace ExplorerNodeTypes {
@@ -1086,10 +1080,6 @@ class LocalTerminalOpenedResource extends PersistedOpenedResource {
     relativePath: string;
 }
 
-class LinkOpenedResource extends PersistedOpenedResource {
-    link: string;
-}
-
 class PersistedTree {
     objectId: string;
     namespace: string;
@@ -1294,17 +1284,6 @@ export class StateManager {
                     resourceToSave.objectId = matchingTree.objectId;
                     resourceToSave.relativePath = tab.resourceState.relativePath;
                     s.openTabs.push(resourceToSave);
-                } else if (tab.url) {
-                    // This tab is not tied to a resource, it's just a link.
-                    let urlLower = tab.url.toLowerCase();
-                    if (urlLower.startsWith("http://") || urlLower.startsWith("https://")) {
-                        // Do not persist file links since this can lead to arbitrary terminal launching, etc.
-                        let resourceToSave = new LinkOpenedResource();
-                        resourceToSave.type = "link";
-                        resourceToSave.link = tab.url;
-
-                        s.openTabs.push(resourceToSave);
-                    }
                 }
             })
         }
@@ -1339,7 +1318,6 @@ export class StateManager {
 
         let sideBarState = StateManager.store.sideBar.inner;
 
-        let trees = sideBarState.explorer.inner.trees.length;
         let explorerState = sideBarState.explorer.inner;
         let generatedTrees: Map<ExplorerNodeProps> = {};
         let dateTimeWidgetState = explorerState.dateTimeWidget.inner;
@@ -1403,7 +1381,6 @@ export class StateManager {
                             if (!resource) {
                                 log.error("Could not find resource: {0} in the object definition. Make sure you have the latest model files by clicking on Refresh on the Edit page.".format(resourcePath))
                             } else {
-                                console.log("Opening Resource {0}".format(resourcePath));
                                 let tooltip = matchingTree.node.path + "\\" + resource.relativePath + "." + resource.type;
                                 let resourceProvider = ResourceProviderSelector.getResourceProvider(resource);
                                 if (!fromLink || (resourceProvider.isUnprotected && resourceProvider.isUnprotected())) {
@@ -1414,13 +1391,6 @@ export class StateManager {
                     } else if (resourceToOpen.type === "localTerminal") {
                         let terminalResource = resourceToOpen as LocalTerminalOpenedResource;
                         TerminalConfigManager.launchTerminal(terminalResource.relativePath);
-                    } else if (resourceToOpen.type === "link") {
-                        let linkToOpen = (resourceToOpen as LinkOpenedResource).link;
-                        let lowerCase = linkToOpen.toLowerCase();
-                        if (lowerCase.startsWith('http://') || lowerCase.startsWith('https://') || lowerCase.startsWith("file://")) {
-                            // Only allow http(s) resources.
-                            this.openLinkTab(linkToOpen);
-                        }
                     }
                 }
             }).catch(err => log.error(err));
@@ -1433,17 +1403,6 @@ export class StateManager {
                 this.saveStateToLocalStorage();
             }
         }
-    }
-
-    private static openLinkTab(linkToOpen: string) {
-        let newTab = new TabRequest();
-        let tabManager = StateManager.getStore().tabManager.inner;
-        newTab.url = linkToOpen;
-        newTab.title = linkToOpen;
-        newTab.tooltip = linkToOpen;
-        newTab.openInNew = true;
-        newTab.icon = "./extensions/resourceProviders/img/link.png"; // TODO: get favicon from url.
-        tabManager.openTab(newTab);
     }
 
     public static rehydrateStore() {

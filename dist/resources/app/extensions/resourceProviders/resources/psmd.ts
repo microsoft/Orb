@@ -134,10 +134,7 @@ export class PsmdResourceProvider extends BaseResourceProvider implements IResou
                 } else if (resource.options && resource.options.outputFormat === "rawMarkdown") {
                     // inject the raw markdown output
                     outputSection = result.Output;
-                } else if (resource.options && resource.options.outputFormat === "MRDriverLatestHealthSnapShot") {
-                    outputSection = `<MRDriverLatestHealthSnapShot>${result.Output}</MRDriverLatestHealthSnapShot>`;
-                }
-                else {
+                } else {
                     // format the output as markdown automatically.
                     // for now, just encapsulate the output in a <pre> tag.
                     outputSection = "<pre>" + result.Output + "</pre>";
