@@ -56,7 +56,7 @@ export class Kusto {
             let requestId = uuidV4();
             console.log("requestId:", requestId);
             var headers = {
-                "Authorization": "bearer ",
+                "Authorization": "bearer " + token,
                 "Content-Type": "application/json;charset=UTF-8",
                 "Connection": "Keep-Alive",
                 "Accept-Encoding": "gzip",

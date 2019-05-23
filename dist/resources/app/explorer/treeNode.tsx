@@ -261,7 +261,7 @@ export class TreeNode extends React.Component<ExplorerNodeProps, any> {
     }
 
     handleResourceClick(event: React.MouseEvent<any>) {
-        this.openResource(this.props.node.resource, event, ConfigUtil.Settings.alwaysOpenInNewTab());
+        this.openResource(this.props.node.resource, event, ConfigUtil.Settings.alwaysOpenInNewTab);
     }
 
     openResource(resource: m.Resource, event?: React.MouseEvent<any>, openFirstRequestInNewTab = false) {

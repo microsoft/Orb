@@ -42,16 +42,13 @@ class AadNativeAuthenticator implements IAuthenticator {
             return this.authPromise;
         }
 
-        if (resourceId) {
-            this.apiResourceId = resourceId;
-        }
-
         this.authInProgress = true;
+
         this.authPromise = new Promise<string>((resolve, reject) => {
             this.InvokeAadAuthClr(<AuthRequest>{
                 ClientId: this.clientId,
                 ReplyUri: this.redirectUri,
-                ResourceId: this.apiResourceId,
+                ResourceId: resourceId ? resourceId : this.apiResourceId,
                 CacheLocation: Util.getAuthCacheLocation(),
             }, (error, result: AuthResult) => {
                 this.authInProgress = false;
