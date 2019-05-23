@@ -104,7 +104,7 @@ export class VstsClient {
     }
 
     public getPullRequestURL(pullRequestId) {
-        return ConfigUtil.Settings.pullRequestUrl + "/{0}".format(pullRequestId);
+        return ConfigUtil.Settings.remoteOrigin + "/pullrequest/{0}".format(pullRequestId);
     }
 
     public getActivePendingPullRequests(branchName: string): Promise<{ value: VstsResponse[] }> {

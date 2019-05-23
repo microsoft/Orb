@@ -61,7 +61,7 @@ function isSaw() {
     return argv.outputFolder.toLowerCase().indexOf("_saw") > 0;
 }
 function getStubExeName() {
-    return getExeName().replace(".exe", "") + "_ExecutionStub.exe";
+    return getExeName().replace(".exe", "") + ".ExecutionStub.exe";
 }
 
 function getBuildVersion() {
@@ -156,7 +156,7 @@ gulp.task("copyForkedZipToSetup", ['deleteOriginalZipToSetup'], function () {
 
     // We can't delete WriteZipToSetup.exe since squirrel fails releasify without it.
     // Just copy the same stub executable and rename it to WriteSetupToZip to keep squirrel happy.
-    gutil.log("Copying stub exe to " + paths.stubexe);
+    gutil.log("Override " + "WriteZipToSetup.exe");
     return gulp.src(path.join(paths.assets, "/WriteZipToSetup_Forked.exe"))
         .pipe(rename("WriteZipToSetup.exe"))
         .pipe(gulp.dest(path.join(paths.winstaller, "/vendor/")));

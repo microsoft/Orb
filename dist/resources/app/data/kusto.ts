@@ -34,7 +34,6 @@ Logging = {
 export class Kusto {
     static executeQuery(endpoint: string, db: string, query: string, cloudType: string = "Public", needWriteAccess: boolean = false): Promise<KustoData> {
         let authenticator: IAuthenticator = KustoAuthenticator.instance();
-
         return authenticator.getToken(endpoint).then((token) => {
             if (!token) {
                 throw <KustoError>{
@@ -74,9 +73,7 @@ export class Kusto {
                     return new KustoData(<KustoResult>o);
                 })
                 .catch((e) => {
-                    if (e.statusCode == 401) {
-                        return Kusto.executeQuery(endpoint, db, query, cloudType);
-                    } else if (e.statusCode) {
+                    if (e.statusCode) {
                         throw <KustoError>{
                             message: "Kusto Error:" + e.message,
                             statusCode: e.statusCode

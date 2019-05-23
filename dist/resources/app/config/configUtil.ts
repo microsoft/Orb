@@ -9,38 +9,16 @@ export class ConfigUtil {
     public static Settings = {
         modelRepoDir: null,
         remoteOrigin: null,
-        fontFamily: null,
-        fontSize: null,
         alwaysOpenInNewTab: null,
-        pullRequestUrl: null,
         vstsBaseUri: null,
-        kustoClientId: null,
-        kustoClientReplyUri: null,
-        kustoResourceId: null,
-        vstsClientId: null,
-        vstsClientReplyUri: null,
-        vstsResourceId: null,
-        featureRequestUrl: null,
-        supportUrl: null,
         homePageUrl: null,
     }
 
     private static DefaultConfig = {
         modelRepoDir: path.join(remote.app.getPath("userData"), "OrbModels"),
         remoteOrigin: "https://dev.azure.com/orbModels/_git/OrbModels",
-        fontFamily: "Roboto,sans-serif",
-        fontSize: "14px",
         alwaysOpenInNewTab: true,
-        pullRequestUrl: "https://dev.azure.com/orbModels/_git/OrbModels/pullrequest",
         vstsBaseUri: "https://dev.azure.com/orbModels/_apis/git/repositories/d4136505-6729-4843-9213-84b700af567d",
-        kustoClientId: "db662dc1-0cfe-4e1c-a843-19a68e65be58",
-        kustoClientReplyUri: "https://microsoft/kustoclient",
-        kustoResourceId: "https://orbcluster.westus2.kusto.windows.net",
-        vstsClientId: "872cd9fa-d31f-45e0-9eab-6e460a02d1f1",
-        vstsClientReplyUri: "urn:ietf:wg:oauth:2.0:oob",
-        vstsResourceId: "499b84ac-1321-427f-aa17-267ca6975798",
-        featureRequestUrl: "https://github.com/Microsoft/Orb/issues",
-        supportUrl: "mailto:orbTalk@microsoft.com",
         homePageUrl: "https://github.com/Microsoft/Orb"
     }
 

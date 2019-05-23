@@ -72,8 +72,8 @@ initialize()
         }
 
         // Injecting configured styles to app header and excluding chrome styles
-        Util.injectFontFamily(["html", "div", "body"], ConfigUtil.Settings.fontFamily, true);
-        Util.injectFontSize(["html", "div:not([class^='chrome']):not([class^='address']):not([class^='exclude'])", "body"], ConfigUtil.Settings.fontSize, true);
+        Util.injectFontFamily(["html", "div", "body"], "Roboto,sans-serif", true);
+        Util.injectFontSize(["html", "div:not([class^='chrome']):not([class^='address']):not([class^='exclude'])", "body"], "14px", true);
 
         sendNotification();
     })

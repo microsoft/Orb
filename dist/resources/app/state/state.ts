@@ -100,11 +100,9 @@ export class TabState extends TabRequest { // TODO remove this extension. It's b
 }
 
 export class Constants {
-    static userVoice = ConfigUtil.Settings.featureRequestUrl;
     static helpUrl = Util.getUrlPathRelativeToApp("./markdown/markdownView.html?md=documentation/all.md");
     static terminalUrl = Util.getUrlPathRelativeToApp("./terminal/terminal.html");
     static mdUrl = Util.getUrlPathRelativeToApp("./markdown/markdownView.html");
-    static supportUrl = ConfigUtil.Settings.supportUrl;
     static editorUrl = Util.getUrlPathRelativeToApp("./editor/editor.html") + "?originalSrc={0}&originalSrcType={1}&modifiedSrc={2}&modifiedSrcType={3}&language={4}&isDiff={5}";
     static prHelperUrl = Util.getUrlPathRelativeToApp("./markdown/markdownView.html?md=documentation/pullRequest.md");
     static reactResourceUrl = Util.getUrlPathRelativeToApp("./extensions/resourceProviders/reactResourceProvider/index.html");
@@ -327,7 +325,7 @@ export class EditState {
         Repo.instance().getPendingPullRequest().then((res) => {
             this.setPullRequests(res.value);
         }).catch((e) => {
-            log.error(e);
+            log.info(e.error.message);
         }).finally(() => {
             this.setGetPendingPullRequestInProgress(false);
         });

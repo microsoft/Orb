@@ -173,7 +173,7 @@ export class Edit extends React.Component<EditProps, any> {
                     primaryText={pullRequest.title}
                     secondaryText={pullRequest.creationDate}
                     onClick={() => {
-                        StateManager.getStore().tabManager.inner.openTab({ url: VstsClient.instance().getPullRequestURL(pullRequest.pullRequestId), title: "Azure-OrbModels - Visual Studio Team Services" });
+                        StateManager.getStore().tabManager.inner.openTab({ url: VstsClient.instance().getPullRequestURL(pullRequest.pullRequestId), title: "Azure Devops" });
                     }}
                 />);
         })

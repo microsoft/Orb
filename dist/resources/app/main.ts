@@ -643,7 +643,7 @@ if (!require("electron-squirrel-startup")) {
         let dirName = path.dirname(process.execPath);
 
         let autoUpdateFileName = isInsiders() ?
-            "autoUpdatePath_insiders.txt" : "autoUpdatePath_production.txt";
+            "autoUpdatePath_insiders.txt" : "autoUpdatePath.txt";
 
 
         let autoUpdateFilePath = path.resolve(dirName, "resources/app", autoUpdateFileName);
@@ -880,7 +880,7 @@ function copySquirrelStubExe() {
     // see gulpfile.js for details on the stub exe
     let dirName = path.dirname(process.execPath);
     let exeName = path.basename(process.execPath);
-    let stubPath = path.join(dirName, "/Stub/StubExecutable.exe");
+    let stubPath = path.join(dirName, (isInsiders() ? "orb_insiders" : "orb") + ".StubExecutable.exe");
     let dest = path.join(dirName, "..", exeName);
 
     fse.copySync(stubPath, dest);

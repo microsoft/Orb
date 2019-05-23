@@ -77,8 +77,6 @@ export class NavBar extends React.Component<NavBarProps, any> {
         this.handleHelpClick = this.handleHelpClick.bind(this);
         this.handleTerminalClick = this.handleTerminalClick.bind(this);
         this.handleTerminalContextMenuClick = this.handleTerminalContextMenuClick.bind(this);
-        this.handleSuggestFeatureClick = this.handleSuggestFeatureClick.bind(this);
-        this.handleSupportClick = this.handleSupportClick.bind(this);
         this.refreshEditPage = this.refreshEditPage.bind(this);
         this.renderMenu = this.renderMenu.bind(this);
         this.refreshEditPage();
@@ -135,14 +133,6 @@ export class NavBar extends React.Component<NavBarProps, any> {
         TerminalConfigManager.getTerminalMenu().popup({});
     }
 
-    handleSuggestFeatureClick() {
-        Util.openInNewInWindow(Constants.userVoice, false);
-    }
-
-    handleSupportClick() {
-        Util.openInNewInWindow(Constants.supportUrl, false, true);
-    }
-
     renderMenu(Icon, badgeCount?: number) {
         if (badgeCount > 0) {
             return (
@@ -163,8 +153,6 @@ export class NavBar extends React.Component<NavBarProps, any> {
                     {this.renderMenu(<IconButton onClick={() => this.handlePageClick(PageName.EDIT)} title="Edit" style={style.iconButton}><FontIcon color={grey400} hoverColor={grey50} className="fa fa-pencil"></FontIcon></IconButton>, this.props.inner.editBadgeCount)}
                     <IconButton onClick={() => this.handleTerminalClick()} onContextMenu={this.handleTerminalContextMenuClick} title="Terminal" style={style.iconButton}><FontIcon color={grey400} hoverColor={grey50} className="fa fa-terminal"></FontIcon></IconButton>
                     <div style={style.bottomButtonDiv}>
-                        <IconButton onClick={this.handleSuggestFeatureClick} title="Suggest a Feature" style={style.iconButton}><FontIcon color={grey400} hoverColor={grey50} className="fa fa-lightbulb-o"></FontIcon></IconButton>
-                        <IconButton onClick={this.handleSupportClick} title="Get Support" style={style.iconButton}><FontIcon color={grey400} hoverColor={grey50} className="fa fa-exclamation"></FontIcon></IconButton>
                         <IconButton onClick={this.handleHelpClick} title="Help" style={style.iconButton}><FontIcon color={grey400} hoverColor={grey50} className="fa fa-question"></FontIcon></IconButton>
                     </div>
                 </Paper>

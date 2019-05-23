@@ -8,11 +8,10 @@ import * as electron from "electron";
 import * as Promise from "bluebird";
 import * as path from "path";
 import { Util } from "../util/util";
-import { ConfigUtil } from "../config/configUtil";
 
 export interface IAuthenticator {
     isAuthInProgress?(): boolean;
-    getToken(connectionStr?: string): Promise<string>;
+    getToken(resourceId?: string): Promise<string>;
 }
 
 class AadNativeAuthenticator implements IAuthenticator {
@@ -23,7 +22,7 @@ class AadNativeAuthenticator implements IAuthenticator {
     private authInProgress: boolean;
     private authPromise: any;
 
-    public constructor(clientId: string, redirectUri: string, apiResourceId) {
+    public constructor(clientId: string, redirectUri: string, apiResourceId: string = "") {
         this.clientId = clientId;
         this.redirectUri = redirectUri;
         this.apiResourceId = apiResourceId;
@@ -38,9 +37,13 @@ class AadNativeAuthenticator implements IAuthenticator {
         });
     }
 
-    getToken(): Promise<string> {
+    getToken(resourceId: string = ""): Promise<string> {
         if (this.authInProgress && this.authPromise) {
             return this.authPromise;
+        }
+
+        if (resourceId) {
+            this.apiResourceId = resourceId;
         }
 
         this.authInProgress = true;
@@ -64,31 +67,13 @@ class AadNativeAuthenticator implements IAuthenticator {
     }
 }
 
-class AadAuthenticator {
-    protected aadNativeAuthenticator: AadNativeAuthenticator;
-    protected keyForToken: string;
-    protected useNativeAuthenticator: boolean;
-
-    public constructor(clientId: string, replyUri: string, resource: string) {
-        this.aadNativeAuthenticator = new AadNativeAuthenticator(clientId, replyUri, resource);
-        this.keyForToken = resource + "token";
-    }
-
-    public getToken(): Promise<string> {
-        return this.aadNativeAuthenticator.getToken().then((token) => {
-            return token;
-        });
-    }
-}
-
-export class KustoAuthenticator extends AadAuthenticator {
+export class KustoAuthenticator extends AadNativeAuthenticator {
 
     private static _instance: KustoAuthenticator;
 
     private constructor() {
-        super(ConfigUtil.Settings.kustoClientId,
-            ConfigUtil.Settings.kustoClientReplyUri,
-            ConfigUtil.Settings.kustoResourceId);
+        super("db662dc1-0cfe-4e1c-a843-19a68e65be58",
+            "https://microsoft/kustoclient");
     }
 
     public static instance() {
@@ -100,14 +85,14 @@ export class KustoAuthenticator extends AadAuthenticator {
     }
 }
 
-export class VstsAuthenticator extends AadAuthenticator {
+export class VstsAuthenticator extends AadNativeAuthenticator {
 
     private static _instance: VstsAuthenticator;
 
     private constructor() {
-        super(ConfigUtil.Settings.vstsClientId,
-            ConfigUtil.Settings.vstsClientReplyUri,
-            ConfigUtil.Settings.vstsResourceId);
+        super("872cd9fa-d31f-45e0-9eab-6e460a02d1f1",
+            "urn:ietf:wg:oauth:2.0:oob",
+            "499b84ac-1321-427f-aa17-267ca6975798");
     }
 
     public static instance() {
