@@ -345,7 +345,7 @@ gulp.task("installDependencies", function (done) {
     done();
 })
 
-gulp.task("runTests", function (done) {
+gulp.task("runTests", ["installDependencies", "copyElectron", "resEdit", "resEditStubExe", "transpile", "buildDotNetDependencies"], function (done) {
     gutil.log("Run tests");
     var res = spawnSync("npm.cmd", ["test"], { cwd: paths.app, stdio: ["inherit", "inherit", "inherit"] });
     if (res.error) {
@@ -368,13 +368,17 @@ gulp.task("buildDotNetDependencies", function (done) {
     build.sourcePath = path.join(argv.sourceFolder, "dotNet", "Orb.sln");
     build.build();
     // var res = spawnSync("msbuild.exe", ["Orb.sln"], { cwd: path.join(argv.sourceFolder, "dotNet"), stdio: ["inherit", "inherit", "inherit"] });
-    if (res.error) {
-        throw "Failed to restore Orb.sln";
-    }
+    build.on('done', function (err, results) {
+        if (err) {
+            gutil.log("err");
+        }
+
+        done();
+    })
 })
 
 if (argv.buildBranch == "dev") {
-    gulp.task("build", ["installDependencies", "copyElectron", "resEdit", "resEditStubExe", "transpile", "buildDotNetDependencies", "runTests"], function (callback) {
+    gulp.task("build", ["runTests"], function (callback) {
         gutil.log("Building Orb");
     });
 } else {
