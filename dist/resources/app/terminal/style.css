@@ -1,0 +1,47 @@
+html, body, #react-app {margin:0;padding:0;height:100%;}
+
+body {
+    font-family: helvetica, sans-serif, arial;
+    font-size: 1em;
+    color: #111;
+    background-color: #39383e;
+}
+
+h1 {
+    text-align: center;
+}
+
+.terminal {
+    font-family: Menlo, DejaVu Sans Mono, Consolas, Lucida Console, monospace;
+    font-size: 15px;
+    color: #fafafa;
+    padding: 2px;
+    background-color: #39383e;
+}
+
+.terminal .xterm-viewport {
+    background-color: #39383e;
+}
+
+.terminal-container {
+    box-sizing:border-box;
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+    overflow-y:hidden;
+}
+
+/* Override dark-grey color*/
+.terminal .xterm-color-8 {
+    color: #df79ff;
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: #7b7070;
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+}

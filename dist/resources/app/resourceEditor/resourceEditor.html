@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+         ::-webkit-scrollbar {
+            width: 0.5em;
+            height: 6px;
+            visibility: visible;
+        }
+
+         ::-webkit-scrollbar-track {
+            background: #595959;
+            visibility: hidden;
+        }
+
+         ::-webkit-scrollbar-thumb {
+            background: #454545;
+            visibility: visible;
+        }
+
+         ::-webkit-scrollbar-corner {
+            background: #595959;
+            visibility: hidden;
+        }
+
+        .chip :hover {
+            cursor: pointer;
+        }
+    </style>
+    <title></title>
+</head>
+
+<body>
+    <div id="react-app"></div>
+</body>
+<script src="../node_modules/react/dist/react.min.js"></script>
+<script src="../node_modules/react-dom/dist/react-dom.min.js"></script>
+<script>
+    var extensions = require("../extensions.js");
+    var reactResourceRenderer = require("./resourceEditor.js");
+
+</script>
+
+</html>

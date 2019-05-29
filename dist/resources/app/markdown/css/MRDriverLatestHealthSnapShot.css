@@ -1,0 +1,97 @@
+.roleInstance {
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    border: 1px solid #d8d8d8;
+    min-width: 240px;
+}
+
+.rolehr{
+  border: 0;
+  border-bottom: 1px solid;
+  color: #dddddd;
+  height: 1px;
+}
+
+.key{
+  font-weight: bold;
+}
+
+.healthy{
+  color: #28a745;
+}
+
+.non-contactable{
+  color: #dc3545;
+}
+
+.fa-trophy{
+  color: #FFD700;
+}
+
+.info{
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 2.0;
+  color: #212529;
+  margin: 0;
+}
+
+.healthDescription{
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: .5rem;
+}
+
+.titleDiv{
+  height: 48px;
+  line-height: 48px;
+}
+
+.bigInfo{
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.smallInfo{
+  font-size: 12px;
+}
+
+.keyDiv{
+  float: left;
+  width: 20%;
+  height: 48px;
+  line-height: 48px;
+  font-weight: bold;
+}
+
+.valueDiv{
+  float: left;
+  width: 80%;
+  line-height: 48px;
+}
+
+.bg1{
+  background: #c3e6cb;
+}
+
+.bg2{
+  background: #dddfe2;
+}
+
+.bg3{
+  background: #b8daff;
+}
+
+.bg4{
+  background: #dddfe2;
+}
+
+.bg5{
+  background: #f5c6cb;
+}
+
+.bg6{
+  background: #dddfe2;
+}

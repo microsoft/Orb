@@ -8,6 +8,8 @@
 
 node_modules/**/*
 dist/resources/app/node_modules/**/*
+dist/resources/app/edgeDependencies/**/*
+dotNet/packages/**/*
 dist/resources/electron.asar
 dist/*.*
 dist/LICENSE
@@ -28,6 +30,12 @@ installer/**/*
 
 #Do not ignore
 !dist/resources/app/tab/**/*.js
+!dist/resources/app/node_modules_forked/**/*
+!node_modules_native/node_modules_forked/**/*
+!build/**/*
+!.vscode/**/*
+!assets/**/*
+!dist/orb.exe.config
 
 # User-specific files
 *.suo
