@@ -2,12 +2,13 @@
 ![](https://img.shields.io/badge/electron-2.0.9-blue.svg)
 ![](https://img.shields.io/badge/typescript-2.5.3-blue.svg)
 ![](https://img.shields.io/badge/platform-win--64%20%7C%20win--32-success.svg)
-![](https://img.shields.io/badge/build-passing-success.svg)
+
+[![Build Status](https://dev.azure.com/orbPipeline/Orb/_apis/build/status/Microsoft.Orb?branchName=master)](https://dev.azure.com/orbPipeline/Orb/_build/latest?definitionId=1&branchName=master)
 
 Orb is a web browser, built specifically for LiveSite and DevOps. It combines Kusto, Link, PowerShell and a lot more.
 
 # Installation
-https://orbstorage.blob.core.windows.net/release/latest/Setup.exe
+Releases -> Download Setup.exe for the specific version.
 
 # Features
 ## Object and Context Driven
