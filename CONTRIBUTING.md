@@ -1,5 +1,4 @@
 # Contributing to Orb
-
 Welcome, and thank you for your interest in contributing to Orb! Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
 the rights to use your contribution. For details, visit https://cla.microsoft.com..
@@ -15,7 +14,6 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
 There are many ways in which you can contribute, beyond writing code. The goal of this document is to provide a high-level overview of how you can get involved.
 
 ## Providing Feedback
-
 Your comments and feedback are welcome, and the development team is available via a handful of different channels.
 
 ### Stack overflow
@@ -27,8 +25,6 @@ Therefore please do not be upset when we close an issue with the comment to ask 
 The Gitter Channel provides a place where the Community can get together and collaborate. It is actually great to see that folks have already started to collaborate and support each other there.
 
 [![Gitter](https://badges.gitter.im/microsoft-orb/community.svg)](https://gitter.im/microsoft-orb/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-
-The Orb team's presence in the room will be optional, at least for the foreseeable future. We hope the Community will use the room and have discussions.
 
 ## Reporting Issues
 
@@ -61,6 +57,7 @@ git clone https://github.com/microsoft/Orb.git
 ### Compiling
 To enable ts compile on save, in VSCode, open directory: *yourWorkingDir*/Orb, press Ctrl+Shift+B once. The watcher task will auto compile on any ts file modifications. This will only complie ts to js. Most of cases if your change is only within ts/tsx, you don't need to run the full build.   
 
+
 ### Build
 Orb has dependencis on node modules which needs precompiling with electron (Native Dependencies) and .dll (Edge Depdencies) for invoking [edge](https://github.com/kexplo/electron-edge) commands. Hence, in addition to compiling ts, full build take care of precompiling Native Dependencies, Edge Depdencies, and etc. More information available on Orb/build/gulpfiles.js
 
@@ -80,7 +77,6 @@ Orb.exe
 Once you've launched orb. To bring up the chrome dev tools, use Ctrl+Shift+D. You can hit Shift+F5 in the debug tools to refresh without restarting after ts/tsx code changes. You can "disable cache (while DevTools is open)" and hitting Shift+F5 in the debugger reloads the app without restarting.
 
 ### Unit Tests
-
 Orb uses many popular JS frameworks for unit testing.
 
 > <a href = "http://airbnb.io/enzyme/" target="_blank">enzyme</a> testing utility for react component testing.
@@ -106,7 +102,6 @@ Running tests is also part of build (YAML) pipeline, make sure tests are passed 
 
 
 ### Logging
-
 loglevel replaces console.log() and friends with level-based logging and filtering, with none of console's downsides.
 
 Usage:
@@ -123,11 +118,14 @@ Usage:
   log.warn(msg)
   log.error(msg)
 ```
-
 Documentation - https://github.com/pimterry/loglevel
 
-### Notifications
+Enable production logging for main process.
 
+Orb.exe --enable-logging
+
+
+### Notifications
 Notifications are configured by notification.config.json under OrbModels.
 File path: %appdata%\Orb\OrbModels\src\ProtectedModels\notification.config.json
 
@@ -150,7 +148,6 @@ Example:
 To apply your notification change, simply push models to remote.
 
 ### Orb Settings
-
 Orb allows you to change a setting by modifying orb.config.json.
 File path: %appdata%\Orb\OrbModels\src\ProtectedModels\orb.config.json
 
@@ -178,7 +175,6 @@ To consume your setting in Orb:
 ```
 
 ### Native dependencies
-
 These modules are native code compiled against a specific version of Node. To install and use native node modules:
 
 ```
