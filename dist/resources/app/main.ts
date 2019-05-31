@@ -880,7 +880,7 @@ function copySquirrelStubExe() {
     // see gulpfile.js for details on the stub exe
     let dirName = path.dirname(process.execPath);
     let exeName = path.basename(process.execPath);
-    let stubPath = path.join(dirName, (isInsiders() ? "orb_insiders" : "orb") + ".StubExecutable.exe");
+    let stubPath = path.join(dirName, (isInsiders() ? "orb_insiders" : "orb") + ".ExecutionStub.exe");
     let dest = path.join(dirName, "..", exeName);
 
     fse.copySync(stubPath, dest);
