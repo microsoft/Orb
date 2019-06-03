@@ -5,7 +5,7 @@
 
 [![Build Status](https://dev.azure.com/orbPipeline/Orb/_apis/build/status/Microsoft.Orb?branchName=master)](https://dev.azure.com/orbPipeline/Orb/_build/latest?definitionId=1&branchName=master)
 
-Orb is a web browser, built specifically for LiveSite and DevOps. It combines Kusto, Link, PowerShell and a lot more.
+Orb is a tool built specifically for LiveSite and DevOps. It combines Kusto, Link, PowerShell and a lot more.
 
 # Installation
 Releases -> Download Setup.exe for the specific version.
