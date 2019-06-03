@@ -75,7 +75,31 @@ function getBuildVersion() {
     return buildVersion;
 }
 
-gulp.task("resEditStubExe", ["copyStubExe"], function (callback) {
+gulp.task("copyStubExe", function () {
+
+    // The stub exe is package with squirrel 1.5+ (electron-winstaller)
+    // The stub provides a way to launch the latest version. This is required for file associations (.orb files) to not break after updates.
+    // It needs to be dropped in the top level install folder after signing, etc.
+    // Squirrel 1.5+ does this automatically, however, since the squirrel does the stub file generation for you as part of creating the installer,
+    // this leaves the stub exe unsigned (since signing is not done by squirrel but by ESRP and we can't provide the signing cert/password directly to squirrel).
+    // As a workaround, create the stub manually by copying it in the dist folder and delete the original squirrel stub so squirrel skips this step for us.
+    // We also need to delete the original tool that copies over exe attributes, since this reverses the signing process.
+    // Replace it with a custom version that bypasses stub signing only.
+    // This is forked from: https://github.com/Squirrel/Squirrel.Windows/tree/master/src/WriteZipToSetup
+    // The fork code is not committed, but pasted here for reference.
+    // int wmain(int argc, wchar_t* argv[])
+    // {
+    //  if (argc > 1 && wcscmp(argv[1], L"--copy-stub-resources") == 0) {
+    // 	return 0;		}
+    //
+    //
+    gutil.log("Copying stub exe to " + paths.stubexe);
+    return gulp.src(paths.winstaller + "/vendor/StubExecutable.exe")
+        .pipe(rename(getStubExeName()))
+        .pipe(gulp.dest(paths.dist));
+});
+
+gulp.task("resEditStubExe", gulp.series(["copyStubExe"]), function (callback) {
     var deferred = Q.defer();
 
     var exeName = getExeName();
@@ -128,49 +152,7 @@ gulp.task("resEditStubExe", ["copyStubExe"], function (callback) {
     return deferred.promise;
 });
 
-gulp.task("copyStubExe", [], function () {
-
-    // The stub exe is package with squirrel 1.5+ (electron-winstaller)
-    // The stub provides a way to launch the latest version. This is required for file associations (.orb files) to not break after updates.
-    // It needs to be dropped in the top level install folder after signing, etc.
-    // Squirrel 1.5+ does this automatically, however, since the squirrel does the stub file generation for you as part of creating the installer,
-    // this leaves the stub exe unsigned (since signing is not done by squirrel but by ESRP and we can't provide the signing cert/password directly to squirrel).
-    // As a workaround, create the stub manually by copying it in the dist folder and delete the original squirrel stub so squirrel skips this step for us.
-    // We also need to delete the original tool that copies over exe attributes, since this reverses the signing process.
-    // Replace it with a custom version that bypasses stub signing only.
-    // This is forked from: https://github.com/Squirrel/Squirrel.Windows/tree/master/src/WriteZipToSetup
-    // The fork code is not committed, but pasted here for reference.
-    // int wmain(int argc, wchar_t* argv[])
-    // {
-    //  if (argc > 1 && wcscmp(argv[1], L"--copy-stub-resources") == 0) {
-    // 	return 0;		}
-    //
-    //
-    gutil.log("Copying stub exe to " + paths.stubexe);
-    return gulp.src(paths.winstaller + "/vendor/StubExecutable.exe")
-        .pipe(rename(getStubExeName()))
-        .pipe(gulp.dest(paths.dist));
-});
-
-gulp.task("copyForkedZipToSetup", ['deleteOriginalZipToSetup'], function () {
-
-    // We can't delete WriteZipToSetup.exe since squirrel fails releasify without it.
-    // Just copy the same stub executable and rename it to WriteSetupToZip to keep squirrel happy.
-    gutil.log("Override " + "WriteZipToSetup.exe");
-    return gulp.src(path.join(paths.assets, "/WriteZipToSetup_Forked.exe"))
-        .pipe(rename("WriteZipToSetup.exe"))
-        .pipe(gulp.dest(path.join(paths.winstaller, "/vendor/")));
-});
-
-gulp.task('deleteOriginalStubExecutable', ['copyForkedZipToSetup'], function () {
-    gutil.log("Deleting " + paths.originalStubExe);
-
-    return del([
-        paths.originalStubExe
-    ], { force: true });
-});
-
-gulp.task('deleteOriginalZipToSetup', function () {
+gulp.task("deleteOriginalZipToSetup", function () {
     var zipToSetupPath = path.join(paths.winstaller + "/vendor/WriteZipToSetup.exe");
 
     gutil.log("Deleting " + zipToSetupPath);
@@ -180,14 +162,23 @@ gulp.task('deleteOriginalZipToSetup', function () {
     ], { force: true });
 });
 
-function dumpFiles(input) {
-    gutil.log("Dumping " + input);
-    glob(input, {}, function (er, files) {
-        files.forEach(function (f) {
-            gutil.log(f);
-        })
-    })
-}
+gulp.task("copyForkedZipToSetup", gulp.series(["deleteOriginalZipToSetup"]), function () {
+
+    // We can't delete WriteZipToSetup.exe since squirrel fails releasify without it.
+    // Just copy the same stub executable and rename it to WriteSetupToZip to keep squirrel happy.
+    gutil.log("Override " + "WriteZipToSetup.exe");
+    return gulp.src(path.join(paths.assets, "/WriteZipToSetup_Forked.exe"))
+        .pipe(rename("WriteZipToSetup.exe"))
+        .pipe(gulp.dest(path.join(paths.winstaller, "/vendor/")));
+});
+
+gulp.task("deleteOriginalStubExecutable", gulp.series(['copyForkedZipToSetup']), function () {
+    gutil.log("Deleting " + paths.originalStubExe);
+
+    return del([
+        paths.originalStubExe
+    ], { force: true });
+});
 
 gulp.task("renameUpdateExe", function () {
     gutil.log("Copying update exe and renaming to squirrel.exe");
@@ -196,7 +187,7 @@ gulp.task("renameUpdateExe", function () {
         .pipe(gulp.dest(paths.dist));
 });
 
-gulp.task("resEdit", ["renameElectronExe", "renameUpdateExe"], function (callback) {
+gulp.task("resEdit", gulp.series(["renameElectronExe", "renameUpdateExe"]), function (callback) {
     var deferred = Q.defer();
 
     var exeName = getExeName();
@@ -264,7 +255,7 @@ gulp.task("copyNuspec", function () {
         .pipe(gulp.dest(paths.winstaller));
 });
 
-gulp.task("createInstaller", ["copyNuspec", "deleteOriginalStubExecutable"], function () {
+gulp.task("createInstaller", gulp.series(["copyNuspec", "deleteOriginalStubExecutable"]), function () {
     gutil.log("Creating Installer at " + paths.installer);
 
     var exeName = getExeName();
@@ -345,16 +336,6 @@ gulp.task("installDependencies", function (done) {
     done();
 })
 
-gulp.task("runTests", ["installDependencies", "copyElectron", "resEdit", "resEditStubExe", "transpile", "buildDotNetDependencies"], function (done) {
-    gutil.log("Run tests");
-    var res = spawnSync("npm.cmd", ["test"], { cwd: paths.app, stdio: ["inherit", "inherit", "inherit"] });
-    if (res.error) {
-        throw "Failed to run tests";
-    }
-
-    done();
-})
-
 gulp.task("buildDotNetDependencies", function (done) {
     gutil.log("nuget.exe", ["restore"], { cwd: path.join(argv.sourceFolder, "dotNet"), stdio: ["inherit", "inherit", "inherit"] });
     var res = spawnSync("nuget.exe", ["restore"], { cwd: path.join(argv.sourceFolder, "dotNet"), stdio: ["inherit", "inherit", "inherit"] });
@@ -377,12 +358,22 @@ gulp.task("buildDotNetDependencies", function (done) {
     })
 })
 
+gulp.task("runTests", gulp.series(["installDependencies", "copyElectron", "resEdit", "resEditStubExe", "transpile", "buildDotNetDependencies"]), function (done) {
+    gutil.log("Run tests");
+    var res = spawnSync("npm.cmd", ["test"], { cwd: paths.app, stdio: ["inherit", "inherit", "inherit"] });
+    if (res.error) {
+        throw "Failed to run tests";
+    }
+
+    done();
+})
+
 if (argv.buildBranch == "dev") {
-    gulp.task("build", ["runTests"], function (callback) {
+    gulp.task("build", gulp.series(["runTests"]), function (callback) {
         gutil.log("Building Orb");
     });
 } else {
-    gulp.task("build", ["copyElectron", "resEdit", "resEditStubExe", "transpile"], function (callback) {
+    gulp.task("build", gulp.series(["copyElectron", "resEdit", "resEditStubExe", "transpile"]), function (callback) {
         gutil.log("Building Orb");
     });
 }

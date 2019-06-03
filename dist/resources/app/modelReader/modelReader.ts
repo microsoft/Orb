@@ -15,7 +15,6 @@ let log = require("loglevel");
 
 declare type require = any;
 const glob: any = Promise.promisify(require("glob"));
-const multiglob: any = Promise.promisify(require("multiple-glob"));
 const readJson: any = Promise.promisify(require("fs-extra").readJson);
 if (!String.prototype.format) {
     String.prototype.format = function () {
@@ -377,7 +376,7 @@ export class ModelReader {
             // Searches for root objects underneath src\**\Objects\**\*.json
             // Root files can be defined in any folder under src.
             // Extension files (denoted with a subextension like stuff.ext.json), can be defined under any folder.
-            return multiglob([`${path.join(parentPath, "*.json")}`, `!${path.join(parentPath, "*.*.json")}`])
+            return glob(path.join(parentPath, "!(*.*).json"))
                 .map((path) => {
                     return {
                         filePath: path, jsonPromise: this.readSplitJson(path).catch((e) => {
@@ -681,7 +680,7 @@ export class ModelReader {
 
                 return {
                     result: errorMessage.length == 0,
-                    errorMessage: errorMessage.join(" ")
+                    errorMessage: errorMessage.join(".")
                 };
             }
         });
@@ -737,57 +736,5 @@ export class ModelReader {
                 }
             })
         })
-    }
-
-    private static readDefinitions<T>(namespaceName: string, parentPath: string, cache: { [key: string]: { [key: string]: T } }, throwInnerException = false): Promise<{ [key: string]: T }> {
-        return ModelReader.getNameSpace(namespaceName).then((namespaceConfig) => {
-            let result = {};
-            let innerExceptions = [];
-
-            return multiglob([`${path.join(parentPath, "*.json")}`, `!${path.join(parentPath, "*.*.json")}`])
-                .map((path) => {
-                    return {
-                        filePath: path, jsonPromise: ModelReader.readSplitJson(path).catch((e) => {
-                            innerExceptions.push(e);
-                        })
-                    }
-                })
-                .each((file) => {
-                    return file.jsonPromise.then((res) => {
-                        if (Util.isConfig(file.filePath)) {
-                            console.log("Config:" + file.filePath);
-                        }
-
-                        if (!res || Util.isTemplate(res.json) || Util.isConfig(file.filePath)) {
-                            // Bypass validation for template file.
-                            return;
-                        }
-
-                        result[res.json.path] = res.json;
-                        return result;
-                    })
-                })
-                .then(() => {
-                    if (innerExceptions.length > 0) {
-                        if (throwInnerException) {
-                            throw innerExceptions.join(";");
-                        } else {
-                            log.error(innerExceptions.join(";"));
-                        }
-                    }
-
-                    if (!cache[namespaceConfig.name]) {
-                        cache[namespaceConfig.name] = result;
-                    }
-
-                    cache[namespaceConfig.name] = result;
-                    return result;
-                })
-        }).catch((e) => {
-            Object.keys(cache).forEach((key) => {
-                delete cache.key;
-            });
-            throw "Error reading " + parentPath + " defintions: " + e.toString();
-        });
     }
 }
