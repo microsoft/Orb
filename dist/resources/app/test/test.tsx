@@ -169,7 +169,7 @@ describe("ModelReader - validateObjectToBeMerged", () => {
             ]
         }
 
-        ModelReader.validateObjectProtectionBeforeMerge(namespaceConfig as any, "test").then((res) => {
+        return ModelReader.validateObjectProtectionBeforeMerge(namespaceConfig as any, "test").then((res) => {
             assert(!res.result);
             assert(res.errorMessage == "The resource profile: testResource for namespace: testNamespace needs to be moved to a protected model")
         })
@@ -186,7 +186,7 @@ describe("ModelReader - validateObjectToBeMerged", () => {
             ]
         }
 
-        ModelReader.validateObjectProtectionBeforeMerge(namespaceConfig as any, "test").then((res) => {
+        return ModelReader.validateObjectProtectionBeforeMerge(namespaceConfig as any, "test").then((res) => {
             assert(res.result);
             assert(res.errorMessage == "");
         })
@@ -202,7 +202,7 @@ describe("ModelReader - validateObjectToBeMerged", () => {
             }
         }
 
-        ModelReader.validateObjectProtectionBeforeMerge(obj as any, "test").then((res) => {
+        return ModelReader.validateObjectProtectionBeforeMerge(obj as any, "test").then((res) => {
             assert(!res.result);
             assert(res.errorMessage == "The constructor for object: testPath needs to be moved to a protected model")
         })
@@ -227,9 +227,9 @@ describe("ModelReader - validateObjectToBeMerged", () => {
             ]
         }
 
-        ModelReader.validateObjectProtectionBeforeMerge(obj as any, "test").then((res) => {
+        return ModelReader.validateObjectProtectionBeforeMerge(obj as any, "test").then((res) => {
             assert(!res.result);
-            assert(res.errorMessage == "The additional prop: TestVar for object: testPath needs to be moved to a protected model")
+            assert(res.errorMessage == "The additional prop: gf for object: testPath needs to be moved to a protected model.The additional prop: TestVar for object: testPath needs to be moved to a protected model");
         })
     })
 
@@ -261,7 +261,7 @@ describe("ModelReader - validateObjectToBeMerged", () => {
             ]
         }
 
-        ModelReader.validateObjectProtectionBeforeMerge(obj as any, "test").then((res) => {
+        return ModelReader.validateObjectProtectionBeforeMerge(obj as any, "test").then((res) => {
             assert(!res.result);
             const expectedErrorMessage = [
                 "The resource: testPath1 for object: testPath needs to be moved to a protected model",
@@ -282,14 +282,14 @@ describe("ModelReader - validateObjectToBeMerged", () => {
             "key": "Region",
             "constructor": {
                 "type": "kusto",
-                "connectionProfile": "ACMKusto",
+                "connectionProfile": "Orb",
                 "query": "VMSnapshot | where {timeRange} | where Region != \"\" and Region =~ \"{Region}\" | take 1 | project Region",
                 "wildcardQuery": "VMSnapshot | where {timeRange} | where Region != \"\" and Region matches regex \"{Region}\" | summarize by Region",
                 "minimumResolutionInMinutes": 120
             },
             "resources": [
                 {
-                    "type": "jarvis",
+                    "type": "link",
                     "relativePath": "Health\\Dummy",
                     "description": "",
                     "link": "http:\\dummyLink"
@@ -301,23 +301,23 @@ describe("ModelReader - validateObjectToBeMerged", () => {
                     "relativePath": "Cloud\\All",
                     "associatedObjectPath": "Compute\\VM",
                     "description": "",
-                    "connectionProfile": "ACMKusto",
+                    "connectionProfile": "Orb",
                     "query": "VMSnapshot | where {timeRange} | where Region != \"\" and Region =~ \"{Region}\" | summarize by VMId",
                     "minimumResolutionInMinutes": 120
                 },
                 {
                     "type": "kusto",
                     "relativePath": "Cloud\\Production",
-                    "associatedObjectPath": "Compute\\Node",
+                    "associatedObjectPath": "Compute\\Host",
                     "description": "",
                     "connectionProfile": "ACMKusto",
-                    "query": "NodeSnapshot | where {timeRange} | where Region != \"\" and Region =~ \"{Region}\" | summarize by NodeId",
+                    "query": "HostSnapshot | where {timeRange} | where Region != \"\" and Region =~ \"{Region}\" | summarize by HostId",
                     "minimumResolutionInMinutes": 120
                 }
             ]
         }
 
-        ModelReader.validateObjectProtectionBeforeMerge(obj as any, "test").then((res) => {
+        return ModelReader.validateObjectProtectionBeforeMerge(obj as any, "test").then((res) => {
             assert(res.result);
             assert(res.errorMessage == "");
         })
