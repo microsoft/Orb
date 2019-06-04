@@ -1,12 +1,12 @@
 //------------------------------------------------------------
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------
+
 var gulp = require("gulp");
 var gutil = require("gulp-util");
 var argv = require("yargs").argv;
 var rename = require("gulp-rename");
 var path = require("path");
-var glob = require("glob");
 var ts = require("gulp-typescript");
 var sourcemaps = require("gulp-sourcemaps");
 var Q = require("q");
@@ -60,6 +60,7 @@ function getExeName() {
 function isSaw() {
     return argv.outputFolder.toLowerCase().indexOf("_saw") > 0;
 }
+
 function getStubExeName() {
     return getExeName().replace(".exe", "") + ".ExecutionStub.exe";
 }
@@ -99,7 +100,7 @@ gulp.task("copyStubExe", function () {
         .pipe(gulp.dest(paths.dist));
 });
 
-gulp.task("resEditStubExe", gulp.series(["copyStubExe"]), function (callback) {
+gulp.task("resEditStubExe", gulp.series("copyStubExe", function (done) {
     var deferred = Q.defer();
 
     var exeName = getExeName();
@@ -122,7 +123,7 @@ gulp.task("resEditStubExe", gulp.series(["copyStubExe"]), function (callback) {
                 deferred.resolve();
             } else {
                 gutil.log(err.toString());
-                callback(err.toString());
+                done(err.toString());
             }
         });
     } else {
@@ -143,42 +144,40 @@ gulp.task("resEditStubExe", gulp.series(["copyStubExe"]), function (callback) {
                 deferred.resolve();
             } else {
                 gutil.log(err.toString());
-                callback(err.toString());
+                done(err.toString());
             }
         });
-
     }
 
     return deferred.promise;
-});
+}));
 
 gulp.task("deleteOriginalZipToSetup", function () {
     var zipToSetupPath = path.join(paths.winstaller + "/vendor/WriteZipToSetup.exe");
 
     gutil.log("Deleting " + zipToSetupPath);
-
     return del([
         zipToSetupPath
     ], { force: true });
 });
 
-gulp.task("copyForkedZipToSetup", gulp.series(["deleteOriginalZipToSetup"]), function () {
+gulp.task("copyForkedZipToSetup", gulp.series("deleteOriginalZipToSetup", function () {
 
     // We can't delete WriteZipToSetup.exe since squirrel fails releasify without it.
     // Just copy the same stub executable and rename it to WriteSetupToZip to keep squirrel happy.
-    gutil.log("Override " + "WriteZipToSetup.exe");
+    gutil.log("Override WriteZipToSetup.exe");
     return gulp.src(path.join(paths.assets, "/WriteZipToSetup_Forked.exe"))
         .pipe(rename("WriteZipToSetup.exe"))
         .pipe(gulp.dest(path.join(paths.winstaller, "/vendor/")));
-});
+}));
 
-gulp.task("deleteOriginalStubExecutable", gulp.series(['copyForkedZipToSetup']), function () {
+gulp.task("deleteOriginalStubExecutable", gulp.series("copyForkedZipToSetup", function () {
     gutil.log("Deleting " + paths.originalStubExe);
 
     return del([
         paths.originalStubExe
     ], { force: true });
-});
+}));
 
 gulp.task("renameUpdateExe", function () {
     gutil.log("Copying update exe and renaming to squirrel.exe");
@@ -187,13 +186,12 @@ gulp.task("renameUpdateExe", function () {
         .pipe(gulp.dest(paths.dist));
 });
 
-gulp.task("resEdit", gulp.series(["renameElectronExe", "renameUpdateExe"]), function (callback) {
+gulp.task("resEdit", gulp.series("renameElectronExe", "renameUpdateExe", function (done) {
     var deferred = Q.defer();
 
     var exeName = getExeName();
 
     if (exeName !== "orb_insiders.exe") {
-        console.log("resEdit for prod version.");
         rcedit(paths.dist + "/" + exeName, {
             "name": "Orb",
             "icon": paths.assets + "/orb.ico",
@@ -209,7 +207,7 @@ gulp.task("resEdit", gulp.series(["renameElectronExe", "renameUpdateExe"]), func
                 deferred.resolve();
             } else {
                 gutil.log(err.toString());
-                callback(err.toString());
+                done(err.toString());
             }
         });
     } else {
@@ -240,14 +238,14 @@ gulp.task("resEdit", gulp.series(["renameElectronExe", "renameUpdateExe"]), func
                 deferred.resolve();
             } else {
                 gutil.log(err.toString());
-                callback(err.toString());
+                done(err.toString());
             }
         });
 
     }
 
     return deferred.promise;
-});
+}));
 
 gulp.task("copyNuspec", function () {
     gutil.log("Copying custom nuspec template.");
@@ -255,11 +253,11 @@ gulp.task("copyNuspec", function () {
         .pipe(gulp.dest(paths.winstaller));
 });
 
-gulp.task("createInstaller", gulp.series(["copyNuspec", "deleteOriginalStubExecutable"]), function () {
+gulp.task("createInstaller", gulp.series("copyNuspec", "deleteOriginalStubExecutable", function () {
     gutil.log("Creating Installer at " + paths.installer);
 
     var exeName = getExeName();
-
+    console.log(paths);
     if (exeName !== "orb_insiders.exe") {
         return electronInstaller.createWindowsInstaller({
             appDirectory: paths.dist,
@@ -291,7 +289,7 @@ gulp.task("createInstaller", gulp.series(["copyNuspec", "deleteOriginalStubExecu
             noDelta: true
         });
     }
-});
+}));
 
 gulp.task("transpile", function () {
     var tsProject = ts.createProject(paths.app + "/tsconfig.json");
@@ -348,8 +346,8 @@ gulp.task("buildDotNetDependencies", function (done) {
     var build = new Msbuild();
     build.sourcePath = path.join(argv.sourceFolder, "dotNet", "Orb.sln");
     build.build();
-    // var res = spawnSync("msbuild.exe", ["Orb.sln"], { cwd: path.join(argv.sourceFolder, "dotNet"), stdio: ["inherit", "inherit", "inherit"] });
-    build.on('done', function (err, results) {
+
+    build.on("done", function (err, results) {
         if (err) {
             gutil.log("err");
         }
@@ -358,7 +356,7 @@ gulp.task("buildDotNetDependencies", function (done) {
     })
 })
 
-gulp.task("runTests", gulp.series(["installDependencies", "copyElectron", "resEdit", "resEditStubExe", "transpile", "buildDotNetDependencies"]), function (done) {
+gulp.task("runTests", gulp.series("installDependencies", "copyElectron", "resEdit", "resEditStubExe", "transpile", "buildDotNetDependencies", function (done) {
     gutil.log("Run tests");
     var res = spawnSync("npm.cmd", ["test"], { cwd: paths.app, stdio: ["inherit", "inherit", "inherit"] });
     if (res.error) {
@@ -366,15 +364,17 @@ gulp.task("runTests", gulp.series(["installDependencies", "copyElectron", "resEd
     }
 
     done();
-})
+}));
 
 if (argv.buildBranch == "dev") {
-    gulp.task("build", gulp.series(["runTests"]), function (callback) {
+    gulp.task("build", gulp.series("runTests", function (done) {
         gutil.log("Building Orb");
-    });
+        done();
+    }));
 } else {
-    gulp.task("build", gulp.series(["copyElectron", "resEdit", "resEditStubExe", "transpile"]), function (callback) {
+    gulp.task("build", gulp.series("copyElectron", "resEdit", "resEditStubExe", "transpile", function (done) {
         gutil.log("Building Orb");
-    });
+        done();
+    }));
 }
 
