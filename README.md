@@ -8,7 +8,7 @@
 Orb is a tool built specifically for LiveSite and DevOps. It combines Kusto, Link, PowerShell and a lot more.
 
 # Installation
-Releases -> Download Setup.exe for the specific version.
+Download the latest installer from the [releases page.](https://github.com/microsoft/Orb/releases)
 
 # Features
 ## Object and Context Driven
