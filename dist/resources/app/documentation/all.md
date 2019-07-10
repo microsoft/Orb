@@ -4,25 +4,25 @@
 
 * [Resource Types](#resource-type-examples)
 
-* [Adding Objects and Resources](models.md)
+* [Adding Objects and Resources](./models.md)
 
-* [File Format](fileFormat.md)
+* [File Format](./fileFormat.md)
 
-* [Link Support](linkSupport.md)
+* [Link Support](./linkSupport.md)
 
-* [Terminal Management](terminal.md)
+* [Terminal Management](./terminal.md)
 
-* [Architecture](architecture.md)
+* [Architecture](./architecture.md)
 
 * [Support](#support)
 
 # Release Notes
 7/9/2019
-> * Initial GitHub release. [songxueyuan, gauravjag, vinay-nagarajan]
+> * Initial GitHub release.
 
 # Wiki
 
-<a href= "https://github.com/Microsoft/Orb/README.md" target="_blank">https://github.com/Microsoft/Orb/README.md</a>
+<a href= "https://github.com/microsoft/Orb/blob/master/README.md" target="_blank">https://github.com/microsoft/Orb/blob/master/README.md</a>
 
 # Quick Start
 
