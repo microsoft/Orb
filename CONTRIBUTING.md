@@ -13,19 +13,6 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
 
 There are many ways in which you can contribute, beyond writing code. The goal of this document is to provide a high-level overview of how you can get involved.
 
-## Providing Feedback
-Your comments and feedback are welcome, and the development team is available via a handful of different channels.
-
-### Stack overflow
-Stack overflow is the best place for getting high quality answers. Many Orb community members are already on Stack Overflow and provide great answers to 'how-to' questions. A development team member tracks stack overflow for questions without an answer and jumps in as needed.
-
-Therefore please do not be upset when we close an issue with the comment to ask a question on Stack Overflow.
-
-### Gitter Chat Room
-The Gitter Channel provides a place where the Community can get together and collaborate. It is actually great to see that folks have already started to collaborate and support each other there.
-
-[![Gitter](https://badges.gitter.im/microsoft-orb/community.svg)](https://gitter.im/microsoft-orb/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-
 ## Reporting Issues
 
 Have you identified a reproducible problem in Orb? Have a feature request? We want to hear about it! Submit your feature requests [here](https://github.com/microsoft/Orb/issues).
