@@ -5,28 +5,29 @@
 
 [![Build Status](https://dev.azure.com/orbPipeline/Orb/_apis/build/status/Microsoft.Orb?branchName=master)](https://dev.azure.com/orbPipeline/Orb/_build/latest?definitionId=1&branchName=master)
 
-Orb is a tool built specifically for LiveSite and DevOps. It combines Kusto, Link, PowerShell and a lot more.
+Orb is a tool built specifically for running Live Site for your services.
 
 # Installation
 Download the latest installer from the [releases page.](https://github.com/microsoft/Orb/releases)
 
 # Features
 ## Object and Context Driven
-Orb is context driven and allows you to rapidly browse through information based on an object hierarchy.
+Orb allows you to rapidly browse through information based on an object hierarchy. 
 
 When any resource on the object tree is clicked, all context associated with that object is passed to the resource link.
-This allows you to rapidly explore queries, dashboards, links and powershell scripts since all variables are automatically injected for you.
+This allows you to rapidly explore shared queries, dashboards, links, scripts and more since all variables are automatically injected for you.
 
 ![](gifs/ObjectAndContextDriven.gif)
 
-## Backed by Kusto
-Kusto integration allows rapidly searching for objects and discovering hierarchies dynamically.
+## Backed by Azure Data Explorer
+Object heirarchies are user defined and backed by ADX queries. ADX integration allows rapidly searching for objects and discovering hierarchies dynamically.
 
 ![](gifs/BackedByKusto.gif)
+
 ## Extensible and Shareable
 All object definitions and hierarchies are defined as JSON config. You can edit object definitions, add resources and share your changes from within Orb.
 
-These config files are stored on a Git repository so you can audit and rollback changes just as easily.
+These config files are stored on a Git repository - this provides a shared view of Live Site resources across the entire organization.
 
 ![](gifs/ExtensibleAndShareable.gif)
 ## PowerShell Support
@@ -45,10 +46,10 @@ You can save Orb state to a file, edit it, pin it to your JumpList to accelerate
 
 You can also share your Orb state as a link.
 
-# Built On Chromium
+# Built On Electron
 Orb is built on [Electron](https://electronjs.org/).
 
-Every tab in Orb is a Chromium process (just like in Chrome) - i.e. you don't need to worry about Browser compatibility when using Orb.
+Every tab in Orb is a Chromium process.
 
 # [Onboarding](ONBOARDING.md)
 
