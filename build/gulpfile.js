@@ -50,8 +50,8 @@ gulp.task("renameElectronExe", function () {
 
 function getExeName() {
     var exeName = "orb.exe";
-    gutil.log("Running on branch " + argv.buildBranch);
-    if (argv.buildBranch.toLowerCase() === "insiders") {
+    gutil.log("Running on branch " + argv.buildBranch || "local");
+    if (argv.buildBranch && argv.buildBranch.toLowerCase() === "insiders") {
         exeName = "orb_insiders.exe";
     }
     return exeName;
@@ -366,7 +366,7 @@ gulp.task("runTests", gulp.series("installDependencies", "copyElectron", "resEdi
     done();
 }));
 
-if (argv.buildBranch == "dev") {
+if (!argv.buildBranch) {
     gulp.task("build", gulp.series("runTests", function (done) {
         gutil.log("Building Orb");
         done();
