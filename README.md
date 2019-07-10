@@ -5,7 +5,7 @@
 
 [![Build Status](https://dev.azure.com/orbPipeline/Orb/_apis/build/status/Microsoft.Orb?branchName=master)](https://dev.azure.com/orbPipeline/Orb/_build/latest?definitionId=1&branchName=master)
 
-Orb is a tool built specifically for running Live Site for your services.
+Orb is a tool built specifically for running Live Site for your services. Orb is used by engineers in Azure to manage internal Azure services.
 
 # Installation
 Download the latest installer from the [releases page.](https://github.com/microsoft/Orb/releases)
@@ -31,27 +31,30 @@ These config files are stored on a Git repository - this provides a shared view 
 
 ![](gifs/ExtensibleAndShareable.gif)
 ## PowerShell Support
-Orb allows you to save and share PowerShell snippets. The results of these PowerShell snippets are displayed as web pages rendered using Markdown.
+Orb allows you to save and share PowerShell snippets. The results of these PowerShell snippets are displayed as web pages rendered using Markdown. These snippets could be common mitigation actions, data collection triggers and more.
 
-Since Orb allows multiple tabs, you can open up saved snippets and run them in parallel. Reloading (F5) these PowerShell pages re-executes the PowerShell script. Ctrl+F searches through result output.
+Since Orb allows multiple tabs, you can open up saved snippets and run them in parallel. Since the script result is a web page, you can Ctrl + F to search through output.
 
 ![](gifs/PowerShellSupport.gif)
-# Terminal Integration
+## Terminal Integration
 In addition to PowerShell Markdown support, you can open a fully functional PowerShell terminal in Orb.
-You can define custom terminal profiles to launch terminals with custom startup scripts.
+You can define custom terminal profiles to launch terminals with custom startup scripts. These startup scripts can also be shared through the git repository, allowing teams to use consistent startup scripts.
 
 ![](gifs/TerminalIntegration.gif)
-# Orb Files and Links
+## Orb Files and Links
 You can save Orb state to a file, edit it, pin it to your JumpList to accelerate repeated workflows.
 
 You can also share your Orb state as a link.
 
-# Built On Electron
+## Built On Electron
 Orb is built on [Electron](https://electronjs.org/).
 
 Every tab in Orb is a Chromium process.
 
-# [Onboarding](ONBOARDING.md)
+## OS Support
+Orb is currently only supported on Windows machines. Since electron is cross-platform, Linux/MacOs support is possible through future updates.
 
-# [Contributing](CONTRIBUTING.md)
+[Onboarding](ONBOARDING.md)
+
+[Contributing](CONTRIBUTING.md)
 
