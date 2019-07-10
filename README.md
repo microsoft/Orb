@@ -33,7 +33,7 @@ These config files are stored on a Git repository - this provides a shared view 
 ## PowerShell Support
 Orb allows you to save and share PowerShell snippets. The results of these PowerShell snippets are displayed as web pages rendered using Markdown. These snippets could be common mitigation actions, data collection triggers and more.
 
-Since Orb allows multiple tabs, you can open up saved snippets and run them in parallel. Since the script result is a web page, you can Ctrl + F to search through output.
+Since Orb allows multiple tabs, you can open up saved snippets and run them in parallel. Since the script result is a web page, you can Ctrl + F to search through the output.
 
 ![](gifs/PowerShellSupport.gif)
 ## Terminal Integration
@@ -54,7 +54,7 @@ Every tab in Orb is a Chromium process.
 ## OS Support
 Orb is currently only supported on Windows machines. Since electron is cross-platform, Linux/MacOs support is possible through future updates.
 
-[Onboarding](ONBOARDING.md)
+## [Onboarding](ONBOARDING.md)
 
-[Contributing](CONTRIBUTING.md)
+## [Contributing](CONTRIBUTING.md)
 
