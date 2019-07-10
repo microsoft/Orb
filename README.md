@@ -15,7 +15,7 @@ Download the latest installer from the [releases page.](https://github.com/micro
 Orb allows you to rapidly browse through information based on an object hierarchy. 
 
 When any resource on the object tree is clicked, all context associated with that object is passed to the resource link.
-This allows you to rapidly explore shared queries, dashboards, links, scripts and more since all variables are automatically injected for you.
+Since all variables for an object are automatically injected for you, this allows you to rapidly explore shared queries, dashboards, links, scripts and more.
 
 ![](gifs/ObjectAndContextDriven.gif)
 
