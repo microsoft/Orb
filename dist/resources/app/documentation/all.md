@@ -17,10 +17,16 @@
 * [Support](#support)
 
 # Release Notes
+7/9/2019
+> * Initial GitHub release. [songxueyuan, gauravjag, vinay-nagarajan]
+
+# Wiki
+
+<a href= "https://github.com/Microsoft/Orb/README.md" target="_blank">https://github.com/Microsoft/Orb/README.md</a>
 
 # Quick Start
 
-Orb is a web browser, built specifically for LiveSite and DevOps. It combines Kusto - Azure Data Explorer, PowerShell and a lot more.
+Orb is a tool built specifically for running Live Site for your services. 
 
 > To get started, find an object in the Search View.
 
@@ -98,10 +104,5 @@ Resource Extension | Description
 
 To add resources or objects, see the model documentation [here.](models.md)
 
-# Wiki
 
-<a href= "https://github.com/Microsoft/Orb/README.md" target="_blank">https://github.com/Microsoft/Orb/README.md</a>
 
-# Support
-
-[See Contributing Section](https://github.com/microsoft/Orb/blob/master/ONBOARDING.md)
