@@ -17,7 +17,7 @@ Orb allows you to rapidly browse through information based on an object hierarch
 When any resource on the object tree is clicked, all context associated with that object is passed to the resource link.
 Since all variables for an object are automatically injected for you, this allows you to rapidly explore shared queries, dashboards, links, scripts and more.
 
-![](gifs/ObjectAndContextDriven.gif)
+![](gifs/orbRapidExploration.gif)
 
 ## Backed by Azure Data Explorer
 Object heirarchies are user defined and backed by ADX queries. ADX integration allows rapidly searching for objects and discovering hierarchies dynamically.
