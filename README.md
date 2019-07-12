@@ -10,6 +10,8 @@ Orb is a tool built specifically for running Live Site for your services. Orb is
 # Installation
 Download the latest installer from the [releases page.](https://github.com/microsoft/Orb/releases)
 
+To setup Orb for your organization, take a look at the [Onboarding guide](./dist/resources/app/documentation/onboarding.md)
+
 # Features
 ## Object and Context Driven
 Orb allows you to rapidly browse through information based on an object hierarchy. 
@@ -53,8 +55,6 @@ Every tab in Orb is a Chromium process.
 
 ## OS Support
 Orb is currently only supported on Windows machines. Since electron is cross-platform, Linux/MacOs support is possible through future updates.
-
-## [Onboarding](ONBOARDING.md)
 
 ## [Contributing](CONTRIBUTING.md)
 
