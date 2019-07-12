@@ -50,7 +50,7 @@ The model repository is a Git repo that stores all saved resources and object de
 
 > Users submit changes to Orb models through Pull Requests (PRs). PRs can be initiated from within Orb.
 
-Only VSTS git repositories are supported at this point.
+Only Azure DevOps git repositories are supported at this point.
 
 ## Object Search
 Object search is the entry point to locate objects. When Orb starts up, it syncs all files in the model repository and looks for object definition files. Each object definition file contains the queries that help Orb search for that object and discover other connected objects.  
