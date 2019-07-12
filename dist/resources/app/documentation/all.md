@@ -2,6 +2,8 @@
 
 * [Basic Concepts](./BasicConcepts.md)
 
+* [Onboarding](./onboarding.md)
+
 * [Adding Objects and Resources](./models.md)
 
 * [File Format](./fileFormat.md)
@@ -18,9 +20,9 @@
 7/9/2019
 > * Initial GitHub release.
 
-# Wiki
+# GitHub Page
 
-<a href= "https://github.com/microsoft/Orb/blob/master/README.md" target="_blank">https://github.com/microsoft/Orb/blob/master/README.md</a>
+<a href= "https://github.com/microsoft/Orb" target="_blank">https://github.com/microsoft/Orb</a>
 
 
 
