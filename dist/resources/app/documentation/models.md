@@ -15,20 +15,19 @@ Orb uses a git repository to store all object and resource definitions.
 
 >* Orb automatically syncs with the Models git repository to continuously update definitions.
 
-The Orb Models Repository is located [here.](https://dev.azure.com/orbModels/_git/OrbModels)
-
 You can explore your local git repository in the Edit page. You can also right-click folders and click 'Reveal in Explorer'.
 
 >* Any changes made locally need to be explicitly pushed through Pull Requests in the *Changes* section.
 
 ## Public Models
 
-Anything located under src\Models is considered Public. Public Model updates require no Code Reviews.
+Anything located under src\Models is considered Public. Public Model updates typically require no Code Reviews.
 
 ## Protected Models
 
-Anything located under src\ProtectedModels is considered Protected. Protected Models require Code Reviews.
+Anything located under src\ProtectedModels is considered Protected. Protected Models typically require Code Reviews.
 
+>* You'd have to setup your Repo to enforce Code Reviews on the protected folder. 
 >* All PowerShell Object definitions and resources (psx, psmd, terminal, etc.) must be placed under the Protected Models folder.
 >* Since Constants can be used by any definition, these have to be added to Protected Models.
 
@@ -44,84 +43,11 @@ To create a namespace, you need to create a new folder and a namespaceConfig.jso
 
 You can pick one of the 3 directory layouts below.
 
-### Fully Public Definition
-
->* This setup is recommended if you plan to use Kusto objects and non-PowerShell resources.
-
-For example, to create a namespace "foo", this should be the folder structure.
-
-<pre>
-Models
-|
-foo
-   |
-   namespaceConfig.json
-   |
-   Objects
-      |
-      object1.json
-</pre>
-
-### Fully Protected Definition
-
-If you want your entire namespace config to be only modifiable through code reviews, you can place it in the protected folder.
-
->* You can create owners.txt files at every folder to control Ownership Enforcer approvals.
->* This setup is recommended if you plan to only use PowerShell objects and resources.
-
-<pre>
-ProtectedModels
-|
-foo
-   |
-   owners.txt
-   namespaceConfig.json
-   |
-   Objects
-      |
-      object1.json
-</pre>
-
-### Hybrid Definition (Most Flexible)
-
-You can choose to split your config into multiple files and decide what portion goes through code reviews. Note that PowerShell related definition must always go in the protected folder.
-
->* This setup is recommended if you plan to use a combination of Kusto and PowerShell objects/resources.
-
-<pre>
-src
-|
-Models
- |
- foo
-   |
-   namespaceConfig.json
-   |
-   Objects
-      |
-      object1Hybrid.json
-      object2FullyPublic.json
-|
-ProtectedModels
- |
- foo
-   |
-   owners.txt
-   namespaceconfig.protected.json #Contains just the stuff that needs CRs
-   |
-   Objects
-      |
-      owners.txt
-      object1Hybrid.protected.json #Contains just the stuff that needs CRs
-      object3FullyProtected.json
-</pre>
-
-
 ## NamespaceConfig.json
 
 The namespaceConfig contains several resource profiles.
 
-These resource profiles tell Orb about how to connect to key resources like Kusto, Dgrep, etc.
+These resource profiles tell Orb about how to connect to key resources like ADX, links, etc.
 
 This allows individual resource definitions to share connection configuration.
 
@@ -166,17 +92,11 @@ Sample namespace config for OrbSample:
 
 This is a set of properties that all objects in the namespace will inherit.
 
->* requiredBaseProps can be used to implement [national clouds support](https://docs.microsoft.com/en-us/graph/deployments)
-
 Currently, only enums are supported as requiredBaseProps. These enum choices are automatically displayed on the search page.
 
-### National Clouds Support
+These properties can be used in resource profiles or in any resource definition. 
 
-If requiredBaseProps are setup for your namespace as shown in the example above, every object will automatically include the *cloudType* variable.
-
-Kusto resources will be automatically converted to the endpoint defined for the given cloudType.
-
-> Orb will automatically convert saved queries to Public endpoints if the underlying object is in a different cloudType.
+cloudType is a special base prop that can be used to pick different ADX clusters/databases for the same object type.
 
 # Objects
 
@@ -188,7 +108,7 @@ Under the *Objects* folder for your namespace create a file *objectName*.json.
 
 >* The object json file can be under any subdirectory of *Objects*.
 >* An Object can be split into multiple files like *objectName*.file1.json, *objectName*.file2.json. However, *objectName*.json is always required.
->* Protected resources needing Code Reviews (all PowerShell snippets) need to be placed in the ProtectedModels folder. See the Namespace Section above for directory definition examples.
+>* Protected resources needing Code Reviews (all PowerShell snippets) need to be placed in the ProtectedModels folder. See the section on folder structure below for more details.
 
 ## Global Object json
 
@@ -202,7 +122,7 @@ Sample global object json file:
     "path": "Global\\Global Object",
     "resources": [
         {
-            "type": "jarvis",
+            "type": "link",
             "relativePath": "Compute\\Global Object",
             "description": "Global Compute VM, Host Availability",
             "link": "https://github.com/Microsoft/Orb"
@@ -212,6 +132,43 @@ Sample global object json file:
 ```
 
 Resource definition details can be found in [this section](#resources)
+
+## Recommended Folder Structure
+
+You can choose to split your config into multiple files and decide what portion goes through code reviews. Note that PowerShell related definition must always go in the protected folder.
+
+Anything in the objects folder is part of the object definition. 
+
+> An object can be split into multiple parts, so that different parts of the object can be code reviewed if required.
+
+>* This setup is recommended if you plan to use a combination of ADX and PowerShell objects/resources.
+
+<pre>
+src
+|
+Models
+ |
+ foo
+   |
+   namespaceConfig.json
+   |
+   Objects
+      |
+      object1.part1..json
+      object2.json
+|
+ProtectedModels
+ |
+ foo
+   |   
+   namespaceconfig.protected.json #Contains just the stuff that needs CRs
+   |
+   Objects
+      |
+      owners.txt
+      object1.protected.json #Contains just the stuff that needs CRs
+      object3FullyProtected.json
+</pre>
 
 ## Object json
 
