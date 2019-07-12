@@ -69,6 +69,8 @@ For example, here is a snippet from the Object Definition file for a VM:
  ```
  By adding this object definition, this object becomes available to search in Orb.
  
+ ![Object Search](objectSearch.gif)
+ 
  Under the covers, when the search button is clicked, the following query is run:
  
  <pre>
@@ -79,7 +81,21 @@ Since a match was found for that query, the result is displayed. Search strings 
 
 You can also search for object IDs without knowing the type of object and Orb will run multiple parallel queries to scan all object definitions. This is handy if you are dealing with an incident or support ticket with partial information. Once an object is found, you can click on it to add it to the explorer page. When an object is added to the explorer, all properties associated with that object are available for future parameter substitution.
 
+## Object Explorer
+The object explorer page lets you visualize connected objects. Inside an object definition, you can specify how one object is linked to another. This is a sample association modeled inside the VM object definition file.
+
+```json
+"associations": [
+        {
+            "relativePath": "Host",
+            "associatedObjectPath": "Compute\\Host",
+            "query": "VMSnapshot | where {timeRange} and VMId == \"{VMId}\" | take 1 | project HostId",
+            "minimumResolutionInMinutes": 120
+        },
+```
+ ![Associations](orbAssociations.gif)
  
+ As an association is clicked (indicated by the purple icon), the query that locates a connected object is run. In this case, to find the connected host, the VMSnapshot query is run after replacing all variables. VMId is a property stored in the object context, so it can be used throughout the object definition. Associations also factor in time – in this example if a VM was migrated from one host to another, the time range specified in the explorer page can alter the results. If multiple entries are found, all connected objects are displayed. Similarly, a host server object is linked to a rack and all other VMs on the host.
  
 ## Resource Types
 
