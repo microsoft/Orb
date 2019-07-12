@@ -1,6 +1,6 @@
 # Orb
 
-* [Basic Concepts](./basicConcepts.md)
+* [Basic Concepts](./BasicConcepts.md)
 
 * [Adding Objects and Resources](./models.md)
 
