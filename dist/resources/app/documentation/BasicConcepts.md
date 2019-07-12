@@ -69,7 +69,7 @@ For example, here is a snippet from the Object Definition file for a VM:
  ```
  By adding this object definition, this object becomes available to search in Orb.
  
- ![Object Search](objectSearch.gif)
+ ![Object Search](orbSearch.gif)
  
  Under the covers, when the search button is clicked, the following query is run:
  
@@ -93,6 +93,7 @@ The object explorer page lets you visualize connected objects. Inside an object 
             "minimumResolutionInMinutes": 120
         },
 ```
+
  ![Associations](orbAssociations.gif)
  
  As an association is clicked (indicated by the purple icon), the query that locates a connected object is run. In this case, to find the connected host, the VMSnapshot query is run after replacing all variables. VMId is a property stored in the object context, so it can be used throughout the object definition. Associations also factor in time – in this example if a VM was migrated from one host to another, the time range specified in the explorer page can alter the results. If multiple entries are found, all connected objects are displayed. Similarly, a host server object is linked to a rack and all other VMs on the host.
