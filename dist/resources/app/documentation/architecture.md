@@ -3,7 +3,7 @@
 ![](../documentation/orb_architecture.png)
 
 ## Electron
-Orb is built on the same open-source platform that powers VSCode, Slack, Microsoft Teams and many others.
+Orb is built on the same open-source platform that powers VSCode and many others.
 Electron is a framework for creating native applications with web technologies like JavaScript, HTML, and CSS.
 You can learn more about it here:
 
