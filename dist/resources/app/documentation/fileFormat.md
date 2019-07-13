@@ -1,7 +1,5 @@
 # File Format
 
-* [Back to Help](all.md)
-
 Orb allows you to save all state to a file and share that with others.
 
 Orb also supports share by link.See [Link Support](linkSupport.md) for more details.
@@ -219,6 +217,3 @@ function Add-ToOrb {
     }
 }
 ```
-
-* [Back to Help](all.md)
-* [Top](#file-format)
