@@ -1,23 +1,15 @@
 # Updating Orb Models
 
-* [Back to Help](all.md)
-* [PowerShell Objects](powershellObjects.md)
-
->* You can Add/Remove/Update Objects and Namespaces in the Edit Page.
-
->* The fastest way to create a new namespace is to browse through existing examples and clone one.
-
->* To edit existing objects, you can also right-click on any Object in the Explorer Page and click Edit.
-
-# Models Overview
-
-Orb uses a git repository to store all object and resource definitions.
+Orb uses a git repository to store all object and resource definitions. Make sure you've followed the [Onboarding guide](./onboarding.md) to create a repo for your organization.
 
 >* Orb automatically syncs with the Models git repository to continuously update definitions.
 
 You can explore your local git repository in the Edit page. You can also right-click folders and click 'Reveal in Explorer'.
 
 >* Any changes made locally need to be explicitly pushed through Pull Requests in the *Changes* section.
+>* The fastest way to create a new namespace is to browse through existing examples and clone one.
+>* To edit existing objects, you can also right-click on any Object in the Explorer Page and click Edit.
+>* You can also right-click on resources to clone/edit them.
 
 ## Public Models
 
@@ -33,7 +25,7 @@ Anything located under src\ProtectedModels is considered Protected. Protected Mo
 
 # Namespaces
 
->* Namespaces are designed to be at the scope of a large organization and not individual teams.
+>* Namespaces can be used arbitrarily to organize different objects. Teams that use similar ADX config can all share a namespace.
 
 Object trees can span namespaces if required.
 
@@ -611,6 +603,3 @@ Sample definition:
 In the above example a Host is associated with a VM.
 
 For details on minimumResolutionInMinutes see the [constructor section](#constructor) above.
-
-* [Back to Help](all.md)
-* [Top](#updating-orb-models)
