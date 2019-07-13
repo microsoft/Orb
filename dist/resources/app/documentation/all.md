@@ -14,8 +14,6 @@
 
 * [Architecture](./architecture.md)
 
-* [Support](#support)
-
 # Release Notes
 7/9/2019
 > * Initial GitHub release.
