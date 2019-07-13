@@ -10,7 +10,7 @@ Orb is a tool built specifically for running Live Site for your services. Orb is
 # Installation
 Download the latest installer from the [releases page.](https://github.com/microsoft/Orb/releases)
 
-To setup Orb for your organization, take a look at the [Onboarding guide](./dist/resources/app/documentation/onboarding.md)
+To setup Orb for your organization, take a look at the [Onboarding guide.](./dist/resources/app/documentation/onboarding.md)
 
 # Features
 ## Object and Context Driven
