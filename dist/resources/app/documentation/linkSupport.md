@@ -1,7 +1,5 @@
 # Link Support
 
-* [Back to Help](all.md)
-
 Orb allows you to save all state in a link and share that with others.
 
 Orb links use the same schema as the [File Format](fileFormat.md).
