@@ -33,4 +33,3 @@ The {data} is the file format, Gzipped, Base64 and then url encoded.
 
 The {parameters} section defines what values can be overridden in the URL.
 
-* [File Format](fileFormat.md)
