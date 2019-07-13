@@ -1,10 +1,6 @@
 # Terminal Management
 
-* [Back to Help](all.md)
-
 Orb has an integrated terminal that can be configured to launch custom terminal resources.
-
-> Orb Terminals allow searching through output using Ctrl+F.
 
 To configure your terminal preferences, right-click on the terminal icon in the NavBar on the left, then select edit.
 
@@ -50,6 +46,3 @@ Orb Terminals have two special environment variables that can be used for specia
 
 * 1. OrbInstanceId - This is the unique ID for the Orb App Instance. See [File Format](fileFormat.md) for details.
 * 2. OrbProcessPath - Full path to the current orb process which is hosting the terminal.
-
-* [Back to Help](all.md)
-* [Top](#terminal-management)
