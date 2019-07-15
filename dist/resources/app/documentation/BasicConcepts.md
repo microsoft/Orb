@@ -1,3 +1,5 @@
+# Basic Concepts
+
 ## Objects
 Objects are the primary entry point used for exploration.
 Objects are user defined and can be anything you'd like to model as part of handling your live site.
