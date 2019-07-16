@@ -9,9 +9,9 @@ Onboarding to Orb requires the following steps:
 
 Orb ships with a sample ADX Database and model repo hosted on Azure Devops. You can use these as reference samples throughout the onboarding process.
 
-	Database connection URI: https://orbcluster.westus2.kusto.windows.net
+	Sample ADX Cluster: https://orbcluster.westus2.kusto.windows.net
 
-	OrbModels: https://dev.azure.com/orbModels/_git/OrbModels
+	Sample OrbModels Repo: https://dev.azure.com/orbModels/_git/OrbModels
 
 
 ## Onboarding to Azure Data Explorer
