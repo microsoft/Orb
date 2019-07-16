@@ -58,5 +58,7 @@ Every tab in Orb is a Chromium process.
 ## OS Support
 Orb is currently only supported on Windows machines. Since electron is cross-platform, Linux/MacOs support is possible through future updates.
 
+
+## [Announcement Blog](https://techcommunity.microsoft.com/t5/Azure-Data-Explorer/Orb-A-tool-to-run-Live-Site-using-Azure-Data-Explorer/td-p/757581)
 ## [Contributing](CONTRIBUTING.md)
 
