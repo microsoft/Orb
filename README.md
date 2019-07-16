@@ -37,6 +37,8 @@ Orb allows you to save and share PowerShell snippets. The results of these Power
 
 Since Orb allows multiple tabs, you can open up saved snippets and run them in parallel. Since the script result is a web page, you can Ctrl + F to search through the output.
 
+You can also use PowerShell scripts to define your Object Hierarchy if you don't have an ADX cluster.
+
 ![](gifs/PowerShellSupport.gif)
 ## Terminal Integration
 In addition to PowerShell Markdown support, you can open a fully functional PowerShell terminal in Orb.
