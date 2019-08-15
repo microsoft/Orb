@@ -15,15 +15,12 @@ import { FileItem } from "./fileItem";
 import { FileNode } from "./fileNode";
 import * as path from "path";
 import { ListItem } from 'material-ui/List';
-import Avatar from 'material-ui/Avatar';
 import { VstsClient } from "../repo/VstsClient";
 import { ConfigUtil } from "../config/configUtil";
 import { ModelReader } from "../modelReader/modelReader";
 import { TreeGenerator } from "../Explorer/treeGenerator";
 import CircularProgress from 'material-ui/CircularProgress';
 
-const Config = require("electron-config");
-const config = new Config();
 const log = require("loglevel");
 
 interface RenderSectionProps {

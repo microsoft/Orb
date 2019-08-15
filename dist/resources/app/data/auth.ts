@@ -53,6 +53,7 @@ class AadNativeAuthenticator implements IAuthenticator {
             }, (error, result: AuthResult) => {
                 this.authInProgress = false;
                 if (error || result.Error) {
+                    Util.clearAuthCacheSync();
                     reject(error ? error : result.Error);
                 } else {
                     resolve(result.Parameter);

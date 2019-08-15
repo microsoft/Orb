@@ -339,7 +339,11 @@ export class ModelReader {
 
                 return arr;
             })
-            .catch((e) => { throw "Error reading namespace: " + e.toString() });
+            .catch((e) => {
+                return Util.remove(ConfigUtil.GetSetting("modelRepoDir")).then(() => {
+                    throw "Error reading namespace: " + e.toString();
+                })
+            });
     }
 
     private static addResourceProfilesFromNamespaceConfig(namespaceConfig: m.NamespaceConfig) {

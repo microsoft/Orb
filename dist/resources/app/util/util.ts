@@ -27,6 +27,10 @@ export class Util {
         return Util.authCacheLocation;
     }
 
+    static clearAuthCacheSync() {
+        Util.unlinkSync(Util.getAuthCacheLocation());
+    }
+
     static openInNewInWindow(url: string, openInExternal?: boolean, shellOpen?: boolean) {
         if (openInExternal) {
             shell.openExternal(url);
