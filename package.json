@@ -8,7 +8,7 @@
   "license": "",
   "devDependencies": {
     "del": "4.1.1",
-    "electron": "2.0.9",
+    "electron": "7.2.4",
     "electron-winstaller": "2.7.0",
     "gulp": "4.0.2",
     "gulp-rename": "1.2.2",
